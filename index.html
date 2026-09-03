@@ -309,9 +309,23 @@
     68%{stroke-dashoffset:0;opacity:1;}
     88%,100%{stroke-dashoffset:-100;opacity:.32;}
   }
-  #cell-cycling .sic *{animation-delay:-2.2s;}
   #cell-english .sic *{animation-delay:-4.4s;}
   #cell-ai .sic *{animation-delay:-6.6s;}
+
+  /* 騎車 icon 改走不同的動態：車架跟座管固定常駐，只有兩個輪子
+     消失又出現，速度是原本畫線動畫（9s）的兩倍快 */
+  #cell-cycling .sic path,
+  #cell-cycling .sic circle:not(.wheel){
+    animation:none;stroke-dashoffset:0;opacity:1;
+  }
+  #cell-cycling .sic circle.wheel{
+    animation:wheelBlink 4.5s ease-in-out infinite;
+  }
+  @keyframes wheelBlink{
+    0%,44%{opacity:1;}
+    50%{opacity:0;}
+    56%,100%{opacity:1;}
+  }
   @media(prefers-reduced-motion:reduce){
     .sic polyline,.sic path,.sic circle{animation:none;stroke-dashoffset:0;opacity:.9;}
   }
@@ -601,7 +615,7 @@
       <section class="cell" id="cell-cycling">
         <div class="cell-top">
           <div class="eyebrow">
-            <svg class="sic" viewBox="0 0 16 16" aria-hidden="true"><circle pathLength="100" cx="3.6" cy="11.7" r="2.4"></circle><circle pathLength="100" cx="12.4" cy="11.7" r="2.4"></circle><path pathLength="100" d="M8 11.7V9.3L6 7.3L8.8 5.3L10.2 7.3H11.6"></path><circle pathLength="100" cx="10.1" cy="3.3" r="0.75"></circle></svg>
+            <svg class="sic" viewBox="0 0 16 16" aria-hidden="true"><circle class="wheel" pathLength="100" cx="3.6" cy="11.7" r="2.4"></circle><circle class="wheel" pathLength="100" cx="12.4" cy="11.7" r="2.4"></circle><path pathLength="100" d="M8 11.7V9.3L6 7.3L8.8 5.3L10.2 7.3H11.6"></path><circle pathLength="100" cx="10.1" cy="3.3" r="0.75"></circle></svg>
             <span>CYCLING 騎車</span>
           </div>
           <div class="right">
