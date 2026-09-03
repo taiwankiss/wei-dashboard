@@ -1021,9 +1021,12 @@
       '</div>'+
       '<div class="recent"><div class="k">近期測驗</div>'+
         (doc.history||[]).slice(-3).reverse().map(function(h,i){
-          return '<div class="r">'+rowIcon(i)+'<span class="n">'+esc(h.note||h.date||"紀錄")+'</span>'+
-            '<span class="m">'+(h.toeic_predicted!=null? num(h.toeic_predicted)+' 分'
-              : (h.vocab_count!=null? num(h.vocab_count)+' 詞':'—'))+'</span></div>';
+          // 日期 / 預測分數 / 題目數 · 詞彙數 —— 跟 note 無關，一律照數值欄位排
+          return '<div class="r">'+rowIcon(i)+
+            '<span class="d">'+esc(md(h.date))+'</span>'+
+            '<span class="n">'+(h.toeic_predicted!=null? num(h.toeic_predicted)+' 分':'—')+'</span>'+
+            '<span class="m">'+(h.questions_count!=null? num(h.questions_count)+' 題':'—')+
+              ' · '+(h.vocab_count!=null? num(h.vocab_count)+' 詞':'—')+'</span></div>';
         }).join("")+'</div>'+
       '<div class="foot">手動維護 · 資料來源 Santa</div>';
 
