@@ -302,9 +302,11 @@
   .cell-top .right{display:flex;align-items:center;gap:9px;}
   .cell-top .ctrls{display:flex;align-items:center;gap:9px;}
 
-  /* 累計數據收成一顆 i 按鈕，接在「/ 7天」後面，點了才跳出 */
+  /* 累計數據收成一顆 i 按鈕，接在「/ 7天」後面，點了才跳出。
+     跟單位文字包在同一個 flex-end 容器裡，兩者下緣才會切齊 */
+  .headline .big .u-wrap{display:flex;align-items:flex-end;gap:5px;}
   .info{
-    flex:none;align-self:center;margin-left:4px;
+    flex:none;
     width:13px;height:13px;border-radius:50%;padding:0;
     border:1px solid rgba(109,140,255,.7);background:transparent;
     color:var(--blue-lt);font:600 8.5px/1 var(--mono);
@@ -382,7 +384,6 @@
   .readout .sel .d{font:500 10px/1 var(--mono);color:var(--ink-45);}
   .readout .sel .m{font:600 13px/1 var(--mono);}
   .readout .sel .x{font:500 11px/1 var(--mono);color:var(--ink-50);}
-  .readout .hint{font:400 10px/1.4 var(--cjk);color:var(--ink-34);}
 
   /* 上下線改掛在各欄位上，中間的 gap 自然把線斷開成左右兩段 */
   .pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
@@ -801,9 +802,10 @@
       '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.6 4.3A1.3 1.3 0 0 1 2.9 3h2.9l1.4 1.8h5A1.3 1.3 0 0 1 13.5 6v5.9a1.3 1.3 0 0 1-1.3 1.3H2.9a1.3 1.3 0 0 1-1.3-1.3z"></path></svg></a>';
   }
 
-  function readoutHtml(inner, hint){
-    return '<div class="readout">'+(inner? '<div class="sel">'+inner+'</div>'
-      : '<div class="hint">'+esc(hint)+'</div>')+'</div>';
+  // 沒選任何一天就整塊不畫 —— 下方內容自然上移，選了才展開
+  function readoutHtml(inner){
+    if(!inner) return "";
+    return '<div class="readout"><div class="sel">'+inner+'</div></div>';
   }
   function goalLine(actual, goal, unit){
     if(goal==null) return '<div class="goal">目標未設定</div>';
@@ -841,7 +843,7 @@
         '<div class="headline"><div class="hl-main">'+
         '<div class="big"><span class="v">—</span></div>'+
         '<div class="goal">尚未同步 Strava 資料</div></div></div>'+
-        readoutHtml(null,"每天 00:00 自動同步，或點右上角 + 手動上傳截圖");
+        readoutHtml(null);
       dot.className = "dot warn";
       return;
     }
@@ -902,14 +904,14 @@
       '<div class="headline">'+
         '<div class="hl-main">'+
           '<div class="big"><span class="v">'+fmtKm(winKm)+'</span>'+
-          '<span class="u">km / '+WINDOW_DAYS+'天</span>'+
+          '<span class="u-wrap"><span class="u">km / '+WINDOW_DAYS+'天</span>'+
           '<button class="info" data-info="'+esc(kind)+'" title="累計數據" aria-label="累計數據">i</button>'+
-          '</div>'+
+          '</span></div>'+
           goalLine(winKm, goal, 'km')+
         '</div>'+
       '</div>'+
       barsHtml(kind, days, function(d){return d.km;})+
-      readoutHtml(inner, kind==="cycling" ? "點任一天，看當日里程與爬升" : "點任一天，看當日里程與時間")+
+      readoutHtml(inner)+
       pairHtml+
       '<div class="recent"><div class="k">近期活動</div>'+
         (rec.length? rec.join("") : '<div class="none">尚無紀錄</div>')+'</div>';
@@ -924,7 +926,7 @@
     if(!doc){
       body.innerHTML =
         '<div class="headline"><div class="big"><span class="v">—</span></div>'+
-        '<div class="goal">尚未計算使用估算</div></div>'+ readoutHtml(null,"每天 00:00 自動重算");
+        '<div class="goal">尚未計算使用估算</div></div>'+ readoutHtml(null);
       dot.className = "dot warn";
       return;
     }
@@ -944,7 +946,7 @@
         '<span class="u">小時 / '+WINDOW_DAYS+'天</span></div>'+
         '<div class="goal">Claude 使用紀錄自動同步</div></div></div>'+
       barsHtml("ai", days, function(d){return d.seconds;})+
-      readoutHtml(inner,"點任一天，看當日使用時數")+
+      readoutHtml(inner)+
       '<div class="pair">'+
         '<div><div class="k">目前專案</div><div class="v">'+num(doc.projectCount||0)+'</div></div>'+
         '<div><div class="k">累計時數</div><div class="v">'+fmtHours(doc.totalSeconds||0)+' h</div></div>'+
@@ -972,7 +974,7 @@
           '<div class="big"><span class="v">—</span>'+
           '<span class="u">多益預測</span></div>'+
           '<div class="goal">'+(tgt!=null? '目標 '+num(tgt)+' 分 · 尚未上傳紀錄' : '尚未上傳學習紀錄')+'</div></div></div>'+
-        readoutHtml(null,"點右上角 + 新增第一筆學習紀錄")+
+        readoutHtml(null)+
         '<div class="pair">'+
           '<div><div class="k">LC 聽力</div><div class="v">—</div></div>'+
           '<div><div class="k">RC 閱讀</div><div class="v">—</div></div>'+
@@ -1012,7 +1014,7 @@
           : '<div class="goal">'+(latest.study_time_sec!=null? '學習時間 '+fmtHM(latest.study_time_sec) : '目標未設定')+'</div>')+
       '</div></div>'+
       barsHtml("english", days, function(d){return d.seconds;})+
-      readoutHtml(inner, "點任一天，看當日學習時間與題數")+
+      readoutHtml(inner)+
       '<div class="pair">'+
         '<div><div class="k">LC 聽力</div><div class="v">'+(latest.toeic_lc!=null? num(latest.toeic_lc):'—')+'</div></div>'+
         '<div><div class="k">RC 閱讀</div><div class="v">'+(latest.toeic_rc!=null? num(latest.toeic_rc):'—')+'</div></div>'+
