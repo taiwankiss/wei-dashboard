@@ -312,22 +312,53 @@
   #cell-english .sic *{animation-delay:-4.4s;}
   #cell-ai .sic *{animation-delay:-6.6s;}
 
-  /* 騎車 icon 改走不同的動態：車架跟座管固定常駐，只有兩個輪子
-     消失又出現，速度是原本畫線動畫（9s）的兩倍快 */
-  #cell-cycling .sic path,
-  #cell-cycling .sic circle:not(.wheel){
+  /* 騎車 icon：車架跟座管固定常駐；兩個輪子改成留一個小缺口的
+     C 形，繞著各自的圓心持續旋轉，不會消失（上一版用 opacity
+     忽隱忽現，結果連 stroke-dashoffset 都沒解開，輪子整個沒畫出來）*/
+  #cell-cycling .sic path:not(.wheel),
+  #cell-cycling .sic circle{
     animation:none;stroke-dashoffset:0;opacity:1;
   }
-  #cell-cycling .sic circle.wheel{
-    animation:wheelBlink 4.5s ease-in-out infinite;
+  #cell-cycling .sic path.wheel{
+    stroke-dashoffset:0;opacity:1;
+    animation:wheelSpin 2.2s linear infinite;
   }
-  @keyframes wheelBlink{
-    0%,44%{opacity:1;}
-    50%{opacity:0;}
-    56%,100%{opacity:1;}
+  @keyframes wheelSpin{ to{transform:rotate(360deg);} }
+
+  /* 跑步 icon：不再用「畫線後淡出」的手法，改成真的用手腳擺動跑起來。
+     手臂／腿各拆成獨立的 path，繞著肩膀／髖部的軸心旋轉；leg-a 跟
+     arm-b 同相位、leg-b 跟 arm-a 同相位（用 animation-delay 錯開半個
+     週期），前後手腳自然交叉擺動。整個身體再疊一層很輕的垂直起伏。 */
+  #cell-running .sic path:not(.leg):not(.arm),
+  #cell-running .sic circle{
+    animation:none;stroke-dashoffset:0;opacity:1;
+  }
+  #cell-running .sic .leg,
+  #cell-running .sic .arm{
+    stroke-dashoffset:0;opacity:1;
+  }
+  #cell-running .sic .leg-a,
+  #cell-running .sic .arm-b{ animation:runSwing 2.6s ease-in-out infinite; }
+  #cell-running .sic .leg-b,
+  #cell-running .sic .arm-a{ animation:runSwing 2.6s ease-in-out infinite; animation-delay:-1.3s; }
+  @keyframes runSwing{
+    0%{transform:rotate(-10deg);}
+    50%{transform:rotate(10deg);}
+    100%{transform:rotate(-10deg);}
+  }
+  #cell-running .sic .runbody{ animation:runBob 1.3s ease-in-out infinite; }
+  @keyframes runBob{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-.4px);}
   }
   @media(prefers-reduced-motion:reduce){
     .sic polyline,.sic path,.sic circle{animation:none;stroke-dashoffset:0;opacity:.9;}
+    /* 上面那條全域規則的優先度不夠高，蓋不過底下這些用 #cell-xxx 限定
+       範圍的動畫規則（選擇器更精確），所以要在這裡各自關掉 */
+    #cell-cycling .sic path.wheel{animation:none;}
+    #cell-running .sic .leg-a,#cell-running .sic .leg-b,
+    #cell-running .sic .arm-a,#cell-running .sic .arm-b{animation:none;transform:none;}
+    #cell-running .sic .runbody{animation:none;transform:none;}
   }
   .cell-top .right{display:flex;align-items:center;gap:9px;}
   .cell-top .ctrls{display:flex;align-items:center;gap:9px;}
@@ -596,7 +627,14 @@
       <section class="cell" id="cell-running">
         <div class="cell-top">
           <div class="eyebrow">
-            <svg class="sic" viewBox="0 0 16 16" aria-hidden="true"><circle pathLength="100" cx="11.6" cy="3" r="1.75"></circle><path pathLength="100" d="M10.4 5.9L7.9 9"></path><path pathLength="100" d="M4.3 7.2L6.8 5.5L10.4 5.9L12.8 7.5L14.5 6.2"></path><path pathLength="100" d="M2 13.4L5.1 11.3L7.9 9L11.3 10.4L10.1 14.2"></path></svg>
+            <svg class="sic" viewBox="0 0 16 16" aria-hidden="true"><g class="runbody">
+              <circle pathLength="100" cx="11.6" cy="3" r="1.75"></circle>
+              <path pathLength="100" d="M10.4 5.9L7.9 9"></path>
+              <path class="arm arm-a" pathLength="100" style="transform-origin:10.4px 5.9px" d="M10.4 5.9L8.6 4.6L6.7 5.3"></path>
+              <path class="arm arm-b" pathLength="100" style="transform-origin:10.4px 5.9px" d="M10.4 5.9L12.6 6.6L14.3 5.6"></path>
+              <path class="leg leg-a" pathLength="100" style="transform-origin:7.6px 9.2px" d="M7.6 9.2L6.1 7.6L5 11"></path>
+              <path class="leg leg-b" pathLength="100" style="transform-origin:7.6px 9.2px" d="M7.6 9.2L10.1 10.6L12.8 13.6"></path>
+            </g></svg>
             <span>RUN 跑步</span>
           </div>
           <div class="right">
@@ -615,7 +653,7 @@
       <section class="cell" id="cell-cycling">
         <div class="cell-top">
           <div class="eyebrow">
-            <svg class="sic" viewBox="0 0 16 16" aria-hidden="true"><circle class="wheel" pathLength="100" cx="3.6" cy="11.7" r="2.4"></circle><circle class="wheel" pathLength="100" cx="12.4" cy="11.7" r="2.4"></circle><path pathLength="100" d="M8 11.7V9.3L6 7.3L8.8 5.3L10.2 7.3H11.6"></path><circle pathLength="100" cx="10.1" cy="3.3" r="0.75"></circle></svg>
+            <svg class="sic" viewBox="0 0 16 16" aria-hidden="true"><path class="wheel" pathLength="100" style="transform-origin:3.6px 11.7px" d="M5.78 12.71 A2.4 2.4 0 1 1 5.78 10.69"></path><path class="wheel" pathLength="100" style="transform-origin:12.4px 11.7px" d="M14.58 12.71 A2.4 2.4 0 1 1 14.58 10.69"></path><path pathLength="100" d="M8 11.7V9.3L6 7.3L8.8 5.3L10.2 7.3H11.6"></path><circle pathLength="100" cx="10.1" cy="3.3" r="0.75"></circle></svg>
             <span>CYCLING 騎車</span>
           </div>
           <div class="right">
