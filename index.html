@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>動態總覽</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BBH+Bartle&family=Archivo:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BBH+Bartle&family=Archivo:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Share+Tech+Mono&display=swap">
 <style>
   :root{
     --ink:#eae7e2;
@@ -337,13 +337,13 @@
   /* 呼吸光暈：只在「有在動」的藍點上，灰／黃兩種狀態不裝，
      不然閒置或警示也看起來像在正常運作，語意會混淆 */
   .dot:not(.idle):not(.warn)::after{
-    content:"";position:absolute;inset:-2.1px;border-radius:50%;pointer-events:none;
+    content:"";position:absolute;inset:-4.55px;border-radius:50%;pointer-events:none;
     background:radial-gradient(circle,rgba(88,124,255,.75),rgba(88,124,255,0) 68%);
-    animation:dotBreathe 10.2s ease-in-out infinite;
+    animation:dotBreathe 6.8s ease-in-out infinite;
   }
   @keyframes dotBreathe{
-    0%,100%{opacity:.175;transform:scale(.72);}
-    50%{opacity:.5;transform:scale(1.25);}
+    0%,100%{opacity:.2625;transform:scale(.72);}
+    50%{opacity:.75;transform:scale(1.25);}
   }
   @media(prefers-reduced-motion:reduce){
     .dot::after{animation:none;opacity:.6;transform:none;}
@@ -367,7 +367,10 @@
   .headline .hl-main{min-width:0;}
   .headline .big{display:flex;align-items:baseline;gap:6px;white-space:nowrap;}
   .headline .goal{white-space:nowrap;}
-  .headline .big .v{font:600 34px/1 var(--mono);letter-spacing:-.02em;}
+  /* 四張卡片的主數字單獨換字體：Share Tech Mono 沒有粗體字重，
+     用 400 撐大字級來補視覺份量，不然跟旁邊 IBM Plex Mono 的粗體
+     單位文字放在一起會顯得太細 */
+  .headline .big .v{font:400 37px/1 "Share Tech Mono",var(--mono);letter-spacing:0;}
   .headline .big .u{font:500 12px/1 var(--mono);color:var(--ink-45);}
   .headline .goal{font:400 11px/1.5 var(--cjk);color:var(--ink-45);margin-top:7px;}
   .headline .goal em{font-style:normal;color:var(--blue-lt);}
@@ -562,7 +565,7 @@
       <div class="rule"></div>
       <div class="who">
         <div class="stamp" id="stamp">—</div>
-        <p class="slogan">日拱一卒，功不唐捐</p>
+        <p class="slogan">聚沙成塔，積少成多</p>
         <div class="modes">
           <button class="mode" id="mode-7" aria-pressed="true">近 7 天</button>
           <button class="mode" id="mode-30" aria-pressed="false">近 30 天</button>
