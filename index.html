@@ -22,6 +22,8 @@
     --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,monospace;
   }
   *{box-sizing:border-box;}
+  /* 獨立托管時沒有外層樣式表，class 的 display 會蓋過 [hidden] 的預設值 */
+  [hidden]{display:none !important;}
   body{
     margin:0;
     background:
