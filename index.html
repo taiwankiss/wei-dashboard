@@ -1119,7 +1119,7 @@
       not_declared:"設定有誤，請重新整理頁面",
       capability_disabled:"此檢視無法使用截圖分析",
       capability_removed:"此檢視無法使用截圖分析",
-      images_unavailable:"此檢視無法傳送圖片",
+      images_unavailable:"這個檢視不支援傳送圖片 — 請改用瀏覽器開啟 claude.ai 的版本",
       image_rejected:"圖片格式不支援或過大，請換一張",
       rate_limited:"請求過多，請稍後再試",
       invalid_json:"讀不出截圖內容，請換一張更清楚的",
@@ -1205,7 +1205,19 @@
 
   ["running","cycling","english"].forEach(function(kind){
     var btn = document.getElementById("add-"+kind), inp = document.getElementById("file-"+kind);
-    btn.addEventListener("click", function(){ if(!btn.disabled){ inp.value=""; inp.click(); } });
+    // 開檔案選擇器之前就先擋掉不可能成功的情況，
+    // 不要讓使用者挑完照片才被告知失敗
+    btn.addEventListener("click", function(){
+      if(btn.disabled) return;
+      if(staticMode || (!db && !sample)){
+        showToast("公開版無法上傳，請改用 Claude 裡的 dashboard", false); return;
+      }
+      if(!sample){ showToast("此檢視未取得 Claude 使用授權，無法讀圖", false); return; }
+      if(!sampleImages){
+        showToast("這個檢視不支援傳送圖片 — 請改用瀏覽器開啟 claude.ai 的版本", false); return;
+      }
+      inp.value=""; inp.click();
+    });
     inp.addEventListener("change", function(){
       var f = inp.files && inp.files[0];
       if(f) handleUpload(kind, f);
