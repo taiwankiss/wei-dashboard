@@ -195,6 +195,67 @@
   ],
   "totalSeconds": 76927
  },
+ "english": {
+  "history": [
+   {
+    "addedAt": "2026-09-03T17:05:00+08:00",
+    "date": "2026-09-01",
+    "goal_percent": 0,
+    "goal_score": 750,
+    "note": "Santa · 推薦學習 2 組",
+    "questions_count": 77,
+    "source": "santa",
+    "study_time_sec": 3977,
+    "toeic_lc": 400,
+    "toeic_predicted": 750,
+    "toeic_rc": 350,
+    "vocab_count": 10
+   },
+   {
+    "addedAt": "2026-09-03T17:05:00+08:00",
+    "date": "2026-09-02",
+    "goal_percent": 0,
+    "goal_score": 750,
+    "note": "Santa · 推薦學習 3 組",
+    "questions_count": 41,
+    "source": "santa",
+    "study_time_sec": 3964,
+    "toeic_lc": 400,
+    "toeic_predicted": 750,
+    "toeic_rc": 350,
+    "vocab_count": 10
+   },
+   {
+    "addedAt": "2026-09-03T17:05:00+08:00",
+    "date": "2026-09-03",
+    "goal_percent": 0,
+    "goal_score": 750,
+    "note": "Santa · 推薦學習 0 組",
+    "questions_count": 5,
+    "source": "santa",
+    "study_time_sec": 472,
+    "toeic_lc": 400,
+    "toeic_predicted": 750,
+    "toeic_rc": 350,
+    "vocab_count": 0
+   }
+  ],
+  "lastUpdated": "2026-09-03T17:05:00+08:00",
+  "latest": {
+   "addedAt": "2026-09-03T17:05:00+08:00",
+   "date": "2026-09-03",
+   "goal_percent": 0,
+   "goal_score": 750,
+   "note": "Santa · 推薦學習 0 組",
+   "questions_count": 5,
+   "source": "santa",
+   "study_time_sec": 472,
+   "toeic_lc": 400,
+   "toeic_predicted": 750,
+   "toeic_rc": 350,
+   "vocab_count": 0
+  }
+ },
  "goals": {
   "enTargetScore": 850,
   "note": "跑步、騎車為每 7 天目標，切到近 30 天時等比放大；AI 學習不設目標",
@@ -359,5 +420,5 @@
   "source": "open-meteo",
   "updatedAt": "2026-09-03T16:39:21+08:00"
  },
- "generatedAt": "2026-09-03T16:40:35+08:00"
+ "generatedAt": "2026-09-03T17:04:11+08:00"
 }
