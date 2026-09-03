@@ -274,9 +274,9 @@
     .cell::before{display:none;}
     .cell:nth-child(2)::after{display:block;}
   }
-  .cell-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+  .cell-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
   .cell-top .eyebrow{font:600 10px/1 var(--mono);letter-spacing:.16em;color:var(--ink-50);
-    display:flex;align-items:center;gap:9px;padding-top:4px;}
+    display:flex;align-items:center;gap:9px;}
 
   /* 區塊標題的線條圖示：pathLength 讓每個圖形的線長統一成 100，
      不管形狀多複雜，同一組 dash 動畫就能畫得一樣勻 */
@@ -299,20 +299,21 @@
   @media(prefers-reduced-motion:reduce){
     .sic polyline,.sic path,.sic circle{animation:none;stroke-dashoffset:0;opacity:.9;}
   }
-  .cell-top .right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;}
+  .cell-top .right{display:flex;align-items:center;gap:9px;}
   .cell-top .ctrls{display:flex;align-items:center;gap:9px;}
 
-  /* 累計數據收成一顆 i 按鈕，點了才跳出 —— 那串文字放在標題列會跟大數字搶空間 */
+  /* 累計數據收成一顆 i 按鈕，點了才跳出。
+     用絕對定位掛在卡片上而不是排進標題列 —— 否則它會把標題列撐高，
+     跑步／騎車的大數字就會比英文／AI 低一截。 */
   .info{
-    width:24px;height:24px;border-radius:50%;flex:none;
-    border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);
-    color:var(--ink-45);font:600 11px/1 var(--mono);
+    position:absolute;top:60px;right:30px;
+    width:13px;height:13px;border-radius:50%;padding:0;
+    border:1px solid rgba(109,140,255,.7);background:transparent;
+    color:var(--blue-lt);font:600 8.5px/1 var(--mono);
     display:flex;align-items:center;justify-content:center;cursor:pointer;
-    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
     transition:background .15s,color .15s,border-color .15s;
   }
-  .info:hover{background:rgba(74,113,231,.32);border-color:rgba(120,152,255,.55);color:#fff;}
+  .info:hover{background:rgba(109,140,255,.2);border-color:var(--blue-lt);color:#fff;}
   .info:focus-visible{outline:2px solid var(--blue-lt);outline-offset:2px;}
   .dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex:none;}
   .dot.idle{background:rgba(234,231,226,.28);}
