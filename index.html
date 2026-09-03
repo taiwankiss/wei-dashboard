@@ -325,48 +325,11 @@
   }
   @keyframes wheelSpin{ to{transform:rotate(360deg);} }
 
-  /* 跑步 icon：兩段式腿部關節（大腿＋小腿），各自繞自己的軸心旋轉——
-     大腿繞髖部大幅擺動，小腿繞膝蓋疊加一層獨立、相位錯開的彎曲，
-     兩者疊加起來才會有「屈膝抬腿」的跑步感，而不是整條腿當一根硬棍甩。
-     兩條腿（-a / -b）用 animation-delay 錯開半個週期做交替跨步；
-     手臂幅度收小，跟對側的腿同相位擺動。身體（頭、軀幹）保持固定不動。 */
-  #cell-running .sic path:not(.arm),
-  #cell-running .sic circle{
-    animation:none;stroke-dashoffset:0;opacity:1;
-  }
-  #cell-running .sic .arm{ stroke-dashoffset:0;opacity:1; }
-
-  #cell-running .sic .thigh-a{ animation:thighSwing 2.6s ease-in-out infinite; }
-  #cell-running .sic .thigh-b{ animation:thighSwing 2.6s ease-in-out infinite; animation-delay:-1.3s; }
-  @keyframes thighSwing{
-    0%{transform:rotate(-44deg);}
-    50%{transform:rotate(44deg);}
-    100%{transform:rotate(-44deg);}
-  }
-  #cell-running .sic .shin-a{ animation:shinSwing 2.6s ease-in-out infinite; }
-  #cell-running .sic .shin-b{ animation:shinSwing 2.6s ease-in-out infinite; animation-delay:-1.3s; }
-  @keyframes shinSwing{
-    0%{transform:rotate(12deg);}
-    25%{transform:rotate(-34deg);}
-    50%{transform:rotate(6deg);}
-    75%{transform:rotate(-22deg);}
-    100%{transform:rotate(12deg);}
-  }
-  #cell-running .sic .arm-b{ animation:armSwing 2.6s ease-in-out infinite; }
-  #cell-running .sic .arm-a{ animation:armSwing 2.6s ease-in-out infinite; animation-delay:-1.3s; }
-  @keyframes armSwing{
-    0%{transform:rotate(-26deg);}
-    50%{transform:rotate(26deg);}
-    100%{transform:rotate(-26deg);}
-  }
   @media(prefers-reduced-motion:reduce){
     .sic polyline,.sic path,.sic circle{animation:none;stroke-dashoffset:0;opacity:.9;}
-    /* 上面那條全域規則的優先度不夠高，蓋不過底下這些用 #cell-xxx 限定
-       範圍的動畫規則（選擇器更精確），所以要在這裡各自關掉 */
+    /* 上面那條全域規則的優先度不夠高，蓋不過下面這條用 #cell-cycling
+       限定範圍的動畫規則（選擇器更精確），所以要在這裡額外關掉 */
     #cell-cycling .sic path.wheel{animation:none;}
-    #cell-running .sic .thigh-a,#cell-running .sic .thigh-b,
-    #cell-running .sic .shin-a,#cell-running .sic .shin-b,
-    #cell-running .sic .arm-a,#cell-running .sic .arm-b{animation:none;transform:none;}
   }
   .cell-top .right{display:flex;align-items:center;gap:9px;}
   .cell-top .ctrls{display:flex;align-items:center;gap:9px;}
@@ -635,24 +598,7 @@
       <section class="cell" id="cell-running">
         <div class="cell-top">
           <div class="eyebrow">
-            <svg class="sic" viewBox="0 0 16 16" aria-hidden="true">
-              <circle pathLength="100" cx="11.6" cy="3.2" r="1.7"></circle>
-              <path pathLength="100" d="M10.3 5.6L7.3 9.4"></path>
-              <path class="arm arm-a" pathLength="100" style="transform-origin:10.3px 5.6px" d="M10.3 5.6L12.5 5.1L13.9 3.3"></path>
-              <path class="arm arm-b" pathLength="100" style="transform-origin:10.3px 5.6px" d="M10.3 5.6L8.7 6.8L8 9"></path>
-              <g class="thigh thigh-a" style="transform-origin:7.3px 9.4px">
-                <path pathLength="100" d="M7.3 9.4L6 7.7"></path>
-                <g class="shin shin-a" style="transform-origin:6px 7.7px">
-                  <path pathLength="100" d="M6 7.7L5.6 10.7"></path>
-                </g>
-              </g>
-              <g class="thigh thigh-b" style="transform-origin:7.3px 9.4px">
-                <path pathLength="100" d="M7.3 9.4L9.7 10.9"></path>
-                <g class="shin shin-b" style="transform-origin:9.7px 10.9px">
-                  <path pathLength="100" d="M9.7 10.9L12.3 13.9"></path>
-                </g>
-              </g>
-            </svg>
+            <svg class="sic" viewBox="0 0 16 16" aria-hidden="true"><circle pathLength="100" cx="11.6" cy="3" r="1.75"></circle><path pathLength="100" d="M10.4 5.9L7.9 9"></path><path pathLength="100" d="M4.3 7.2L6.8 5.5L10.4 5.9L12.8 7.5L14.5 6.2"></path><path pathLength="100" d="M2 13.4L5.1 11.3L7.9 9L11.3 10.4L10.1 14.2"></path></svg>
             <span>RUN 跑步</span>
           </div>
           <div class="right">
