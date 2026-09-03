@@ -291,8 +291,8 @@
     .cell:nth-child(2)::after{display:block;}
   }
   .cell-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-  .cell-top .eyebrow{font:600 10px/1 var(--mono);letter-spacing:.16em;color:var(--ink-50);
-    display:flex;align-items:center;gap:9px;}
+  .cell-top .eyebrow{font:600 15px/1 var(--mono);letter-spacing:.16em;color:var(--ink-50);
+    display:flex;align-items:center;gap:11px;}
 
   /* 區塊標題的線條圖示：pathLength 讓每個圖形的線長統一成 100，
      不管形狀多複雜，同一組 dash 動畫就能畫得一樣勻 */
@@ -331,9 +331,23 @@
   }
   .info:hover{background:rgba(109,140,255,.2);border-color:var(--blue-lt);color:#fff;}
   .info:focus-visible{outline:2px solid var(--blue-lt);outline-offset:2px;}
-  .dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex:none;}
+  .dot{position:relative;width:6px;height:6px;border-radius:50%;background:var(--blue);flex:none;}
   .dot.idle{background:rgba(234,231,226,.28);}
   .dot.warn{background:var(--warn);}
+  /* 呼吸光暈：只在「有在動」的藍點上，灰／黃兩種狀態不裝，
+     不然閒置或警示也看起來像在正常運作，語意會混淆 */
+  .dot:not(.idle):not(.warn)::after{
+    content:"";position:absolute;inset:-7px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,rgba(88,124,255,.75),rgba(88,124,255,0) 68%);
+    animation:dotBreathe 3.4s ease-in-out infinite;
+  }
+  @keyframes dotBreathe{
+    0%,100%{opacity:.35;transform:scale(.72);}
+    50%{opacity:1;transform:scale(1.25);}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .dot::after{animation:none;opacity:.6;transform:none;}
+  }
 
   .plus{
     width:24px;height:24px;border-radius:7px;flex:none;
