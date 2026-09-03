@@ -18,17 +18,29 @@
     "durationSec": 2940,
     "elevationM": 0,
     "km": 8
+   },
+   {
+    "date": "2026-09-03",
+    "durationSec": 2260,
+    "elevationM": 0,
+    "km": 6
    }
   ],
-  "lastSynced": "2026-09-03T02:30:00.000Z",
+  "lastSynced": "2026-09-03T16:39:21+08:00",
   "manualEntries": [],
   "month": {
-   "count": 1,
-   "durationSec": 2940,
-   "km": 8
+   "count": 2,
+   "durationSec": 5200,
+   "km": 14
   },
   "source": "strava",
   "syncedRecent": [
+   {
+    "date": "2026-09-03",
+    "durationSec": 2260,
+    "km": 6,
+    "name": "跑步機跑步"
+   },
    {
     "date": "2026-09-01",
     "durationSec": 2940,
@@ -49,10 +61,10 @@
    }
   ],
   "totals": {
-   "count": 3,
-   "durationSec": 8310,
+   "count": 4,
+   "durationSec": 10570,
    "elevationM": 0,
-   "km": 20
+   "km": 26
   }
  },
  "cycling": {
@@ -94,7 +106,7 @@
     "km": 85.27
    }
   ],
-  "lastSynced": "2026-09-03T02:30:00.000Z",
+  "lastSynced": "2026-09-03T16:39:21+08:00",
   "manualEntries": [],
   "month": {
    "count": 0,
@@ -144,41 +156,31 @@
    },
    {
     "date": "2026-08-28",
-    "seconds": 16386,
+    "seconds": 16383,
     "sessions": 5
    },
    {
-    "date": "2026-08-29",
-    "seconds": 0,
-    "sessions": 0
-   },
-   {
     "date": "2026-08-30",
-    "seconds": 14141,
+    "seconds": 14140,
     "sessions": 2
    },
    {
-    "date": "2026-08-31",
-    "seconds": 0,
-    "sessions": 0
-   },
-   {
     "date": "2026-09-01",
-    "seconds": 25073,
+    "seconds": 24712,
     "sessions": 4
    },
    {
     "date": "2026-09-02",
-    "seconds": 10805,
+    "seconds": 10804,
     "sessions": 2
    },
    {
     "date": "2026-09-03",
-    "seconds": 15,
-    "sessions": 1
+    "seconds": 88,
+    "sessions": 2
    }
   ],
-  "lastSynced": "2026-09-03T02:30:00.000Z",
+  "lastSynced": "2026-09-03T16:39:21+08:00",
   "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時",
   "periodEnd": "2026-09-03",
   "periodStart": "2026-08-27",
@@ -191,7 +193,7 @@
    "Toeic 單字卡",
    "Dashboard Project"
   ],
-  "totalSeconds": 77220
+  "totalSeconds": 76927
  },
  "goals": {
   "enTargetScore": 850,
@@ -202,18 +204,18 @@
  },
  "weather": {
   "date": "2026-09-03",
-  "high": 31.7,
+  "high": 29.5,
   "hourly": [
    {
     "code": 51,
     "h": 0,
-    "pop": 57,
+    "pop": 56,
     "temp": 27.2
    },
    {
     "code": 51,
     "h": 1,
-    "pop": 47,
+    "pop": 45,
     "temp": 27.1
    },
    {
@@ -225,128 +227,128 @@
    {
     "code": 51,
     "h": 3,
-    "pop": 43,
+    "pop": 51,
     "temp": 26.5
    },
    {
     "code": 51,
     "h": 4,
-    "pop": 49,
+    "pop": 68,
     "temp": 26.1
    },
    {
     "code": 95,
     "h": 5,
-    "pop": 53,
+    "pop": 80,
     "temp": 25.6
    },
    {
     "code": 95,
     "h": 6,
-    "pop": 51,
+    "pop": 82,
     "temp": 25.4
    },
    {
     "code": 53,
     "h": 7,
-    "pop": 46,
+    "pop": 80,
     "temp": 26.1
    },
    {
     "code": 51,
     "h": 8,
-    "pop": 47,
-    "temp": 27.2
+    "pop": 78,
+    "temp": 26.2
    },
    {
-    "code": 3,
+    "code": 51,
     "h": 9,
-    "pop": 58,
-    "temp": 28.6
+    "pop": 79,
+    "temp": 27
    },
    {
     "code": 3,
     "h": 10,
-    "pop": 73,
-    "temp": 29.6
+    "pop": 81,
+    "temp": 28.7
    },
    {
-    "code": 3,
+    "code": 51,
     "h": 11,
-    "pop": 86,
-    "temp": 31.1
+    "pop": 84,
+    "temp": 29.3
    },
    {
-    "code": 3,
+    "code": 51,
     "h": 12,
-    "pop": 93,
-    "temp": 31.7
+    "pop": 87,
+    "temp": 29.5
    },
    {
-    "code": 95,
+    "code": 53,
     "h": 13,
-    "pop": 97,
-    "temp": 29.1
+    "pop": 91,
+    "temp": 28.7
    },
    {
-    "code": 96,
+    "code": 55,
     "h": 14,
-    "pop": 100,
-    "temp": 27.7
+    "pop": 94,
+    "temp": 27.3
    },
    {
-    "code": 95,
+    "code": 55,
     "h": 15,
-    "pop": 100,
-    "temp": 27.5
+    "pop": 95,
+    "temp": 27.4
    },
    {
-    "code": 95,
+    "code": 80,
     "h": 16,
-    "pop": 100,
-    "temp": 26.9
+    "pop": 94,
+    "temp": 26.8
    },
    {
     "code": 80,
     "h": 17,
-    "pop": 100,
+    "pop": 92,
+    "temp": 26.8
+   },
+   {
+    "code": 61,
+    "h": 18,
+    "pop": 88,
+    "temp": 27
+   },
+   {
+    "code": 80,
+    "h": 19,
+    "pop": 84,
+    "temp": 27
+   },
+   {
+    "code": 80,
+    "h": 20,
+    "pop": 80,
     "temp": 26.6
    },
    {
     "code": 80,
-    "h": 18,
-    "pop": 99,
-    "temp": 26.3
-   },
-   {
-    "code": 55,
-    "h": 19,
-    "pop": 97,
-    "temp": 26.3
-   },
-   {
-    "code": 53,
-    "h": 20,
-    "pop": 94,
-    "temp": 26.3
-   },
-   {
-    "code": 55,
     "h": 21,
-    "pop": 88,
-    "temp": 25.8
+    "pop": 79,
+    "temp": 26.1
    },
    {
-    "code": 95,
+    "code": 80,
     "h": 22,
-    "pop": 80,
-    "temp": 25.7
+    "pop": 78,
+    "temp": 26
    },
    {
-    "code": 81,
+    "code": 55,
     "h": 23,
-    "pop": 71,
-    "temp": 25.8
+    "pop": 75,
+    "temp": 25.9
    }
   ],
   "lat": 25.0143,
@@ -355,7 +357,7 @@
   "lon": 121.4672,
   "low": 25.4,
   "source": "open-meteo",
-  "updatedAt": "2026-09-03T12:30:00+08:00"
+  "updatedAt": "2026-09-03T16:39:21+08:00"
  },
- "generatedAt": "2026-09-03T16:32:15+08:00"
+ "generatedAt": "2026-09-03T16:40:35+08:00"
 }

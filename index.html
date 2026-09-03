@@ -1039,11 +1039,15 @@
   (async function initSample(){
     try{
       sample = await window.claude.use("sample");
-      if(sample){
-        var lim = await sample.limits().catch(function(){return null;});
-        sampleImages = !!(lim && lim.images);
-      }
     }catch(e){ sample = null; }
+    // limits() 只是拿來判斷能不能送圖，它失敗不代表 sample 不能用 ——
+    // 這裡要獨立 try，否則一個查詢失敗會把整個能力誤判成不存在
+    if(sample){
+      try{
+        var lim = await sample.limits();
+        sampleImages = !!(lim && lim.images);
+      }catch(e){ sampleImages = false; }
+    }
     // 不停用按鈕：即使能力偵測不到，也讓使用者選得了檔，
     // 真的不行時在流程裡給明確訊息，而不是一顆按了沒反應的死鈕。
     // 靜態托管版沒有 sample 能力，直接把上傳按鈕收起來，
@@ -1129,7 +1133,12 @@
   }
 
   async function handleUpload(kind, file){
-    if(!sample || !db){ showToast("此功能目前無法使用", false); return; }
+    // 分開判斷，訊息才說得出「為什麼」不能用
+    if(staticMode || (!db && !sample)){
+      showToast("公開版無法上傳，請改用 Claude 裡的 dashboard", false); return;
+    }
+    if(!sample){ showToast("此檢視未取得 Claude 使用授權，無法讀圖", false); return; }
+    if(!db){ showToast("讀不到資料庫，請重新整理頁面再試", false); return; }
     showToast("處理圖片中…", true);
     var img;
     try{
