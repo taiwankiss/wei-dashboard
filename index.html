@@ -1,3 +1,9 @@
+<!-- 這兩個 meta 標籤在 Artifact 環境是多餘的（平台會自動注入），
+     但這份檔案同時也原封不動地當成 GitHub Pages 的 index.html 使用，
+     那裡沒有任何外層 wrapper —— 少了 viewport，手機瀏覽器會以桌面寬度
+     渲染整頁再縮小塞進螢幕，兩欄版面、文字微小的症狀就是這樣來的。 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>動態總覽</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BBH+Bartle&family=Archivo:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
@@ -402,7 +408,7 @@
     border-bottom:1px solid var(--hair-soft);
     padding:6px 0 4px;                 /* 上方分隔線移除，間距減半 */
   }
-  .pair + .recent{margin-top:6px;}   /* 跟「平均配速」上方的 6px 對齊 */
+  .pair + .recent{margin-top:8px;}
   .pair .k{font:500 9px/1 var(--mono);letter-spacing:.1em;color:var(--ink-40);}
   .pair .v{font:600 14px/1 var(--mono);margin-top:7px;}
 
