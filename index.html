@@ -319,12 +319,16 @@
   .plus svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.4;}
   .plus[disabled]{opacity:.3;cursor:default;}
 
-  /* 累計那行跟大數字同一列，靠 flex-start 讓兩者上緣切齊 */
-  .headline{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;}
-  .headline .hl-main{min-width:0;}
-  .headline .tot{font:500 9px/1.4 var(--mono);letter-spacing:.02em;color:var(--ink-34);
-    text-align:right;flex:none;padding-top:5px;}
-  .headline .big{display:flex;align-items:baseline;gap:6px;}
+  /* 累計那行跟大數字同一列，靠 flex-start 讓兩者上緣切齊。
+     四欄版面的卡片只有約 235px 可用，所以：大數字絕不換行、
+     累計文字可以自己折行，真的塞不下時整段掉到下一行，而不是把數字擠爛。 */
+  .headline{display:flex;align-items:flex-start;justify-content:space-between;
+    gap:10px;flex-wrap:wrap;}
+  .headline .hl-main{flex:0 1 auto;min-width:0;}
+  .headline .tot{font:500 9px/1.45 var(--mono);letter-spacing:.02em;color:var(--ink-34);
+    text-align:right;flex:1 1 88px;min-width:0;padding-top:5px;}
+  .headline .big{display:flex;align-items:baseline;gap:6px;white-space:nowrap;}
+  .headline .goal{white-space:nowrap;}
   .headline .big .v{font:600 34px/1 var(--mono);letter-spacing:-.02em;}
   .headline .big .u{font:500 12px/1 var(--mono);color:var(--ink-45);}
   .headline .goal{font:400 11px/1.5 var(--cjk);color:var(--ink-45);margin-top:7px;}
@@ -446,6 +450,48 @@
 
   /* 檔案輸入不能用 display:none —— Safari／iOS 會擋掉對隱藏元素的程式化 click()，
      按鈕就會完全沒反應。改成移到畫面外但仍可互動。 */
+  /* ---------- 手動輸入表單 ---------- */
+  .modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+    padding:20px;background:rgba(6,8,11,.62);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+  .sheet{
+    width:100%;max-width:400px;max-height:88vh;overflow-y:auto;
+    border:1px solid rgba(255,255,255,.13);border-radius:16px;
+    background:linear-gradient(180deg,rgba(34,40,51,.96),rgba(15,18,24,.98));
+    box-shadow:0 30px 70px -20px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.12);
+    padding:22px 22px 18px;
+  }
+  .sheet h3{margin:0;font:600 14px/1.3 var(--cjk);color:var(--ink);}
+  .sheet .sub{margin:5px 0 0;font:400 11px/1.5 var(--cjk);color:var(--ink-45);}
+  .sheet-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;}
+  .sheet .x{width:26px;height:26px;flex:none;border-radius:7px;cursor:pointer;
+    border:1px solid var(--hair);background:var(--fill-04);color:var(--ink-45);
+    font:400 15px/1 var(--sans);display:flex;align-items:center;justify-content:center;}
+  .sheet .x:hover{background:rgba(255,255,255,.10);color:var(--ink);}
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+  .fields .f{display:flex;flex-direction:column;gap:5px;}
+  .fields .f.wide{grid-column:1 / -1;}
+  .fields label{font:500 9px/1 var(--mono);letter-spacing:.1em;color:var(--ink-40);}
+  .fields input{
+    font:500 13px/1 var(--mono);color:var(--ink);
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);
+    border-radius:8px;padding:9px 10px;width:100%;
+  }
+  .fields input::placeholder{color:var(--ink-34);font-family:var(--cjk);}
+  .fields input:focus{outline:none;border-color:rgba(120,152,255,.6);
+    background:rgba(255,255,255,.08);box-shadow:0 0 0 3px rgba(58,95,214,.18);}
+  .sheet-foot{display:flex;gap:9px;justify-content:flex-end;margin-top:18px;}
+  .sheet-foot .btn{font:500 12px/1 var(--cjk);padding:10px 17px;border-radius:9px;cursor:pointer;
+    border:1px solid transparent;transition:background .15s,border-color .15s;}
+  .sheet-foot .ghost{background:rgba(255,255,255,.06);border-color:var(--hair);color:var(--ink-70);}
+  .sheet-foot .ghost:hover{background:rgba(255,255,255,.11);color:var(--ink);}
+  .sheet-foot .primary{background:linear-gradient(180deg,#4a71e7,#3A5FD6);color:#fff;
+    border-color:rgba(120,152,255,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.2);}
+  .sheet-foot .primary:hover{filter:brightness(1.1);}
+  .sheet-foot .btn:focus-visible{outline:2px solid var(--blue-lt);outline-offset:2px;}
+  .shot-row{margin-top:14px;padding-top:13px;border-top:1px solid var(--hair-soft);}
+  .shot-row .btn{width:100%;justify-content:center;}
+
   input[type=file]{
     position:absolute;width:1px;height:1px;opacity:0;
     overflow:hidden;clip:rect(0 0 0 0);border:0;padding:0;margin:-1px;
@@ -571,6 +617,26 @@
 <input type="file" id="file-running" accept="image/*,.heic,.heif">
 <input type="file" id="file-cycling" accept="image/*,.heic,.heif">
 <input type="file" id="file-english" accept="image/*,.heic,.heif">
+
+<div class="modal" id="modal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="sheet-top">
+      <div>
+        <h3 id="modal-title">新增紀錄</h3>
+        <p class="sub" id="modal-sub"></p>
+      </div>
+      <button class="x" id="modal-close" aria-label="關閉">×</button>
+    </div>
+    <div class="fields" id="modal-fields"></div>
+    <div class="shot-row" id="modal-shot" hidden>
+      <button class="btn ghost" id="modal-shot-btn">或上傳截圖自動填入</button>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn ghost" id="modal-cancel">取消</button>
+      <button class="btn primary" id="modal-save">儲存</button>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast"><span class="sp" id="toast-sp"></span><span id="toast-tx"></span></div>
 
@@ -1033,6 +1099,10 @@
         }
       }
     }catch(e){ /* 沒有 data.json 就維持空狀態 */ }
+    // 靜態版是唯讀的，收起編輯入口
+    ["running","cycling","english"].forEach(function(k){
+      document.getElementById("add-"+k).hidden = true;
+    });
     renderAll();
   })();
 
@@ -1050,13 +1120,8 @@
     }
     // 不停用按鈕：即使能力偵測不到，也讓使用者選得了檔，
     // 真的不行時在流程裡給明確訊息，而不是一顆按了沒反應的死鈕。
-    // 靜態托管版沒有 sample 能力，直接把上傳按鈕收起來，
-    // 而不是留一顆按了只會跳錯誤的按鈕
-    if(!sample){
-      ["running","cycling","english"].forEach(function(k){
-        document.getElementById("add-"+k).hidden = true;
-      });
-    }
+    // 注意：不要因為沒有 sample 就藏起按鈕 —— 手動輸入表單不需要讀圖能力，
+    // 按鈕該不該在，取決於這個檢視能不能「寫入」（也就是有沒有 db）。
   })();
 
   // ---------- 圖片前處理 ----------
@@ -1161,7 +1226,16 @@
       img = null;   // 數字已經取出來了，圖片到此為止，不留任何副本
     }
     hideToast();
+    closeForm();
+    await saveEntry(kind, data, "screenshot");
+  }
+
+  // 手動表單與截圖擷取共用同一段寫入邏輯，兩條路徑產生的資料形狀一致
+  async function saveEntry(kind, data, source){
+    if(!db){ showToast("讀不到資料庫，請重新整理頁面再試", false); return; }
     var today = tpeToday();
+    var src = source || "manual";
+    var noteFallback = src==="screenshot" ? "截圖擷取" : "手動輸入";
     try{
       if(kind==="english"){
         var ecur = state.english || {history:[]};
@@ -1175,7 +1249,7 @@
           goal_percent: typeof data.goal_percent==="number"? data.goal_percent:null,
           questions_count: typeof data.questions_count==="number"? data.questions_count:null,
           vocab_count: typeof data.vocab_count==="number"? data.vocab_count:null,
-          note: data.note || "手動上傳", source:"screenshot", addedAt:new Date().toISOString()
+          note: data.note || noteFallback, source:src, addedAt:new Date().toISOString()
         };
         var hist = (ecur.history||[]).slice();
         hist.push(entry);
@@ -1191,7 +1265,7 @@
           distance_km: typeof data.distance_km==="number"? data.distance_km:null,
           duration_sec: typeof data.duration_sec==="number"? data.duration_sec:null,
           elevation_gain_m: typeof data.elevation_gain_m==="number"? data.elevation_gain_m:null,
-          note: data.note || "手動上傳", source:"screenshot"
+          note: data.note || noteFallback, source:src
         });
         if(manual.length>20) manual = manual.slice(manual.length-20);
         if(cur) await db.doc("stats/"+kind).update({manualEntries:manual});
@@ -1203,20 +1277,103 @@
     }
   }
 
+  // ---------- 手動輸入 ----------
+  // 讀圖能力並非每個檢視都有，手動輸入才是隨時都能用的路徑。
+  var FORMS = {
+    running:{title:"新增跑步紀錄", sub:"這筆會疊加到 Strava 同步的數字上", fields:[
+      {k:"date",label:"日期",type:"date",wide:false},
+      {k:"distance_km",label:"距離 (KM)",type:"number",step:"0.01",ph:"6"},
+      {k:"duration_min",label:"時間 (分鐘)",type:"number",step:"1",ph:"38"},
+      {k:"note",label:"備註",type:"text",ph:"跑步機 6 公里",wide:true}
+    ]},
+    cycling:{title:"新增騎車紀錄", sub:"這筆會疊加到 Strava 同步的數字上", fields:[
+      {k:"date",label:"日期",type:"date"},
+      {k:"distance_km",label:"距離 (KM)",type:"number",step:"0.01",ph:"45.5"},
+      {k:"duration_min",label:"時間 (分鐘)",type:"number",step:"1",ph:"125"},
+      {k:"elevation_gain_m",label:"爬升 (M)",type:"number",step:"1",ph:"600"},
+      {k:"note",label:"備註",type:"text",ph:"河濱來回",wide:true}
+    ]},
+    english:{title:"更新英文學習紀錄", sub:"填得到的就填，空白的欄位不會顯示", fields:[
+      {k:"date",label:"日期",type:"date"},
+      {k:"toeic_predicted",label:"多益預測",type:"number",ph:"800"},
+      {k:"toeic_lc",label:"LC",type:"number",ph:"420"},
+      {k:"toeic_rc",label:"RC",type:"number",ph:"380"},
+      {k:"study_time_min",label:"學習時間 (分鐘)",type:"number",ph:"66"},
+      {k:"questions_count",label:"題目數",type:"number",ph:"41"},
+      {k:"vocab_count",label:"詞彙數",type:"number",ph:"10"},
+      {k:"note",label:"備註",type:"text",ph:"每日學習紀錄",wide:true}
+    ]}
+  };
+
+  var modal = document.getElementById("modal"), modalKind = null;
+
+  function openForm(kind){
+    modalKind = kind;
+    var cfg = FORMS[kind];
+    document.getElementById("modal-title").textContent = cfg.title;
+    document.getElementById("modal-sub").textContent = cfg.sub;
+    document.getElementById("modal-fields").innerHTML = cfg.fields.map(function(f){
+      return '<div class="f'+(f.wide?" wide":"")+'">'+
+        '<label for="fld-'+esc(f.k)+'">'+esc(f.label)+'</label>'+
+        '<input id="fld-'+esc(f.k)+'" type="'+esc(f.type)+'"'+
+        (f.step? ' step="'+esc(f.step)+'"':'')+
+        (f.ph? ' placeholder="'+esc(f.ph)+'"':'')+
+        (f.type==="date"? ' value="'+esc(tpeToday())+'"':'')+'>'+
+      '</div>';
+    }).join("");
+    // 只有這個檢視真的能送圖時，才提供截圖自動填入
+    document.getElementById("modal-shot").hidden = !(sample && sampleImages && db);
+    modal.hidden = false;
+    var first = modal.querySelector("input");
+    if(first) first.focus();
+  }
+  function closeForm(){ modal.hidden = true; modalKind = null; }
+
+  function readForm(){
+    var out = {};
+    FORMS[modalKind].fields.forEach(function(f){
+      var el = document.getElementById("fld-"+f.k);
+      if(!el) return;
+      var v = el.value.trim();
+      if(v==="") { out[f.k] = null; return; }
+      out[f.k] = (f.type==="number") ? (isFinite(Number(v))? Number(v) : null) : v;
+    });
+    // 表單用分鐘輸入，資料庫存秒
+    if(out.duration_min!=null){ out.duration_sec = Math.round(out.duration_min*60); }
+    if(out.study_time_min!=null){ out.study_time_sec = Math.round(out.study_time_min*60); }
+    return out;
+  }
+
+  document.getElementById("modal-close").addEventListener("click", closeForm);
+  document.getElementById("modal-cancel").addEventListener("click", closeForm);
+  modal.addEventListener("click", function(e){ if(e.target===modal) closeForm(); });
+  document.addEventListener("keydown", function(e){
+    if(e.key==="Escape" && !modal.hidden) closeForm();
+  });
+  document.getElementById("modal-save").addEventListener("click", async function(){
+    var kind = modalKind, data = readForm();
+    var hasValue = Object.keys(data).some(function(k){
+      return k!=="date" && data[k]!=null && data[k]!=="";
+    });
+    if(!hasValue){ showToast("至少填一個數值再儲存", false); return; }
+    closeForm();
+    await saveEntry(kind, data, "manual");
+  });
+  document.getElementById("modal-shot-btn").addEventListener("click", function(){
+    var inp = document.getElementById("file-"+modalKind);
+    inp.value = ""; inp.click();
+  });
+
   ["running","cycling","english"].forEach(function(kind){
     var btn = document.getElementById("add-"+kind), inp = document.getElementById("file-"+kind);
     // 開檔案選擇器之前就先擋掉不可能成功的情況，
     // 不要讓使用者挑完照片才被告知失敗
     btn.addEventListener("click", function(){
       if(btn.disabled) return;
-      if(staticMode || (!db && !sample)){
-        showToast("公開版無法上傳，請改用 Claude 裡的 dashboard", false); return;
+      if(staticMode || !db){
+        showToast("公開版無法編輯，請改用 Claude 裡的 dashboard", false); return;
       }
-      if(!sample){ showToast("此檢視未取得 Claude 使用授權，無法讀圖", false); return; }
-      if(!sampleImages){
-        showToast("這個檢視不支援傳送圖片 — 請改用瀏覽器開啟 claude.ai 的版本", false); return;
-      }
-      inp.value=""; inp.click();
+      openForm(kind);
     });
     inp.addEventListener("change", function(){
       var f = inp.files && inp.files[0];
