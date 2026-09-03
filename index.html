@@ -1,6 +1,6 @@
 <title>動態總覽</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BBH+Bartle&family=Archivo:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BBH+Bartle&family=Archivo:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
 <style>
   :root{
     --ink:#eae7e2;
@@ -94,6 +94,15 @@
     min-height:100vh;min-height:100dvh;
     display:flex;flex-direction:column;justify-content:center;
   }
+
+  /* 站名獨立在玻璃面板外，18px 的 1.5 倍 = 27px */
+  .page-title{
+    text-align:center;margin:0 0 20px;
+    font:400 27px/1.2 "BBH Bartle","BBH Sans Bartle",Georgia,serif;
+    letter-spacing:.02em;color:var(--ink);
+    text-shadow:0 2px 24px rgba(58,95,214,.35);
+  }
+  @media(max-width:600px){ .page-title{font-size:19.5px;} }
 
   /* ---------- the glass pane ---------- */
   .frame{
@@ -197,8 +206,9 @@
     font-variant-numeric:tabular-nums;}
   .band .stamp .wx{color:var(--ink-70);letter-spacing:.08em;cursor:default;}
   .band .stamp .wx.stale{opacity:.45;}
-  .band h1{font:400 18px/1.2 "BBH Bartle","BBH Sans Bartle",Georgia,serif;
-    letter-spacing:.02em;margin:0;color:var(--ink);}
+  /* slogan 取代了原本站在這裡的標題，字重拉到 900 撐住這個位置的視覺份量 */
+  .band .slogan{font:900 18px/1.35 "Noto Sans TC",sans-serif;
+    letter-spacing:.01em;margin:0;color:var(--ink);text-wrap:balance;}
   .band .modes{display:flex;gap:8px;flex-wrap:wrap;}
   .mode{
     padding:7px 13px;border-radius:8px;background:rgba(255,255,255,.07);
@@ -512,10 +522,6 @@
     .band{flex-wrap:wrap;}
     .feed{width:100%;}
   }
-  /* BBH Bartle 字面很寬，窄螢幕上要收小才不會撐破 */
-  @media(max-width:600px){
-    .band h1{font-size:13px;}
-  }
 </style>
 
 <div class="orbs" aria-hidden="true">
@@ -526,13 +532,14 @@
 <div class="grain" aria-hidden="true"></div>
 
 <div class="shell">
+  <h1 class="page-title">WEI'S DASHBOARD</h1>
   <div class="frame">
 
     <div class="band">
       <div class="rule"></div>
       <div class="who">
         <div class="stamp" id="stamp">—</div>
-        <h1>Wei 's Dashboard</h1>
+        <p class="slogan">日拱一卒，功不唐捐</p>
         <div class="modes">
           <button class="mode" id="mode-7" aria-pressed="true">近 7 天</button>
           <button class="mode" id="mode-30" aria-pressed="false">近 30 天</button>
