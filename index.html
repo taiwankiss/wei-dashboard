@@ -1273,7 +1273,10 @@
         showToast("已新增手動紀錄", false);
       }
     }catch(e){
-      showToast("儲存失敗，請再試一次", false);
+      // 把真正的錯誤碼顯示出來，不要用一句「請再試一次」把線索蓋掉
+      var code = (e && (e.code || e.message)) ? String(e.code || e.message) : "未知錯誤";
+      showToast("儲存失敗：" + code, false);
+      try{ console.error("[dashboard] saveEntry failed", kind, e); }catch(_){}
     }
   }
 
@@ -1324,6 +1327,13 @@
     // 只有這個檢視真的能送圖時，才提供截圖自動填入
     document.getElementById("modal-shot").hidden = !(sample && sampleImages && db);
     modal.hidden = false;
+    // 在欄位裡按 Enter 就送出 —— 這些 input 不在 <form> 裡，
+    // 沒有這段的話按 Enter 什麼都不會發生，很容易誤以為已經存好了
+    modal.querySelectorAll("#modal-fields input").forEach(function(el){
+      el.addEventListener("keydown", function(e){
+        if(e.key==="Enter"){ e.preventDefault(); document.getElementById("modal-save").click(); }
+      });
+    });
     var first = modal.querySelector("input");
     if(first) first.focus();
   }
