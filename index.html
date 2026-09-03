@@ -274,9 +274,9 @@
     .cell::before{display:none;}
     .cell:nth-child(2)::after{display:block;}
   }
-  .cell-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .cell-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
   .cell-top .eyebrow{font:600 10px/1 var(--mono);letter-spacing:.16em;color:var(--ink-50);
-    display:flex;align-items:center;gap:9px;}
+    display:flex;align-items:center;gap:9px;padding-top:4px;}
 
   /* 區塊標題的線條圖示：pathLength 讓每個圖形的線長統一成 100，
      不管形狀多複雜，同一組 dash 動畫就能畫得一樣勻 */
@@ -299,8 +299,21 @@
   @media(prefers-reduced-motion:reduce){
     .sic polyline,.sic path,.sic circle{animation:none;stroke-dashoffset:0;opacity:.9;}
   }
-  .cell-top .right{display:flex;align-items:center;gap:9px;}
+  .cell-top .right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;}
   .cell-top .ctrls{display:flex;align-items:center;gap:9px;}
+
+  /* 累計數據收成一顆 i 按鈕，點了才跳出 —— 那串文字放在標題列會跟大數字搶空間 */
+  .info{
+    width:24px;height:24px;border-radius:50%;flex:none;
+    border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);
+    color:var(--ink-45);font:600 11px/1 var(--mono);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+    transition:background .15s,color .15s,border-color .15s;
+  }
+  .info:hover{background:rgba(74,113,231,.32);border-color:rgba(120,152,255,.55);color:#fff;}
+  .info:focus-visible{outline:2px solid var(--blue-lt);outline-offset:2px;}
   .dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex:none;}
   .dot.idle{background:rgba(234,231,226,.28);}
   .dot.warn{background:var(--warn);}
@@ -319,14 +332,8 @@
   .plus svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.4;}
   .plus[disabled]{opacity:.3;cursor:default;}
 
-  /* 累計那行跟大數字同一列，靠 flex-start 讓兩者上緣切齊。
-     四欄版面的卡片只有約 235px 可用，所以：大數字絕不換行、
-     累計文字可以自己折行，真的塞不下時整段掉到下一行，而不是把數字擠爛。 */
-  .headline{display:flex;align-items:flex-start;justify-content:space-between;
-    gap:10px;flex-wrap:wrap;}
-  .headline .hl-main{flex:0 1 auto;min-width:0;}
-  .headline .tot{font:500 9px/1.45 var(--mono);letter-spacing:.02em;color:var(--ink-34);
-    text-align:right;flex:1 1 88px;min-width:0;padding-top:5px;}
+  .headline{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+  .headline .hl-main{min-width:0;}
   .headline .big{display:flex;align-items:baseline;gap:6px;white-space:nowrap;}
   .headline .goal{white-space:nowrap;}
   .headline .big .v{font:600 34px/1 var(--mono);letter-spacing:-.02em;}
@@ -380,13 +387,12 @@
 
   /* 上下線改掛在各欄位上，中間的 gap 自然把線斷開成左右兩段 */
   .pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-  .pair{margin-top:12px;}
+  .pair{margin-top:6px;}
   .pair > div{
-    border-top:1px solid var(--hair-soft);
     border-bottom:1px solid var(--hair-soft);
-    padding:12px 0 8px;          /* 數字到底線 8px */
+    padding:6px 0 4px;                 /* 上方分隔線移除，間距減半 */
   }
-  .pair + .recent{margin-top:8px;}   /* 底線到近期活動 8px —— 與上面對稱 */
+  .pair + .recent{margin-top:4px;}
   .pair .k{font:500 9px/1 var(--mono);letter-spacing:.1em;color:var(--ink-40);}
   .pair .v{font:600 14px/1 var(--mono);margin-top:7px;}
 
@@ -553,6 +559,7 @@
               </button>
               <span class="dot idle" id="dot-running"></span>
             </div>
+            <button class="info" id="info-running" title="累計數據" aria-label="累計數據">i</button>
           </div>
         </div>
         <div id="body-running"><div class="skel" style="height:190px"></div></div>
@@ -572,6 +579,7 @@
               </button>
               <span class="dot idle" id="dot-cycling"></span>
             </div>
+            <button class="info" id="info-cycling" title="累計數據" aria-label="累計數據">i</button>
           </div>
         </div>
         <div id="body-cycling"><div class="skel" style="height:190px"></div></div>
@@ -646,7 +654,8 @@
 
   var WINDOW_DAYS = 7;
   var state = { running:null, cycling:null, ai:null, english:null, goals:null, weather:null };
-  var sel = { running:null, cycling:null, ai:null };
+  var sel = { running:null, cycling:null, ai:null, english:null };
+  var totals = { running:"", cycling:"" };   // i 按鈕帶出的累計文字
   var db = null, sample = null, sampleImages = false, staticMode = false;
 
   // ---------- date / format helpers ----------
@@ -887,7 +896,8 @@
         '<span class="m'+(r.tag?' tag':'')+'">'+esc(r.met)+'</span></div>';
     });
 
-    var totText = (kind==="cycling"
+    // 累計文字改由標題列的 i 按鈕帶出，不再佔用大數字那一列
+    totals[kind] = (kind==="cycling"
       ? '累計 '+fmtKm(t.km||0)+' km · 爬升 '+Math.round(t.elevationM||0)+' m'
       : '累計 '+fmtKm(t.km||0)+' km · '+(t.count||0)+' 次')+' · 8/1 起';
 
@@ -898,7 +908,6 @@
           '<span class="u">km / '+WINDOW_DAYS+'天</span></div>'+
           goalLine(winKm, goal, 'km')+
         '</div>'+
-        '<div class="tot">'+esc(totText)+'</div>'+
       '</div>'+
       barsHtml(kind, days, function(d){return d.km;})+
       readoutHtml(inner, kind==="cycling" ? "點任一天，看當日里程與爬升" : "點任一天，看當日里程與時間")+
@@ -964,10 +973,10 @@
           '<div class="big"><span class="v">—</span>'+
           '<span class="u">多益預測</span></div>'+
           '<div class="goal">'+(tgt!=null? '目標 '+num(tgt)+' 分 · 尚未上傳紀錄' : '尚未上傳學習紀錄')+'</div></div></div>'+
-        readoutHtml(null,"點右上角 + 上傳第一張截圖，數字會自動讀出來")+
+        readoutHtml(null,"點右上角 + 新增第一筆學習紀錄")+
         '<div class="pair">'+
-          '<div><div class="k">學習時間</div><div class="v">—</div></div>'+
-          '<div><div class="k">題目數</div><div class="v">—</div></div>'+
+          '<div><div class="k">LC 聽力</div><div class="v">—</div></div>'+
+          '<div><div class="k">RC 閱讀</div><div class="v">—</div></div>'+
         '</div>'+
         '<div class="recent"><div class="k">近期測驗</div><div class="none">尚無紀錄</div></div>'+
         '<div class="foot">手動上傳截圖 · 由 Claude 讀圖擷取</div>';
@@ -976,6 +985,23 @@
     }
     var goal = (state.goals||{}).enTargetScore || latest.goal_score;
     var score = latest.toeic_predicted;
+
+    // 逐日學習時間長條圖 —— 與跑步／騎車同一套視覺語彙
+    var wanted = lastDays(WINDOW_DAYS), byDate = {};
+    (doc.history||[]).forEach(function(h){
+      if(!h.date) return;
+      var t = byDate[h.date] || (byDate[h.date] = {date:h.date, seconds:0, questions:0, vocab:0});
+      t.seconds += h.study_time_sec||0;
+      t.questions += h.questions_count||0;
+      t.vocab += h.vocab_count||0;
+    });
+    var days = wanted.map(function(dt){
+      return byDate[dt] || {date:dt, seconds:0, questions:0, vocab:0};
+    });
+    var s = sel.english ? days.filter(function(d){return d.date===sel.english;})[0] : null;
+    var inner = s ? '<span class="d">'+esc(md(s.date))+'</span>'+
+      '<span class="m">'+fmtHM(s.seconds||0)+'</span>'+
+      '<span class="x">'+num(s.questions||0)+' 題 · '+num(s.vocab||0)+' 詞</span>' : null;
 
     body.innerHTML =
       '<div class="headline"><div class="hl-main">'+
@@ -986,13 +1012,11 @@
               : '<em>已達標 +'+num(score-goal)+'</em> 分')+'</div>'
           : '<div class="goal">'+(latest.study_time_sec!=null? '學習時間 '+fmtHM(latest.study_time_sec) : '目標未設定')+'</div>')+
       '</div></div>'+
-      readoutHtml(
-        '<span class="d">'+esc(latest.date||"")+'</span>'+
-        (latest.toeic_lc!=null? '<span class="m">LC '+num(latest.toeic_lc)+'</span>':'')+
-        (latest.toeic_rc!=null? '<span class="x">RC '+num(latest.toeic_rc)+'</span>':''), "最新一筆")+
+      barsHtml("english", days, function(d){return d.seconds;})+
+      readoutHtml(inner, "點任一天，看當日學習時間與題數")+
       '<div class="pair">'+
-        '<div><div class="k">學習時間</div><div class="v">'+(latest.study_time_sec!=null? fmtHM(latest.study_time_sec):'—')+'</div></div>'+
-        '<div><div class="k">題目數</div><div class="v">'+(latest.questions_count!=null? num(latest.questions_count):'—')+'</div></div>'+
+        '<div><div class="k">LC 聽力</div><div class="v">'+(latest.toeic_lc!=null? num(latest.toeic_lc):'—')+'</div></div>'+
+        '<div><div class="k">RC 閱讀</div><div class="v">'+(latest.toeic_rc!=null? num(latest.toeic_rc):'—')+'</div></div>'+
       '</div>'+
       '<div class="recent"><div class="k">近期測驗</div>'+
         (doc.history||[]).slice(-3).reverse().map(function(h,i){
@@ -1000,7 +1024,7 @@
             '<span class="m">'+(h.toeic_predicted!=null? num(h.toeic_predicted)+' 分'
               : (h.vocab_count!=null? num(h.vocab_count)+' 詞':'—'))+'</span></div>';
         }).join("")+'</div>'+
-      '<div class="foot">手動上傳截圖 · 由 Claude 讀圖擷取</div>';
+      '<div class="foot">手動維護 · 資料來源 Santa</div>';
 
     dot.className = "dot";
   }
@@ -1053,12 +1077,21 @@
     renderAll();
   });
 
+  // 累計資訊：點 i 按鈕才跳出
+  ["running","cycling"].forEach(function(kind){
+    var b = document.getElementById("info-"+kind);
+    if(!b) return;
+    b.addEventListener("click", function(){
+      showToast((kind==="running"?"跑步 · ":"騎車 · ")+(totals[kind]||"尚無累計資料"), false);
+    });
+  });
+
   // window toggle
   function setWindow(n){
     WINDOW_DAYS = n;
     document.getElementById("mode-7").setAttribute("aria-pressed", n===7 ? "true":"false");
     document.getElementById("mode-30").setAttribute("aria-pressed", n===30 ? "true":"false");
-    sel.running = sel.cycling = sel.ai = null;
+    sel.running = sel.cycling = sel.ai = sel.english = null;
     renderAll();
   }
   document.getElementById("mode-7").addEventListener("click", function(){ setWindow(7); });
