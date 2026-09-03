@@ -3,7 +3,7 @@
 個人生活儀表板,一頁看完跑步、騎車、AI 學習、英文學習四個領域。
 設計出自 Claude Design 畫布的「指標網格」版本,深色玻璃質感 + 流動光暈。
 
-**線上版本**:https://claude.ai/code/artifact/70e2e532-beb4-4dd1-9a26-ed444ca4fd64
+**線上版本**:https://taiwankiss.github.io/wei-dashboard/
 
 ## 四個區塊
 
@@ -16,14 +16,17 @@
 
 每張卡片都有 7 天長條圖,點任一天可看當日明細;右上的「近 7 天 / 近 30 天」可切換統計區間。
 
-## 執行環境
+## 兩種執行模式
 
-這一頁是為 **Claude Artifact** 環境寫的,依賴兩個 runtime capability:
+同一份 `index.html` 會依所在環境自動切換資料來源:
 
-- `db` — 讀取儀表板資料(`stats/running`、`stats/cycling`、`stats/ai`、`stats/english`、`stats/goals`、`stats/weather`)
-- `sample` — 「+」按鈕上傳截圖後,由 Claude 讀圖擷取數值
+| | Claude Artifact | 靜態托管(GitHub Pages) |
+|---|---|---|
+| 資料來源 | `db` capability,即時訂閱 | 同目錄的 `data.json` |
+| 更新頻率 | 即時 | 每日 00:00 由排程重新產生並 push |
+| 「+」上傳截圖 | 可用(`sample` capability 讀圖) | 按鈕自動隱藏 |
 
-**直接用瀏覽器開啟這個 `index.html` 只會看到版面與空狀態**,因為 `window.claude` 不存在,取不到資料。視覺、動畫、排版都能正常預覽。
+判斷方式是 `claude.use("db")` 是否回傳 `null` —— 在一般網頁環境 `window.claude` 根本不存在,就會走 `data.json` 這條路。
 
 ## 資料流
 

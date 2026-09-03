@@ -579,7 +579,7 @@
   var WINDOW_DAYS = 7;
   var state = { running:null, cycling:null, ai:null, english:null, goals:null, weather:null };
   var sel = { running:null, cycling:null, ai:null };
-  var db = null, sample = null, sampleImages = false;
+  var db = null, sample = null, sampleImages = false, staticMode = false;
 
   // ---------- date / format helpers ----------
   function tpeToday(){
@@ -616,6 +616,8 @@
       return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
     });
   }
+  // 資料庫／JSON 裡的值不保證是數字，插進 HTML 前一律強制轉成數值字面值
+  function num(v){ var n = Number(v); return isFinite(n) ? String(n) : "—"; }
 
   // WMO 天氣代碼 → 中文說明與圖示
   var WMO = {
@@ -704,9 +706,9 @@
       var on = sel[kind]===d.date;
       // 每根柱子錯開相位，深淺變化就會像波浪一根接一根掃過去
       var delay = (-(i*0.55)).toFixed(2);
-      return '<button class="b'+(v>0?' has':'')+'" data-kind="'+kind+'" data-date="'+d.date+'" '+
-        'aria-pressed="'+(on?"true":"false")+'" style="height:'+h+'px;animation-delay:'+delay+'s" '+
-        'title="'+md(d.date)+'" aria-label="'+md(d.date)+'"></button>';
+      return '<button class="b'+(v>0?' has':'')+'" data-kind="'+esc(kind)+'" data-date="'+esc(d.date)+'" '+
+        'aria-pressed="'+(on?"true":"false")+'" style="height:'+num(h)+'px;animation-delay:'+num(delay)+'s" '+
+        'title="'+esc(md(d.date))+'" aria-label="'+esc(md(d.date))+'"></button>';
     }).join("")+'</div>';
   }
   // 列前的藍色線條圖示，每列錯開相位，畫線的動作就會一列接一列跑
@@ -779,7 +781,7 @@
     var s = sel[kind] ? days.filter(function(d){return d.date===sel[kind];})[0] : null;
     var inner = null;
     if(s){
-      inner = '<span class="d">'+md(s.date)+'</span>'+
+      inner = '<span class="d">'+esc(md(s.date))+'</span>'+
         '<span class="m">'+fmtKm(s.km)+' km</span>'+
         (kind==="cycling"
           ? '<span class="x">↑ '+Math.round(s.elevationM||0)+' m</span>'
@@ -856,9 +858,9 @@
     var winSec = days.reduce(function(a,d){return a+(d.seconds||0);},0);
 
     var s = sel.ai ? days.filter(function(d){return d.date===sel.ai;})[0] : null;
-    var inner = s ? '<span class="d">'+md(s.date)+'</span>'+
+    var inner = s ? '<span class="d">'+esc(md(s.date))+'</span>'+
       '<span class="m">'+fmtHM(s.seconds||0)+'</span>'+
-      '<span class="x">'+(s.sessions||0)+' 個 session</span>' : null;
+      '<span class="x">'+num(s.sessions||0)+' 個 session</span>' : null;
 
     body.innerHTML =
       '<div class="headline"><div class="hl-main">'+
@@ -868,7 +870,7 @@
       barsHtml("ai", days, function(d){return d.seconds;})+
       readoutHtml(inner,"點任一天，看當日使用時數")+
       '<div class="pair">'+
-        '<div><div class="k">目前專案</div><div class="v">'+(doc.projectCount||0)+'</div></div>'+
+        '<div><div class="k">目前專案</div><div class="v">'+num(doc.projectCount||0)+'</div></div>'+
         '<div><div class="k">累計時數</div><div class="v">'+fmtHours(doc.totalSeconds||0)+' h</div></div>'+
       '</div>'+
       '<div class="recent"><div class="k">專案</div>'+
@@ -893,7 +895,7 @@
         '<div class="headline"><div class="hl-main">'+
           '<div class="big"><span class="v">—</span>'+
           '<span class="u">多益預測</span></div>'+
-          '<div class="goal">'+(tgt!=null? '目標 '+tgt+' 分 · 尚未上傳紀錄' : '尚未上傳學習紀錄')+'</div></div></div>'+
+          '<div class="goal">'+(tgt!=null? '目標 '+num(tgt)+' 分 · 尚未上傳紀錄' : '尚未上傳學習紀錄')+'</div></div></div>'+
         readoutHtml(null,"點右上角 + 上傳第一張截圖，數字會自動讀出來")+
         '<div class="pair">'+
           '<div><div class="k">學習時間</div><div class="v">—</div></div>'+
@@ -909,26 +911,26 @@
 
     body.innerHTML =
       '<div class="headline"><div class="hl-main">'+
-        '<div class="big"><span class="v">'+(score!=null? score : '—')+'</span>'+
+        '<div class="big"><span class="v">'+(score!=null? num(score) : '—')+'</span>'+
         '<span class="u">多益預測</span></div>'+
         (goal!=null && score!=null
-          ? '<div class="goal">目標 '+goal+' · '+(goal-score>0? '差 <em>'+(goal-score)+'</em> 分'
-              : '<em>已達標 +'+(score-goal)+'</em> 分')+'</div>'
+          ? '<div class="goal">目標 '+num(goal)+' · '+(goal-score>0? '差 <em>'+num(goal-score)+'</em> 分'
+              : '<em>已達標 +'+num(score-goal)+'</em> 分')+'</div>'
           : '<div class="goal">'+(latest.study_time_sec!=null? '學習時間 '+fmtHM(latest.study_time_sec) : '目標未設定')+'</div>')+
       '</div></div>'+
       readoutHtml(
         '<span class="d">'+esc(latest.date||"")+'</span>'+
-        (latest.toeic_lc!=null? '<span class="m">LC '+latest.toeic_lc+'</span>':'')+
-        (latest.toeic_rc!=null? '<span class="x">RC '+latest.toeic_rc+'</span>':''), "最新一筆")+
+        (latest.toeic_lc!=null? '<span class="m">LC '+num(latest.toeic_lc)+'</span>':'')+
+        (latest.toeic_rc!=null? '<span class="x">RC '+num(latest.toeic_rc)+'</span>':''), "最新一筆")+
       '<div class="pair">'+
         '<div><div class="k">學習時間</div><div class="v">'+(latest.study_time_sec!=null? fmtHM(latest.study_time_sec):'—')+'</div></div>'+
-        '<div><div class="k">題目數</div><div class="v">'+(latest.questions_count!=null? latest.questions_count:'—')+'</div></div>'+
+        '<div><div class="k">題目數</div><div class="v">'+(latest.questions_count!=null? num(latest.questions_count):'—')+'</div></div>'+
       '</div>'+
       '<div class="recent"><div class="k">近期測驗</div>'+
         (doc.history||[]).slice(-3).reverse().map(function(h,i){
           return '<div class="r">'+rowIcon(i)+'<span class="n">'+esc(h.note||h.date||"紀錄")+'</span>'+
-            '<span class="m">'+(h.toeic_predicted!=null? h.toeic_predicted+' 分'
-              : (h.vocab_count!=null? h.vocab_count+' 詞':'—'))+'</span></div>';
+            '<span class="m">'+(h.toeic_predicted!=null? num(h.toeic_predicted)+' 分'
+              : (h.vocab_count!=null? num(h.vocab_count)+' 詞':'—'))+'</span></div>';
         }).join("")+'</div>'+
       '<div class="foot">手動上傳截圖 · 由 Claude 讀圖擷取</div>';
 
@@ -959,7 +961,7 @@
     el.innerHTML = items.length
       ? items.map(function(it,i){
           var cls = (i===0?" lead":"") + (i===items.length-1 && items.length>1 ? " faded":"");
-          return '<div class="fr'+cls+'"><span class="d">'+md(it.date)+'</span>'+
+          return '<div class="fr'+cls+'"><span class="d">'+esc(md(it.date))+'</span>'+
             '<span class="t">'+esc(it.text)+'</span></div>';
         }).join("")
       : '<div class="fr"><span class="t">尚無動態</span></div>';
@@ -995,16 +997,41 @@
   document.getElementById("mode-30").addEventListener("click", function(){ setWindow(30); });
 
   // ---------- capabilities ----------
-  (async function initDb(){
+  // 兩種執行環境用同一份檔案：
+  //   在 Claude artifact 裡 → 走 db，資料即時、可上傳截圖
+  //   當成一般網頁托管時 → 沒有 window.claude，改讀同目錄的 data.json（每日快照）
+  (async function initData(){
     try{ db = await window.claude.use("db"); }catch(e){ db = null; }
-    if(!db){ renderAll(); return; }
-    [["running","stats/running"],["cycling","stats/cycling"],["ai","stats/ai"],
-     ["english","stats/english"],["goals","stats/goals"],["weather","stats/weather"]].forEach(function(p){
-      db.doc(p[1]).onSnapshot(function(s){
-        state[p[0]] = s.exists ? s.data() : null;
-        renderAll();
+
+    if(db){
+      [["running","stats/running"],["cycling","stats/cycling"],["ai","stats/ai"],
+       ["english","stats/english"],["goals","stats/goals"],["weather","stats/weather"]].forEach(function(p){
+        db.doc(p[1]).onSnapshot(function(s){
+          state[p[0]] = s.exists ? s.data() : null;
+          renderAll();
+        });
       });
-    });
+      return;
+    }
+
+    try{
+      var res = await fetch("data.json",{cache:"no-store"});
+      if(res.ok){
+        var j = await res.json();
+        if(j && typeof j==="object"){
+          ["running","cycling","ai","english","goals","weather"].forEach(function(k){
+            if(j[k] && typeof j[k]==="object") state[k] = j[k];
+          });
+          staticMode = true;
+          var cr = document.querySelector(".copyright");
+          if(cr && j.generatedAt){
+            cr.textContent = "資料快照 " + String(j.generatedAt).slice(0,10) +
+              "　·　" + cr.textContent;
+          }
+        }
+      }
+    }catch(e){ /* 沒有 data.json 就維持空狀態 */ }
+    renderAll();
   })();
 
   (async function initSample(){
@@ -1017,9 +1044,11 @@
     }catch(e){ sample = null; }
     // 不停用按鈕：即使能力偵測不到，也讓使用者選得了檔，
     // 真的不行時在流程裡給明確訊息，而不是一顆按了沒反應的死鈕。
+    // 靜態托管版沒有 sample 能力，直接把上傳按鈕收起來，
+    // 而不是留一顆按了只會跳錯誤的按鈕
     if(!sample){
       ["running","cycling","english"].forEach(function(k){
-        document.getElementById("add-"+k).title = "此檢視無法使用截圖分析";
+        document.getElementById("add-"+k).hidden = true;
       });
     }
   })();

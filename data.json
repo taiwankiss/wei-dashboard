@@ -1,0 +1,361 @@
+{
+ "running": {
+  "days": [
+   {
+    "date": "2026-08-21",
+    "durationSec": 3000,
+    "elevationM": 0,
+    "km": 6
+   },
+   {
+    "date": "2026-08-25",
+    "durationSec": 2370,
+    "elevationM": 0,
+    "km": 6
+   },
+   {
+    "date": "2026-09-01",
+    "durationSec": 2940,
+    "elevationM": 0,
+    "km": 8
+   }
+  ],
+  "lastSynced": "2026-09-03T02:30:00.000Z",
+  "manualEntries": [],
+  "month": {
+   "count": 1,
+   "durationSec": 2940,
+   "km": 8
+  },
+  "source": "strava",
+  "syncedRecent": [
+   {
+    "date": "2026-09-01",
+    "durationSec": 2940,
+    "km": 8,
+    "name": "跑步機跑步"
+   },
+   {
+    "date": "2026-08-25",
+    "durationSec": 2370,
+    "km": 6,
+    "name": "跑步機跑步"
+   },
+   {
+    "date": "2026-08-21",
+    "durationSec": 3000,
+    "km": 6,
+    "name": "跑步機跑步"
+   }
+  ],
+  "totals": {
+   "count": 3,
+   "durationSec": 8310,
+   "elevationM": 0,
+   "km": 20
+  }
+ },
+ "cycling": {
+  "days": [
+   {
+    "date": "2026-08-04",
+    "durationSec": 7528,
+    "elevationM": 600,
+    "km": 45.48
+   },
+   {
+    "date": "2026-08-06",
+    "durationSec": 4883,
+    "elevationM": 74,
+    "km": 29.55
+   },
+   {
+    "date": "2026-08-12",
+    "durationSec": 5076,
+    "elevationM": 98,
+    "km": 32.36
+   },
+   {
+    "date": "2026-08-15",
+    "durationSec": 13423,
+    "elevationM": 361,
+    "km": 84.14
+   },
+   {
+    "date": "2026-08-26",
+    "durationSec": 7695,
+    "elevationM": 460,
+    "km": 44.71
+   },
+   {
+    "date": "2026-08-29",
+    "durationSec": 14374,
+    "elevationM": 703,
+    "km": 85.27
+   }
+  ],
+  "lastSynced": "2026-09-03T02:30:00.000Z",
+  "manualEntries": [],
+  "month": {
+   "count": 0,
+   "durationSec": 0,
+   "km": 0
+  },
+  "source": "strava",
+  "syncedRecent": [
+   {
+    "date": "2026-08-29",
+    "durationSec": 14374,
+    "km": 85.27,
+    "name": "角板山 水蜜桃冰沙"
+   },
+   {
+    "date": "2026-08-26",
+    "durationSec": 7695,
+    "km": 44.71,
+    "name": "凌雲路上觀音山下渡船頭路"
+   },
+   {
+    "date": "2026-08-15",
+    "durationSec": 13423,
+    "km": 84.14,
+    "name": "石門水庫"
+   },
+   {
+    "date": "2026-08-12",
+    "durationSec": 5076,
+    "km": 32.36,
+    "name": "關渡大橋"
+   }
+  ],
+  "totals": {
+   "count": 6,
+   "durationSec": 52979,
+   "elevationM": 2296,
+   "km": 321.5
+  }
+ },
+ "ai": {
+  "daily": [
+   {
+    "date": "2026-08-27",
+    "seconds": 10800,
+    "sessions": 1
+   },
+   {
+    "date": "2026-08-28",
+    "seconds": 16386,
+    "sessions": 5
+   },
+   {
+    "date": "2026-08-29",
+    "seconds": 0,
+    "sessions": 0
+   },
+   {
+    "date": "2026-08-30",
+    "seconds": 14141,
+    "sessions": 2
+   },
+   {
+    "date": "2026-08-31",
+    "seconds": 0,
+    "sessions": 0
+   },
+   {
+    "date": "2026-09-01",
+    "seconds": 25073,
+    "sessions": 4
+   },
+   {
+    "date": "2026-09-02",
+    "seconds": 10805,
+    "sessions": 2
+   },
+   {
+    "date": "2026-09-03",
+    "seconds": 15,
+    "sessions": 1
+   }
+  ],
+  "lastSynced": "2026-09-03T02:30:00.000Z",
+  "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時",
+  "periodEnd": "2026-09-03",
+  "periodStart": "2026-08-27",
+  "projectCount": 3,
+  "projectLinks": {
+   "Toeic 單字卡": "https://github.com/taiwankiss/Vocabulary"
+  },
+  "projects": [
+   "my-agent",
+   "Toeic 單字卡",
+   "Dashboard Project"
+  ],
+  "totalSeconds": 77220
+ },
+ "goals": {
+  "enTargetScore": 850,
+  "note": "跑步、騎車為每 7 天目標，切到近 30 天時等比放大；AI 學習不設目標",
+  "rideWeeklyKm": 300,
+  "runWeeklyKm": 40,
+  "updatedAt": "2026-09-03T03:00:00.000Z"
+ },
+ "weather": {
+  "date": "2026-09-03",
+  "high": 31.7,
+  "hourly": [
+   {
+    "code": 51,
+    "h": 0,
+    "pop": 57,
+    "temp": 27.2
+   },
+   {
+    "code": 51,
+    "h": 1,
+    "pop": 47,
+    "temp": 27.1
+   },
+   {
+    "code": 3,
+    "h": 2,
+    "pop": 41,
+    "temp": 26.7
+   },
+   {
+    "code": 51,
+    "h": 3,
+    "pop": 43,
+    "temp": 26.5
+   },
+   {
+    "code": 51,
+    "h": 4,
+    "pop": 49,
+    "temp": 26.1
+   },
+   {
+    "code": 95,
+    "h": 5,
+    "pop": 53,
+    "temp": 25.6
+   },
+   {
+    "code": 95,
+    "h": 6,
+    "pop": 51,
+    "temp": 25.4
+   },
+   {
+    "code": 53,
+    "h": 7,
+    "pop": 46,
+    "temp": 26.1
+   },
+   {
+    "code": 51,
+    "h": 8,
+    "pop": 47,
+    "temp": 27.2
+   },
+   {
+    "code": 3,
+    "h": 9,
+    "pop": 58,
+    "temp": 28.6
+   },
+   {
+    "code": 3,
+    "h": 10,
+    "pop": 73,
+    "temp": 29.6
+   },
+   {
+    "code": 3,
+    "h": 11,
+    "pop": 86,
+    "temp": 31.1
+   },
+   {
+    "code": 3,
+    "h": 12,
+    "pop": 93,
+    "temp": 31.7
+   },
+   {
+    "code": 95,
+    "h": 13,
+    "pop": 97,
+    "temp": 29.1
+   },
+   {
+    "code": 96,
+    "h": 14,
+    "pop": 100,
+    "temp": 27.7
+   },
+   {
+    "code": 95,
+    "h": 15,
+    "pop": 100,
+    "temp": 27.5
+   },
+   {
+    "code": 95,
+    "h": 16,
+    "pop": 100,
+    "temp": 26.9
+   },
+   {
+    "code": 80,
+    "h": 17,
+    "pop": 100,
+    "temp": 26.6
+   },
+   {
+    "code": 80,
+    "h": 18,
+    "pop": 99,
+    "temp": 26.3
+   },
+   {
+    "code": 55,
+    "h": 19,
+    "pop": 97,
+    "temp": 26.3
+   },
+   {
+    "code": 53,
+    "h": 20,
+    "pop": 94,
+    "temp": 26.3
+   },
+   {
+    "code": 55,
+    "h": 21,
+    "pop": 88,
+    "temp": 25.8
+   },
+   {
+    "code": 95,
+    "h": 22,
+    "pop": 80,
+    "temp": 25.7
+   },
+   {
+    "code": 81,
+    "h": 23,
+    "pop": 71,
+    "temp": 25.8
+   }
+  ],
+  "lat": 25.0143,
+  "location": "新北市板橋區",
+  "locationShort": "板橋",
+  "lon": 121.4672,
+  "low": 25.4,
+  "source": "open-meteo",
+  "updatedAt": "2026-09-03T12:30:00+08:00"
+ },
+ "generatedAt": "2026-09-03T16:32:15+08:00"
+}
