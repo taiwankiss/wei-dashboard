@@ -302,11 +302,9 @@
   .cell-top .right{display:flex;align-items:center;gap:9px;}
   .cell-top .ctrls{display:flex;align-items:center;gap:9px;}
 
-  /* 累計數據收成一顆 i 按鈕，點了才跳出。
-     用絕對定位掛在卡片上而不是排進標題列 —— 否則它會把標題列撐高，
-     跑步／騎車的大數字就會比英文／AI 低一截。 */
+  /* 累計數據收成一顆 i 按鈕，接在「/ 7天」後面，點了才跳出 */
   .info{
-    position:absolute;top:60px;right:30px;
+    flex:none;align-self:center;margin-left:4px;
     width:13px;height:13px;border-radius:50%;padding:0;
     border:1px solid rgba(109,140,255,.7);background:transparent;
     color:var(--blue-lt);font:600 8.5px/1 var(--mono);
@@ -560,7 +558,6 @@
               </button>
               <span class="dot idle" id="dot-running"></span>
             </div>
-            <button class="info" id="info-running" title="累計數據" aria-label="累計數據">i</button>
           </div>
         </div>
         <div id="body-running"><div class="skel" style="height:190px"></div></div>
@@ -580,7 +577,6 @@
               </button>
               <span class="dot idle" id="dot-cycling"></span>
             </div>
-            <button class="info" id="info-cycling" title="累計數據" aria-label="累計數據">i</button>
           </div>
         </div>
         <div id="body-cycling"><div class="skel" style="height:190px"></div></div>
@@ -906,7 +902,9 @@
       '<div class="headline">'+
         '<div class="hl-main">'+
           '<div class="big"><span class="v">'+fmtKm(winKm)+'</span>'+
-          '<span class="u">km / '+WINDOW_DAYS+'天</span></div>'+
+          '<span class="u">km / '+WINDOW_DAYS+'天</span>'+
+          '<button class="info" data-info="'+esc(kind)+'" title="累計數據" aria-label="累計數據">i</button>'+
+          '</div>'+
           goalLine(winKm, goal, 'km')+
         '</div>'+
       '</div>'+
@@ -1078,13 +1076,12 @@
     renderAll();
   });
 
-  // 累計資訊：點 i 按鈕才跳出
-  ["running","cycling"].forEach(function(kind){
-    var b = document.getElementById("info-"+kind);
+  // 累計資訊：點 i 按鈕才跳出。按鈕會隨卡片重繪，所以用事件委派
+  document.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest(".info[data-info]") : null;
     if(!b) return;
-    b.addEventListener("click", function(){
-      showToast((kind==="running"?"跑步 · ":"騎車 · ")+(totals[kind]||"尚無累計資料"), false);
-    });
+    var k = b.getAttribute("data-info");
+    showToast((k==="running"?"跑步 · ":"騎車 · ")+(totals[k]||"尚無累計資料"), false);
   });
 
   // window toggle
