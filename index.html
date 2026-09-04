@@ -864,9 +864,10 @@
       ? '差 <em>'+fmtKm(diff)+'</em> '+unit
       : '<em>已達標 +'+fmtKm(-diff)+'</em> '+unit)+'</div>';
   }
-  // 目標以「每 7 天」為單位設定，切到近 30 天時等比放大
-  function scaleGoal(perWeek){
-    return (perWeek==null) ? null : perWeek*WINDOW_DAYS/7;
+  // 7 天跟 30 天的目標各自獨立設定（不是線性換算），
+  // 依目前選的視窗直接取對應的數字
+  function windowGoal(weeklyVal, monthlyVal){
+    return WINDOW_DAYS>=30 ? monthlyVal : weeklyVal;
   }
 
   function daysInWindow(doc){
@@ -902,7 +903,9 @@
     var winSec = days.reduce(function(a,d){return a+(d.durationSec||0);},0);
     var winClimb = days.reduce(function(a,d){return a+(d.elevationM||0);},0);
     var goals = state.goals || {};
-    var goal = scaleGoal(kind==="running" ? goals.runWeeklyKm : goals.rideWeeklyKm);
+    var goal = kind==="running"
+      ? windowGoal(goals.runWeeklyKm, goals.runMonthlyKm)
+      : windowGoal(goals.rideWeeklyKm, goals.rideMonthlyKm);
 
     var s = sel[kind] ? days.filter(function(d){return d.date===sel[kind];})[0] : null;
     var inner = null;

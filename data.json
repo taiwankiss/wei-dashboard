@@ -276,9 +276,11 @@
    }
   ],
   "note": "跑步、騎車為每 7 天目標，切到近 30 天時等比放大；AI 學習不設目標",
-  "rideWeeklyKm": 300,
-  "runWeeklyKm": 40,
-  "updatedAt": "2026-09-03T03:00:00.000Z"
+  "rideWeeklyKm": 100,
+  "runWeeklyKm": 25,
+  "updatedAt": "2026-09-03T03:00:00.000Z",
+  "runMonthlyKm": 100,
+  "rideMonthlyKm": 400
  },
  "weather": {
   "date": "2026-09-03",
