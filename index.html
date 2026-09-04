@@ -588,7 +588,7 @@
         </div>
       </div>
       <div class="feed">
-        <div class="cap">近期動態</div>
+        <div class="cap">近期目標</div>
         <div class="list" id="feed"><div class="skel" style="height:76px"></div></div>
       </div>
     </div>
@@ -1083,33 +1083,26 @@
   }
 
   // ---------- feed ----------
+  // 近期目標：固定事件清單（存在 stats/goals.events），倒數天數每次渲染
+  // 都用 tpeToday() 重新算，所以每天自動往下數，不用手動更新
   function renderFeed(){
     var el = document.getElementById("feed");
-    var items = [];
-    ["running","cycling"].forEach(function(k){
-      var doc = state[k];
-      (doc && doc.syncedRecent || []).forEach(function(a){
-        items.push({date:a.date, text:(k==="running"?"跑步":"騎車")+"　"+a.name+"　"+fmtKm(a.km)+" km"});
-      });
-    });
-    if(state.ai && state.ai.daily){
-      state.ai.daily.slice(-4).forEach(function(d){
-        if((d.seconds||0)>=60) items.push({date:d.date, text:"Claude 使用　"+fmtHM(d.seconds)});
-      });
-    }
-    if(state.english && state.english.latest){
-      var l = state.english.latest;
-      items.push({date:l.date, text:"英文　"+(l.toeic_predicted!=null? l.toeic_predicted+" 分預測" : (l.note||"學習紀錄"))});
-    }
-    items.sort(function(a,b){ return (b.date||"").localeCompare(a.date||""); });
-    items = items.slice(0,4);
+    var events = (state.goals && state.goals.events) || [];
+    var today = tpeToday();
+    var items = events.map(function(ev){
+      var days = Math.round((new Date(ev.date+"T00:00:00Z") - new Date(today+"T00:00:00Z")) / 86400000);
+      return {name:ev.name, date:ev.date, days:days};
+    }).filter(function(it){ return it.days>=0; })
+      .sort(function(a,b){ return a.days-b.days; });
+
     el.innerHTML = items.length
       ? items.map(function(it,i){
-          var cls = (i===0?" lead":"") + (i===items.length-1 && items.length>1 ? " faded":"");
-          return '<div class="fr'+cls+'"><span class="d">'+esc(md(it.date))+'</span>'+
-            '<span class="t">'+esc(it.text)+'</span></div>';
+          var tag = it.days===0 ? "今天" : "D-"+it.days;
+          return '<div class="fr'+(i===0?" lead":"")+'">'+
+            '<span class="d">'+esc(tag)+'</span>'+
+            '<span class="t">'+esc(it.name)+'</span></div>';
         }).join("")
-      : '<div class="fr"><span class="t">尚無動態</span></div>';
+      : '<div class="fr"><span class="t">尚無設定目標</span></div>';
   }
 
   function renderAll(){

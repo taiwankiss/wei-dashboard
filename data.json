@@ -258,6 +258,20 @@
  },
  "goals": {
   "enTargetScore": 850,
+  "events": [
+   {
+    "date": "2026-11-29",
+    "name": "TOEIC 英文測驗"
+   },
+   {
+    "date": "2026-12-20",
+    "name": "台北馬拉松 半馬"
+   },
+   {
+    "date": "2027-01-10",
+    "name": "渣打馬拉松 半馬"
+   }
+  ],
   "note": "跑步、騎車為每 7 天目標，切到近 30 天時等比放大；AI 學習不設目標",
   "rideWeeklyKm": 300,
   "runWeeklyKm": 40,
@@ -420,5 +434,5 @@
   "source": "open-meteo",
   "updatedAt": "2026-09-03T16:39:21+08:00"
  },
- "generatedAt": "2026-09-03T17:04:11+08:00"
+ "generatedAt": "2026-09-04T10:12:32+08:00"
 }
