@@ -242,6 +242,7 @@
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .feed .fr.lead .t{font-weight:500;color:var(--ink);}
   .feed .fr.faded{opacity:.5;}
+  .feed .fr .g{font:600 10.5px/1 var(--mono);color:var(--blue-lt);flex:none;text-align:right;}
 
   /* ---------- metric grid ---------- */
   .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:transparent;}
@@ -1091,7 +1092,7 @@
     var today = tpeToday();
     var items = events.map(function(ev){
       var days = Math.round((new Date(ev.date+"T00:00:00Z") - new Date(today+"T00:00:00Z")) / 86400000);
-      return {name:ev.name, date:ev.date, days:days};
+      return {name:ev.name, date:ev.date, days:days, target:ev.target};
     }).filter(function(it){ return it.days>=0; })
       .sort(function(a,b){ return a.days-b.days; });
 
@@ -1100,7 +1101,9 @@
           var tag = it.days===0 ? "今天" : "D-"+it.days;
           return '<div class="fr'+(i===0?" lead":"")+'">'+
             '<span class="d">'+esc(tag)+'</span>'+
-            '<span class="t">'+esc(it.name)+'</span></div>';
+            '<span class="t">'+esc(it.name)+'</span>'+
+            (it.target? '<span class="g">'+esc(it.target)+'</span>':'')+
+            '</div>';
         }).join("")
       : '<div class="fr"><span class="t">尚無設定目標</span></div>';
   }
