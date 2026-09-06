@@ -709,6 +709,7 @@
   var sel = { running:null, cycling:null, ai:null, english:null };
   var totals = { running:"", cycling:"" };   // i 按鈕帶出的累計文字
   var db = null, sample = null, sampleImages = false, staticMode = false;
+  var ANIM_EPOCH = Date.now();   // 長條圖流光動畫的共同起點，重繪時用它算出目前該在的相位，避免看起來「跳一下」
 
   // ---------- date / format helpers ----------
   function tpeToday(){
@@ -833,8 +834,10 @@
       var v = valueOf(d)||0;
       var h = v>0 ? Math.max(8, Math.round((v/max)*50)) : 5;
       var on = sel[kind]===d.date;
-      // 每根柱子錯開相位，深淺變化就會像波浪一根接一根掃過去
-      var delay = (-(i*0.55)).toFixed(2);
+      // 每根柱子錯開相位，深淺變化就會像波浪一根接一根掃過去。
+      // 用「距共同起點的經過時間」而不是固定值算相位，這樣點擊選取造成的重繪
+      // 換出新的柱子元素時，動畫會接續在原本該有的相位上繼續跑，畫面不會跳一下。
+      var delay = (-((Date.now()-ANIM_EPOCH)/1000 + i*0.55)).toFixed(2);
       return '<button class="b'+(v>0?' has':'')+'" data-kind="'+esc(kind)+'" data-date="'+esc(d.date)+'" '+
         'aria-pressed="'+(on?"true":"false")+'" style="height:'+num(h)+'px;animation-delay:'+num(delay)+'s" '+
         'title="'+esc(md(d.date))+'" aria-label="'+esc(md(d.date))+'"></button>';
