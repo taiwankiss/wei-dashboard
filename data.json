@@ -26,7 +26,7 @@
     "km": 6
    }
   ],
-  "lastSynced": "2026-09-03T16:39:21+08:00",
+  "lastSynced": "2026-09-06T09:20:00+08:00",
   "manualEntries": [],
   "month": {
    "count": 2,
@@ -104,17 +104,29 @@
     "durationSec": 14374,
     "elevationM": 703,
     "km": 85.27
+   },
+   {
+    "date": "2026-09-05",
+    "durationSec": 7602,
+    "elevationM": 572,
+    "km": 44.72
    }
   ],
-  "lastSynced": "2026-09-03T16:39:21+08:00",
+  "lastSynced": "2026-09-06T09:20:00+08:00",
   "manualEntries": [],
   "month": {
-   "count": 0,
-   "durationSec": 0,
-   "km": 0
+   "count": 1,
+   "durationSec": 7602,
+   "km": 44.7
   },
   "source": "strava",
   "syncedRecent": [
+   {
+    "date": "2026-09-05",
+    "durationSec": 7602,
+    "km": 44.72,
+    "name": "劍中劍"
+   },
    {
     "date": "2026-08-29",
     "durationSec": 14374,
@@ -132,19 +144,13 @@
     "durationSec": 13423,
     "km": 84.14,
     "name": "石門水庫"
-   },
-   {
-    "date": "2026-08-12",
-    "durationSec": 5076,
-    "km": 32.36,
-    "name": "關渡大橋"
    }
   ],
   "totals": {
-   "count": 6,
-   "durationSec": 52979,
-   "elevationM": 2296,
-   "km": 321.5
+   "count": 7,
+   "durationSec": 60581,
+   "elevationM": 2868,
+   "km": 366.2
   }
  },
  "ai": {
@@ -156,8 +162,8 @@
    },
    {
     "date": "2026-08-28",
-    "seconds": 16383,
-    "sessions": 5
+    "seconds": 11700,
+    "sessions": 4
    },
    {
     "date": "2026-08-30",
@@ -178,11 +184,16 @@
     "date": "2026-09-03",
     "seconds": 88,
     "sessions": 2
+   },
+   {
+    "date": "2026-09-04",
+    "seconds": 24,
+    "sessions": 2
    }
   ],
-  "lastSynced": "2026-09-03T16:39:21+08:00",
-  "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時",
-  "periodEnd": "2026-09-03",
+  "lastSynced": "2026-09-06T09:20:00+08:00",
+  "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時；歷史僅回溯到本機保留的 session 記錄",
+  "periodEnd": "2026-09-06",
   "periodStart": "2026-08-27",
   "projectCount": 3,
   "projectLinks": {
@@ -193,23 +204,9 @@
    "Toeic 單字卡",
    "Dashboard Project"
   ],
-  "totalSeconds": 76927
+  "totalSeconds": 72268
  },
  "english": {
-  "latest": {
-   "date": "2026-09-04",
-   "toeic_predicted": 800,
-   "toeic_lc": 420,
-   "toeic_rc": 380,
-   "goal_score": 750,
-   "study_time_sec": 6753,
-   "goal_percent": 0,
-   "questions_count": 89,
-   "vocab_count": 20,
-   "note": "Santa · 推薦學習 5 組",
-   "source": "santa",
-   "addedAt": "2026-09-04T14:00:00+08:00"
-  },
   "history": [
    {
     "addedAt": "2026-09-03T17:05:00+08:00",
@@ -254,204 +251,232 @@
     "vocab_count": 0
    },
    {
+    "addedAt": "2026-09-04T14:00:00+08:00",
     "date": "2026-09-04",
-    "toeic_predicted": 800,
-    "toeic_lc": 420,
-    "toeic_rc": 380,
-    "goal_score": 750,
-    "study_time_sec": 6753,
     "goal_percent": 0,
-    "questions_count": 89,
-    "vocab_count": 20,
+    "goal_score": 750,
     "note": "Santa · 推薦學習 5 組",
+    "questions_count": 89,
     "source": "santa",
-    "addedAt": "2026-09-04T14:00:00+08:00"
+    "study_time_sec": 6753,
+    "toeic_lc": 420,
+    "toeic_predicted": 800,
+    "toeic_rc": 380,
+    "vocab_count": 20
+   },
+   {
+    "addedAt": "2026-09-06T09:30:00+08:00",
+    "date": "2026-09-06",
+    "goal_percent": 0,
+    "goal_score": 750,
+    "note": "Santa · 推薦學習 0 組（9/5 明細未取得）",
+    "questions_count": 5,
+    "source": "santa",
+    "study_time_sec": 93,
+    "toeic_lc": 450,
+    "toeic_predicted": 845,
+    "toeic_rc": 395,
+    "vocab_count": 0
    }
   ],
-  "lastUpdated": "2026-09-04T14:00:00+08:00"
+  "lastUpdated": "2026-09-06T09:30:00+08:00",
+  "latest": {
+   "addedAt": "2026-09-06T09:30:00+08:00",
+   "date": "2026-09-06",
+   "goal_percent": 0,
+   "goal_score": 750,
+   "note": "Santa · 推薦學習 0 組",
+   "questions_count": 5,
+   "source": "santa",
+   "study_time_sec": 93,
+   "toeic_lc": 450,
+   "toeic_predicted": 845,
+   "toeic_rc": 395,
+   "vocab_count": 0
+  }
  },
  "goals": {
   "enTargetScore": 850,
   "events": [
    {
-    "name": "TOEIC 英文測驗",
     "date": "2026-11-29",
+    "name": "TOEIC 英文測驗",
     "target": "850分"
    },
    {
-    "name": "台北馬拉松 半馬",
     "date": "2026-12-20",
+    "name": "台北馬拉松 半馬",
     "target": "2h10m"
    },
    {
-    "name": "渣打馬拉松 半馬",
     "date": "2027-01-10",
+    "name": "渣打馬拉松 半馬",
     "target": "1h55m"
    }
   ],
   "note": "跑步、騎車為每 7 天目標，切到近 30 天時等比放大；AI 學習不設目標",
+  "rideMonthlyKm": 400,
   "rideWeeklyKm": 100,
-  "runWeeklyKm": 25,
-  "updatedAt": "2026-09-03T03:00:00.000Z",
   "runMonthlyKm": 100,
-  "rideMonthlyKm": 400
+  "runWeeklyKm": 25,
+  "updatedAt": "2026-09-03T03:00:00.000Z"
  },
  "weather": {
-  "date": "2026-09-03",
-  "high": 29.5,
+  "date": "2026-09-06",
+  "high": 26.1,
   "hourly": [
    {
-    "code": 51,
+    "code": 1,
     "h": 0,
-    "pop": 56,
-    "temp": 27.2
-   },
-   {
-    "code": 51,
-    "h": 1,
-    "pop": 45,
-    "temp": 27.1
-   },
-   {
-    "code": 3,
-    "h": 2,
     "pop": 41,
-    "temp": 26.7
+    "temp": 24.4
+   },
+   {
+    "code": 1,
+    "h": 1,
+    "pop": 43,
+    "temp": 24.4
    },
    {
     "code": 51,
+    "h": 2,
+    "pop": 49,
+    "temp": 24.5
+   },
+   {
+    "code": 1,
     "h": 3,
-    "pop": 51,
-    "temp": 26.5
+    "pop": 63,
+    "temp": 24.3
    },
    {
     "code": 51,
     "h": 4,
-    "pop": 68,
-    "temp": 26.1
+    "pop": 81,
+    "temp": 24.5
    },
    {
-    "code": 95,
+    "code": 3,
     "h": 5,
-    "pop": 80,
-    "temp": 25.6
+    "pop": 94,
+    "temp": 24.8
    },
    {
-    "code": 95,
+    "code": 3,
     "h": 6,
-    "pop": 82,
-    "temp": 25.4
+    "pop": 99,
+    "temp": 24.9
    },
    {
-    "code": 53,
+    "code": 51,
     "h": 7,
-    "pop": 80,
-    "temp": 26.1
+    "pop": 100,
+    "temp": 25.1
    },
    {
     "code": 51,
     "h": 8,
-    "pop": 78,
-    "temp": 26.2
+    "pop": 100,
+    "temp": 25.4
+   },
+   {
+    "code": 55,
+    "h": 9,
+    "pop": 100,
+    "temp": 25.3
    },
    {
     "code": 51,
-    "h": 9,
-    "pop": 79,
-    "temp": 27
-   },
-   {
-    "code": 3,
     "h": 10,
-    "pop": 81,
-    "temp": 28.7
+    "pop": 100,
+    "temp": 26.1
    },
    {
     "code": 51,
     "h": 11,
-    "pop": 84,
-    "temp": 29.3
+    "pop": 100,
+    "temp": 26
    },
    {
-    "code": 51,
+    "code": 80,
     "h": 12,
-    "pop": 87,
-    "temp": 29.5
+    "pop": 100,
+    "temp": 25.3
+   },
+   {
+    "code": 95,
+    "h": 13,
+    "pop": 100,
+    "temp": 25.6
+   },
+   {
+    "code": 95,
+    "h": 14,
+    "pop": 100,
+    "temp": 25.5
+   },
+   {
+    "code": 80,
+    "h": 15,
+    "pop": 99,
+    "temp": 26
    },
    {
     "code": 53,
-    "h": 13,
-    "pop": 91,
-    "temp": 28.7
-   },
-   {
-    "code": 55,
-    "h": 14,
-    "pop": 94,
-    "temp": 27.3
-   },
-   {
-    "code": 55,
-    "h": 15,
-    "pop": 95,
-    "temp": 27.4
-   },
-   {
-    "code": 80,
     "h": 16,
-    "pop": 94,
-    "temp": 26.8
+    "pop": 98,
+    "temp": 26.1
    },
    {
-    "code": 80,
+    "code": 51,
     "h": 17,
-    "pop": 92,
-    "temp": 26.8
+    "pop": 96,
+    "temp": 26
    },
    {
-    "code": 61,
+    "code": 53,
     "h": 18,
-    "pop": 88,
-    "temp": 27
+    "pop": 96,
+    "temp": 25.7
    },
    {
-    "code": 80,
+    "code": 53,
     "h": 19,
-    "pop": 84,
-    "temp": 27
+    "pop": 95,
+    "temp": 26
    },
    {
     "code": 80,
     "h": 20,
-    "pop": 80,
-    "temp": 26.6
+    "pop": 88,
+    "temp": 25.3
    },
    {
-    "code": 80,
+    "code": 51,
     "h": 21,
-    "pop": 79,
-    "temp": 26.1
+    "pop": 68,
+    "temp": 24.8
    },
    {
-    "code": 80,
+    "code": 3,
     "h": 22,
-    "pop": 78,
-    "temp": 26
+    "pop": 41,
+    "temp": 24.8
    },
    {
-    "code": 55,
+    "code": 3,
     "h": 23,
-    "pop": 75,
-    "temp": 25.9
+    "pop": 20,
+    "temp": 24.5
    }
   ],
   "lat": 25.0143,
   "location": "新北市板橋區",
   "locationShort": "板橋",
   "lon": 121.4672,
-  "low": 25.4,
+  "low": 24.3,
   "source": "open-meteo",
-  "updatedAt": "2026-09-03T16:39:21+08:00"
+  "updatedAt": "2026-09-06T09:20:00+08:00"
  },
- "generatedAt": "2026-09-04T10:12:32+08:00"
+ "generatedAt": "2026-09-06T09:24:52+08:00"
 }
