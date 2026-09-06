@@ -189,10 +189,16 @@
     "date": "2026-09-04",
     "seconds": 24,
     "sessions": 2
+   },
+   {
+    "date": "2026-09-06",
+    "seconds": 10800,
+    "sessions": 1,
+    "estimated": true
    }
   ],
-  "lastSynced": "2026-09-06T09:20:00+08:00",
-  "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時；歷史僅回溯到本機保留的 session 記錄",
+  "lastSynced": "2026-09-06T22:30:00+08:00",
+  "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時；歷史僅回溯到本機保留的 session 記錄。9/5 無任何工作紀錄（推測當天沒有使用）；9/6 因整段工作都發生在同一個跨日的長時間 session 內，估算工具看不到這個「目前 session」，改用當天 git commit 的時間範圍粗估並封頂 3 小時，可能與實際使用時間有落差。",
   "periodEnd": "2026-09-06",
   "periodStart": "2026-08-27",
   "projectCount": 3,
@@ -204,7 +210,7 @@
    "Toeic 單字卡",
    "Dashboard Project"
   ],
-  "totalSeconds": 72268
+  "totalSeconds": 83068
  },
  "english": {
   "latest": {
