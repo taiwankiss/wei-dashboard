@@ -435,6 +435,7 @@
   }
   .readout .sel{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;}
   .readout .sel .d{font:500 10px/1 var(--mono);color:var(--ink-45);}
+  .readout .sel .n{font:600 13px/1 var(--mono);color:var(--blue-lt);}
   .readout .sel .m{font:600 13px/1 var(--mono);}
   .readout .sel .x{font:500 11px/1 var(--mono);color:var(--ink-50);}
 
@@ -1047,18 +1048,21 @@
     var wanted = lastDays(WINDOW_DAYS), byDate = {};
     (doc.history||[]).forEach(function(h){
       if(!h.date) return;
-      var t = byDate[h.date] || (byDate[h.date] = {date:h.date, seconds:0, questions:0, vocab:0});
+      var t = byDate[h.date] || (byDate[h.date] = {date:h.date, seconds:0, questions:0, vocab:0, score:null});
       t.seconds += h.study_time_sec||0;
       t.questions += h.questions_count||0;
       t.vocab += h.vocab_count||0;
+      if(h.toeic_predicted!=null) t.score = h.toeic_predicted;
     });
     var days = wanted.map(function(dt){
-      return byDate[dt] || {date:dt, seconds:0, questions:0, vocab:0};
+      return byDate[dt] || {date:dt, seconds:0, questions:0, vocab:0, score:null};
     });
     var s = sel.english ? days.filter(function(d){return d.date===sel.english;})[0] : null;
+    // 內容順序：日期、分數、學習時間、題數
     var inner = s ? '<span class="d">'+esc(md(s.date))+'</span>'+
+      '<span class="n">'+(s.score!=null? num(s.score)+' 分':'—')+'</span>'+
       '<span class="m">'+fmtHM(s.seconds||0)+'</span>'+
-      '<span class="x">'+num(s.questions||0)+' 題 · '+num(s.vocab||0)+' 詞</span>' : null;
+      '<span class="x">'+num(s.questions||0)+' 題</span>' : null;
 
     body.innerHTML =
       '<div class="headline"><div class="hl-main">'+
