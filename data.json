@@ -279,21 +279,35 @@
     "vocab_count": 20
    },
    {
-    "date": "2026-09-06",
-    "toeic_predicted": 845,
+    "date": "2026-09-05",
+    "toeic_predicted": 830,
     "toeic_lc": 450,
     "toeic_rc": 395,
     "goal_score": 750,
-    "study_time_sec": 155,
+    "study_time_sec": 5657,
     "goal_percent": 0,
-    "questions_count": 15,
-    "vocab_count": 10,
-    "note": "Santa · 推薦學習 0 組（9/5 明細未取得）",
+    "questions_count": 69,
+    "vocab_count": 0,
+    "note": "Santa · 推薦學習 3 組",
     "source": "santa",
-    "addedAt": "2026-09-06T09:30:00+08:00"
+    "addedAt": "2026-09-06T09:45:00+08:00"
+   },
+   {
+    "addedAt": "2026-09-06T09:30:00+08:00",
+    "date": "2026-09-06",
+    "goal_percent": 0,
+    "goal_score": 750,
+    "note": "Santa · 推薦學習 0 組",
+    "questions_count": 15,
+    "source": "santa",
+    "study_time_sec": 155,
+    "toeic_lc": 450,
+    "toeic_predicted": 845,
+    "toeic_rc": 395,
+    "vocab_count": 10
    }
   ],
-  "lastUpdated": "2026-09-06T09:30:00+08:00"
+  "lastUpdated": "2026-09-06T09:45:00+08:00"
  },
  "goals": {
   "enTargetScore": 850,
