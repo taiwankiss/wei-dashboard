@@ -843,11 +843,14 @@
         'title="'+esc(md(d.date))+'" aria-label="'+esc(md(d.date))+'"></button>';
     }).join("")+'</div>';
   }
-  // 列前的藍色線條圖示，每列錯開相位，畫線的動作就會一列接一列跑
+  // 列前的藍色線條圖示，每列錯開相位，畫線的動作就會一列接一列跑。
+  // 跟長條圖一樣用共同起點的經過時間算 delay，這樣任何一張卡片的重繪
+  // 都不會讓這些圖示的畫線動畫跳一下重新起算。
   function rowIcon(i){
+    var delay = (-((Date.now()-ANIM_EPOCH)/1000 + i*1.0)).toFixed(2);
     return '<svg class="ic" viewBox="0 0 12 12" aria-hidden="true">'+
       '<polyline points="1,7.5 4,4 7.2,8 11,2.5" style="animation-delay:'+
-      (-(i*1.0)).toFixed(2)+'s"></polyline></svg>';
+      num(delay)+'s"></polyline></svg>';
   }
 
   // 專案右側的資料夾圖示連結。網址存在 db 裡，只接受 http(s)，
