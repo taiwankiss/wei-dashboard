@@ -195,22 +195,39 @@
     "seconds": 10800,
     "sessions": 1,
     "estimated": true
+   },
+   {
+    "date": "2026-09-10",
+    "seconds": 13059,
+    "sessions": 2
+   },
+   {
+    "date": "2026-09-11",
+    "seconds": 13604,
+    "sessions": 2
+   },
+   {
+    "date": "2026-09-12",
+    "seconds": 10800,
+    "sessions": 1
    }
   ],
-  "lastSynced": "2026-09-06T22:30:00+08:00",
-  "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時；歷史僅回溯到本機保留的 session 記錄。9/5 無任何工作紀錄（推測當天沒有使用）；9/6 因整段工作都發生在同一個跨日的長時間 session 內，估算工具看不到這個「目前 session」，改用當天 git commit 的時間範圍粗估並封頂 3 小時，可能與實際使用時間有落差。",
-  "periodEnd": "2026-09-06",
+  "lastSynced": "2026-09-14T00:00:00+08:00",
+  "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時；歷史僅回溯到本機保留的 session 記錄。9/5、9/7～9/9、9/13 沒有找到獨立的 session 紀錄（工作內容多半發生在跟這個 dashboard 對話同一個跨日長 session 裡，估算工具看不到「目前 session」，抓不到準確用量，故不補這幾天的數字）；9/6 是用 git commit 時間範圍粗估、封頂 3 小時的近似值；9/10～9/12 則是從實際的獨立 session 記錄估算，較為準確。",
+  "periodEnd": "2026-09-13",
   "periodStart": "2026-08-27",
-  "projectCount": 3,
+  "projectCount": 5,
   "projectLinks": {
    "Toeic 單字卡": "https://github.com/taiwankiss/Vocabulary"
   },
   "projects": [
    "my-agent",
    "Toeic 單字卡",
-   "Dashboard Project"
+   "Dashboard Project",
+   "Blender Video",
+   "20260909 桃山"
   ],
-  "totalSeconds": 83068
+  "totalSeconds": 120531
  },
  "english": {
   "latest": {
