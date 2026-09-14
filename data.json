@@ -403,7 +403,7 @@
   "enTargetScore": 850,
   "events": [
    {
-    "date": "2026-11-29",
+    "date": "2026-10-18",
     "name": "TOEIC 英文測驗",
     "target": "850分"
    },
@@ -423,7 +423,7 @@
   "rideWeeklyKm": 100,
   "runMonthlyKm": 100,
   "runWeeklyKm": 25,
-  "updatedAt": "2026-09-03T03:00:00.000Z"
+  "updatedAt": "2026-09-14T00:00:00+08:00"
  },
  "weather": {
   "date": "2026-09-06",
