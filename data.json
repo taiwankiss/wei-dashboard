@@ -24,17 +24,35 @@
     "durationSec": 2260,
     "elevationM": 0,
     "km": 6
+   },
+   {
+    "date": "2026-09-09",
+    "durationSec": 0,
+    "elevationM": 0,
+    "km": 0
+   },
+   {
+    "date": "2026-09-15",
+    "durationSec": 2131,
+    "elevationM": 7,
+    "km": 6.13
    }
   ],
-  "lastSynced": "2026-09-06T09:20:00+08:00",
+  "lastSynced": "2026-09-16T00:00:00+08:00",
   "manualEntries": [],
   "month": {
-   "count": 2,
-   "durationSec": 5200,
-   "km": 14
+   "count": 4,
+   "durationSec": 7331,
+   "km": 20.1
   },
   "source": "strava",
   "syncedRecent": [
+   {
+    "date": "2026-09-15",
+    "durationSec": 2131,
+    "km": 6.13,
+    "name": "傍晚跑步"
+   },
    {
     "date": "2026-09-03",
     "durationSec": 2260,
@@ -52,19 +70,13 @@
     "durationSec": 2370,
     "km": 6,
     "name": "跑步機跑步"
-   },
-   {
-    "date": "2026-08-21",
-    "durationSec": 3000,
-    "km": 6,
-    "name": "跑步機跑步"
    }
   ],
   "totals": {
-   "count": 4,
-   "durationSec": 10570,
-   "elevationM": 0,
-   "km": 26
+   "count": 6,
+   "durationSec": 12701,
+   "elevationM": 7,
+   "km": 32.1
   }
  },
  "cycling": {
@@ -112,7 +124,7 @@
     "km": 44.72
    }
   ],
-  "lastSynced": "2026-09-06T09:20:00+08:00",
+  "lastSynced": "2026-09-16T00:00:00+08:00",
   "manualEntries": [],
   "month": {
    "count": 1,
@@ -210,13 +222,18 @@
     "date": "2026-09-12",
     "seconds": 10800,
     "sessions": 1
+   },
+   {
+    "date": "2026-09-15",
+    "seconds": 10800,
+    "sessions": 1
    }
   ],
-  "lastSynced": "2026-09-14T00:00:00+08:00",
-  "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時；歷史僅回溯到本機保留的 session 記錄。9/5、9/7～9/9、9/13 沒有找到獨立的 session 紀錄（工作內容多半發生在跟這個 dashboard 對話同一個跨日長 session 裡，估算工具看不到「目前 session」，抓不到準確用量，故不補這幾天的數字）；9/6 是用 git commit 時間範圍粗估、封頂 3 小時的近似值；9/10～9/12 則是從實際的獨立 session 記錄估算，較為準確。",
-  "periodEnd": "2026-09-13",
+  "lastSynced": "2026-09-16T00:00:00+08:00",
+  "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時；歷史僅回溯到本機保留的 session 記錄。9/5、9/7～9/9、9/13、9/14 沒有找到獨立的 session 紀錄（工作內容多半發生在跟這個 dashboard 對話同一個跨日長 session 裡，估算工具看不到「目前 session」，抓不到準確用量，故不補這幾天的數字）；9/6 是用 git commit 時間範圍粗估、封頂 3 小時的近似值；9/10～9/12、9/15 則是從實際的獨立 session 記錄估算，較為準確。",
+  "periodEnd": "2026-09-15",
   "periodStart": "2026-08-27",
-  "projectCount": 5,
+  "projectCount": 6,
   "projectLinks": {
    "Toeic 單字卡": "https://github.com/taiwankiss/Vocabulary"
   },
@@ -225,24 +242,25 @@
    "Toeic 單字卡",
    "Dashboard Project",
    "Blender Video",
-   "20260909 桃山"
+   "20260909 桃山",
+   "山徑運動誌"
   ],
-  "totalSeconds": 120531
+  "totalSeconds": 131331
  },
  "english": {
   "latest": {
-   "date": "2026-09-15",
-   "toeic_predicted": 885,
-   "toeic_lc": 460,
-   "toeic_rc": 425,
+   "date": "2026-09-16",
+   "toeic_predicted": 860,
+   "toeic_lc": 450,
+   "toeic_rc": 410,
    "goal_score": 750,
-   "study_time_sec": 1062,
+   "study_time_sec": 0,
    "goal_percent": 0,
-   "questions_count": 32,
-   "vocab_count": 20,
-   "note": "Santa · 推薦學習 1 組（今日進行中）",
+   "questions_count": 0,
+   "vocab_count": 0,
+   "note": "Santa · 尚未開始今日練習",
    "source": "santa",
-   "addedAt": "2026-09-15T00:00:00+08:00"
+   "addedAt": "2026-09-16T00:00:00+08:00"
   },
   "history": [
    {
@@ -414,21 +432,35 @@
     "vocab_count": 30
    },
    {
+    "addedAt": "2026-09-15T00:00:00+08:00",
     "date": "2026-09-14",
-    "toeic_predicted": 820,
-    "toeic_lc": 435,
-    "toeic_rc": 385,
-    "goal_score": 750,
-    "study_time_sec": 9552,
     "goal_percent": 0,
-    "questions_count": 103,
-    "vocab_count": 40,
+    "goal_score": 750,
     "note": "Santa · 推薦學習 5 組",
+    "questions_count": 103,
     "source": "santa",
-    "addedAt": "2026-09-15T00:00:00+08:00"
+    "study_time_sec": 9552,
+    "toeic_lc": 435,
+    "toeic_predicted": 820,
+    "toeic_rc": 385,
+    "vocab_count": 40
+   },
+   {
+    "date": "2026-09-15",
+    "toeic_predicted": 885,
+    "toeic_lc": 460,
+    "toeic_rc": 425,
+    "goal_score": 750,
+    "study_time_sec": 5032,
+    "goal_percent": 0,
+    "questions_count": 61,
+    "vocab_count": 20,
+    "note": "Santa · 推薦學習 4 組",
+    "source": "santa",
+    "addedAt": "2026-09-16T00:00:00+08:00"
    }
   ],
-  "lastUpdated": "2026-09-15T00:00:00+08:00"
+  "lastUpdated": "2026-09-16T00:00:00+08:00"
  },
  "goals": {
   "enTargetScore": 850,
