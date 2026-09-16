@@ -1049,7 +1049,6 @@
       dot.className = "dot warn";
       return;
     }
-    var goal = (state.goals||{}).enTargetScore || latest.goal_score;
     var score = latest.toeic_predicted;
 
     // 逐日學習時間長條圖 —— 與跑步／騎車同一套視覺語彙
@@ -1079,9 +1078,7 @@
         '<div class="big"><span class="v">'+fmtHours(winSec)+'</span>'+
         '<span class="u">小時 / '+WINDOW_DAYS+'天</span></div>'+
         (score!=null
-          ? '<div class="goal">多益預測 <em>'+num(score)+'</em>'+
-              (goal!=null? ' · 目標 '+num(goal)+' · '+(goal-score>0? '差 '+num(goal-score)+' 分' : '已達標 +'+num(score-goal)+' 分') : '')+
-              '</div>'
+          ? '<div class="goal">多益預測 <em>'+num(score)+'</em></div>'
           : '<div class="goal">尚無多益預測分數</div>')+
       '</div></div>'+
       barsHtml("english", days, function(d){return d.seconds;})+
