@@ -42,17 +42,29 @@
     "durationSec": 2179,
     "elevationM": 7,
     "km": 6.24
+   },
+   {
+    "date": "2026-09-17",
+    "durationSec": 2205,
+    "elevationM": 10,
+    "km": 6.16
    }
   ],
-  "lastSynced": "2026-09-17T00:00:00+08:00",
+  "lastSynced": "2026-09-17T12:00:00+08:00",
   "manualEntries": [],
   "month": {
-   "count": 5,
-   "durationSec": 9510,
-   "km": 26.3
+   "count": 6,
+   "durationSec": 11715,
+   "km": 32.5
   },
   "source": "strava",
   "syncedRecent": [
+   {
+    "date": "2026-09-17",
+    "durationSec": 2205,
+    "km": 6.16,
+    "name": "傍晚跑步"
+   },
    {
     "date": "2026-09-16",
     "durationSec": 2179,
@@ -70,19 +82,13 @@
     "durationSec": 2260,
     "km": 6,
     "name": "跑步機跑步"
-   },
-   {
-    "date": "2026-09-01",
-    "durationSec": 2940,
-    "km": 8,
-    "name": "跑步機跑步"
    }
   ],
   "totals": {
-   "count": 7,
-   "durationSec": 14880,
-   "elevationM": 14,
-   "km": 38.3
+   "count": 8,
+   "durationSec": 17085,
+   "elevationM": 24,
+   "km": 44.5
   }
  },
  "cycling": {
@@ -130,7 +136,7 @@
     "km": 44.72
    }
   ],
-  "lastSynced": "2026-09-17T00:00:00+08:00",
+  "lastSynced": "2026-09-17T12:00:00+08:00",
   "manualEntries": [],
   "month": {
    "count": 1,
@@ -233,13 +239,23 @@
     "date": "2026-09-15",
     "seconds": 10800,
     "sessions": 1
+   },
+   {
+    "date": "2026-09-16",
+    "seconds": 21600,
+    "sessions": 3
+   },
+   {
+    "date": "2026-09-17",
+    "seconds": 10839,
+    "sessions": 3
    }
   ],
-  "lastSynced": "2026-09-16T00:00:00+08:00",
+  "lastSynced": "2026-09-17T00:00:00+08:00",
   "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時；歷史僅回溯到本機保留的 session 記錄。9/5、9/7～9/9、9/13、9/14 沒有找到獨立的 session 紀錄（工作內容多半發生在跟這個 dashboard 對話同一個跨日長 session 裡，估算工具看不到「目前 session」，抓不到準確用量，故不補這幾天的數字）；9/6 是用 git commit 時間範圍粗估、封頂 3 小時的近似值；9/10～9/12、9/15 則是從實際的獨立 session 記錄估算，較為準確。",
-  "periodEnd": "2026-09-15",
+  "periodEnd": "2026-09-17",
   "periodStart": "2026-08-27",
-  "projectCount": 7,
+  "projectCount": 8,
   "projectLinks": {
    "Resume": "https://github.com/taiwankiss/resume",
    "Sport-Journey": "https://github.com/taiwankiss/sport-journey",
@@ -252,9 +268,10 @@
    "my-agent",
    "Dashboard Project",
    "Blender Video",
-   "20260909 桃山"
+   "20260909 桃山",
+   "Brand Site"
   ],
-  "totalSeconds": 131331
+  "totalSeconds": 163770
  },
  "english": {
   "latest": {
