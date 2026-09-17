@@ -11,7 +11,7 @@
 <link rel="icon" href="icon.png" type="image/png">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BBH+Bartle&family=Archivo:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Share+Tech+Mono&family=Poppins:ital,wght@1,800&family=Bricolage+Grotesque:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BBH+Bartle&family=Archivo:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Share+Tech+Mono&family=Poppins:ital,wght@1,800&display=swap">
 <style>
   :root{
     --ink:#eae7e2;
@@ -109,11 +109,11 @@
   /* 站名獨立在玻璃面板外，18px 的 1.5 倍 = 27px */
   .page-title{
     text-align:center;margin:0 0 20px;
-    font:700 48px/1.2 "Bricolage Grotesque",var(--cjk);
-    letter-spacing:.01em;color:var(--ink);
+    font:italic 800 32px/1.2 "Poppins",var(--cjk);
+    letter-spacing:.02em;color:var(--ink);
     text-shadow:0 2px 24px rgba(58,95,214,.35);
   }
-  @media(max-width:600px){ .page-title{font-size:30px;} }
+  @media(max-width:600px){ .page-title{font-size:24px;} }
 
   /* ---------- the glass pane ---------- */
   .frame{
@@ -389,9 +389,10 @@
   .headline .hl-main{min-width:0;}
   .headline .big{display:flex;align-items:baseline;gap:6px;white-space:nowrap;}
   .headline .goal{white-space:nowrap;}
-  /* 四張卡片的主數字字體 */
-  .headline .big .v{font:700 48px/1 "Bricolage Grotesque",var(--cjk);letter-spacing:0;}
-  @media(max-width:600px){ .headline .big .v{font-size:34px;} }
+  /* 四張卡片的主數字單獨換字體：Share Tech Mono 沒有粗體字重，
+     用 400 撐大字級來補視覺份量，不然跟旁邊 IBM Plex Mono 的粗體
+     單位文字放在一起會顯得太細 */
+  .headline .big .v{font:400 37px/1 "Share Tech Mono",var(--mono);letter-spacing:0;}
   .headline .big .u{font:500 12px/1 var(--mono);color:var(--ink-45);}
   .headline .goal{font:400 11px/1.5 var(--cjk);color:var(--ink-45);margin-top:7px;}
   .headline .goal em{font-style:normal;color:var(--blue-lt);}
