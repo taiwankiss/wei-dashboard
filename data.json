@@ -36,17 +36,29 @@
     "durationSec": 2131,
     "elevationM": 7,
     "km": 6.13
+   },
+   {
+    "date": "2026-09-16",
+    "durationSec": 2179,
+    "elevationM": 7,
+    "km": 6.24
    }
   ],
-  "lastSynced": "2026-09-16T00:00:00+08:00",
+  "lastSynced": "2026-09-17T00:00:00+08:00",
   "manualEntries": [],
   "month": {
-   "count": 4,
-   "durationSec": 7331,
-   "km": 20.1
+   "count": 5,
+   "durationSec": 9510,
+   "km": 26.3
   },
   "source": "strava",
   "syncedRecent": [
+   {
+    "date": "2026-09-16",
+    "durationSec": 2179,
+    "km": 6.24,
+    "name": "傍晚跑步"
+   },
    {
     "date": "2026-09-15",
     "durationSec": 2131,
@@ -64,19 +76,13 @@
     "durationSec": 2940,
     "km": 8,
     "name": "跑步機跑步"
-   },
-   {
-    "date": "2026-08-25",
-    "durationSec": 2370,
-    "km": 6,
-    "name": "跑步機跑步"
    }
   ],
   "totals": {
-   "count": 6,
-   "durationSec": 12701,
-   "elevationM": 7,
-   "km": 32.1
+   "count": 7,
+   "durationSec": 14880,
+   "elevationM": 14,
+   "km": 38.3
   }
  },
  "cycling": {
@@ -124,7 +130,7 @@
     "km": 44.72
    }
   ],
-  "lastSynced": "2026-09-16T00:00:00+08:00",
+  "lastSynced": "2026-09-17T00:00:00+08:00",
   "manualEntries": [],
   "month": {
    "count": 1,
