@@ -259,15 +259,15 @@
  "english": {
   "latest": {
    "date": "2026-09-17",
-   "toeic_predicted": 880,
-   "toeic_lc": 460,
-   "toeic_rc": 420,
+   "toeic_predicted": 860,
+   "toeic_lc": 450,
+   "toeic_rc": 410,
    "goal_score": 750,
-   "study_time_sec": 782,
+   "study_time_sec": 3134,
    "goal_percent": 0,
-   "questions_count": 9,
-   "vocab_count": 0,
-   "note": "Santa · 推薦學習 0 組（今日進行中）",
+   "questions_count": 83,
+   "vocab_count": 40,
+   "note": "Santa · 推薦學習 3 組（今日進行中）",
    "source": "santa",
    "addedAt": "2026-09-17T00:00:00+08:00"
   },
