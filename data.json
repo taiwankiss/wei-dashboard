@@ -239,17 +239,20 @@
   "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時；歷史僅回溯到本機保留的 session 記錄。9/5、9/7～9/9、9/13、9/14 沒有找到獨立的 session 紀錄（工作內容多半發生在跟這個 dashboard 對話同一個跨日長 session 裡，估算工具看不到「目前 session」，抓不到準確用量，故不補這幾天的數字）；9/6 是用 git commit 時間範圍粗估、封頂 3 小時的近似值；9/10～9/12、9/15 則是從實際的獨立 session 記錄估算，較為準確。",
   "periodEnd": "2026-09-15",
   "periodStart": "2026-08-27",
-  "projectCount": 6,
+  "projectCount": 7,
   "projectLinks": {
-   "Toeic 單字卡": "https://github.com/taiwankiss/Vocabulary"
+   "Resume": "https://github.com/taiwankiss/resume",
+   "Sport-Journey": "https://github.com/taiwankiss/sport-journey",
+   "單字卡": "https://github.com/taiwankiss/Vocabulary"
   },
   "projects": [
+   "Resume",
+   "Sport-Journey",
+   "單字卡",
    "my-agent",
-   "Toeic 單字卡",
    "Dashboard Project",
    "Blender Video",
-   "20260909 桃山",
-   "山徑運動誌"
+   "20260909 桃山"
   ],
   "totalSeconds": 131331
  },
