@@ -5,49 +5,57 @@
     "date": "2026-08-21",
     "durationSec": 3000,
     "elevationM": 0,
-    "km": 6
+    "km": 6,
+    "name": "跑步機跑步"
    },
    {
     "date": "2026-08-25",
     "durationSec": 2370,
     "elevationM": 0,
-    "km": 6
+    "km": 6,
+    "name": "跑步機跑步"
    },
    {
     "date": "2026-09-01",
     "durationSec": 2940,
     "elevationM": 0,
-    "km": 8
+    "km": 8,
+    "name": "跑步機跑步"
    },
    {
     "date": "2026-09-03",
     "durationSec": 2260,
     "elevationM": 0,
-    "km": 6
+    "km": 6,
+    "name": "跑步機跑步"
    },
    {
     "date": "2026-09-09",
     "durationSec": 0,
     "elevationM": 0,
-    "km": 0
+    "km": 0,
+    "name": "晚間跑步"
    },
    {
     "date": "2026-09-15",
     "durationSec": 2131,
     "elevationM": 7,
-    "km": 6.13
+    "km": 6.13,
+    "name": "傍晚跑步"
    },
    {
     "date": "2026-09-16",
     "durationSec": 2179,
     "elevationM": 7,
-    "km": 6.24
+    "km": 6.24,
+    "name": "傍晚跑步"
    },
    {
     "date": "2026-09-17",
     "durationSec": 2205,
     "elevationM": 10,
-    "km": 6.16
+    "km": 6.16,
+    "name": "傍晚跑步"
    }
   ],
   "lastSynced": "2026-09-17T12:00:00+08:00",
@@ -97,55 +105,64 @@
     "date": "2026-08-04",
     "durationSec": 7528,
     "elevationM": 600,
-    "km": 45.48
+    "km": 45.48,
+    "name": "劍中劍"
    },
    {
     "date": "2026-08-06",
     "durationSec": 4883,
     "elevationM": 74,
-    "km": 29.55
+    "km": 29.55,
+    "name": "傍晚 騎行"
    },
    {
     "date": "2026-08-12",
     "durationSec": 5076,
     "elevationM": 98,
-    "km": 32.36
+    "km": 32.36,
+    "name": "關渡大橋"
    },
    {
     "date": "2026-08-15",
     "durationSec": 13423,
     "elevationM": 361,
-    "km": 84.14
+    "km": 84.14,
+    "name": "石門水庫"
    },
    {
     "date": "2026-08-26",
     "durationSec": 7695,
     "elevationM": 460,
-    "km": 44.71
+    "km": 44.71,
+    "name": "凌雲路上觀音山下渡船頭路"
    },
    {
     "date": "2026-08-29",
     "durationSec": 14374,
     "elevationM": 703,
-    "km": 85.27
+    "km": 85.27,
+    "name": "角板山 水蜜桃冰沙"
    },
    {
     "date": "2026-09-05",
     "durationSec": 7602,
     "elevationM": 572,
-    "km": 44.72
+    "km": 44.72,
+    "name": "劍中劍"
    },
    {
     "date": "2026-09-13",
     "durationSec": 9004,
     "elevationM": 457,
-    "km": 44.43
+    "km": 44.43,
+    "name": "凌雲路上觀音山"
    },
    {
     "date": "2026-09-19",
     "durationSec": 10158,
     "elevationM": 694,
-    "km": 69.24
+    "km": 69.24,
+    "name": "烏來瀑布"
    }
   ],
   "lastSynced": "2026-09-19T12:00:00+08:00",
