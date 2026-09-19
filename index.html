@@ -105,7 +105,7 @@
     display:flex;flex-direction:column;justify-content:center;
   }
 
-  /* 站名放在橫幅左欄、標語正上方 */
+  /* 站名放在橫幅左欄 */
   .page-title{
     text-align:left;margin:0 0 6px;
     font:italic 800 22px/1.15 "Poppins",var(--cjk);
@@ -212,9 +212,6 @@
     font-variant-numeric:tabular-nums;}
   .band .stamp .wx{color:var(--ink-70);letter-spacing:.08em;cursor:default;}
   .band .stamp .wx.stale{opacity:.45;}
-  /* slogan 取代了原本站在這裡的標題，字重拉到 900 撐住這個位置的視覺份量 */
-  .band .slogan{font:900 18px/1.35 "Noto Sans TC",sans-serif;
-    letter-spacing:.01em;margin:0;color:var(--ink);text-wrap:balance;}
   .band .modes{display:flex;gap:8px;flex-wrap:wrap;}
   .mode{
     padding:7px 13px;border-radius:8px;background:rgba(255,255,255,.07);
@@ -467,8 +464,12 @@
     display:flex;flex-direction:column;gap:4.5px;
     max-height:64px;overflow-y:auto;
     scrollbar-width:none;-ms-overflow-style:none;
+    -webkit-mask-image:linear-gradient(180deg,#000 0,#000 calc(100% - 26px),rgba(0,0,0,.08) 100%);
+    mask-image:linear-gradient(180deg,#000 0,#000 calc(100% - 26px),rgba(0,0,0,.08) 100%);
   }
   .recent .rlist::-webkit-scrollbar{display:none;width:0;height:0;}
+  /* 沒有更多內容可看（內容不超出、或已捲到底）就拿掉下緣的淡出 */
+  .recent .rlist.no-more{-webkit-mask-image:none;mask-image:none;}
 
   .foot{margin-top:auto;padding-top:12px;font:400 9.5px/1.4 var(--mono);color:var(--ink-34);}
 
@@ -569,10 +570,7 @@
       <div class="rule"></div>
       <div class="who">
         <div class="stamp" id="stamp">—</div>
-        <div class="brand">
-          <h1 class="page-title">WEI'S DASHBOARD</h1>
-          <p class="slogan">聚沙成塔，積少成多</p>
-        </div>
+        <h1 class="page-title">WEI'S DASHBOARD</h1>
         <div class="modes">
           <button class="mode" id="mode-15" aria-pressed="true">近 15 天</button>
           <button class="mode" id="mode-30" aria-pressed="false">近 30 天</button>
@@ -1134,6 +1132,16 @@
       : '<div class="fr"><span class="t">尚無設定目標</span></div>';
   }
 
+  // 列表下緣的淡出只在「下方還有內容」時出現
+  function syncListFade(){
+    Array.prototype.forEach.call(document.querySelectorAll(".rlist"), function(el){
+      el.classList.toggle("no-more", el.scrollHeight - el.clientHeight - el.scrollTop <= 2);
+    });
+  }
+  document.addEventListener("scroll", function(e){
+    if(e.target && e.target.classList && e.target.classList.contains("rlist")) syncListFade();
+  }, true);
+
   function renderAll(){
     renderActivity("running", state.running);
     renderActivity("cycling", state.cycling);
@@ -1141,6 +1149,7 @@
     renderAi(state.ai);
     renderFeed();
     renderStamp();
+    syncListFade();
   }
 
   // bar clicks (delegated — bars are re-rendered constantly)
