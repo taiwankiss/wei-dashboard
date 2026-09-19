@@ -134,17 +134,41 @@
     "durationSec": 7602,
     "elevationM": 572,
     "km": 44.72
+   },
+   {
+    "date": "2026-09-13",
+    "durationSec": 9004,
+    "elevationM": 457,
+    "km": 44.43
+   },
+   {
+    "date": "2026-09-19",
+    "durationSec": 10158,
+    "elevationM": 694,
+    "km": 69.24
    }
   ],
-  "lastSynced": "2026-09-17T12:00:00+08:00",
+  "lastSynced": "2026-09-19T12:00:00+08:00",
   "manualEntries": [],
   "month": {
-   "count": 1,
-   "durationSec": 7602,
-   "km": 44.7
+   "count": 3,
+   "durationSec": 26764,
+   "km": 158.4
   },
   "source": "strava",
   "syncedRecent": [
+   {
+    "date": "2026-09-19",
+    "durationSec": 10158,
+    "km": 69.24,
+    "name": "烏來瀑布"
+   },
+   {
+    "date": "2026-09-13",
+    "durationSec": 9004,
+    "km": 44.43,
+    "name": "凌雲路上觀音山"
+   },
    {
     "date": "2026-09-05",
     "durationSec": 7602,
@@ -156,25 +180,13 @@
     "durationSec": 14374,
     "km": 85.27,
     "name": "角板山 水蜜桃冰沙"
-   },
-   {
-    "date": "2026-08-26",
-    "durationSec": 7695,
-    "km": 44.71,
-    "name": "凌雲路上觀音山下渡船頭路"
-   },
-   {
-    "date": "2026-08-15",
-    "durationSec": 13423,
-    "km": 84.14,
-    "name": "石門水庫"
    }
   ],
   "totals": {
-   "count": 7,
-   "durationSec": 60581,
-   "elevationM": 2868,
-   "km": 366.2
+   "count": 9,
+   "durationSec": 79743,
+   "elevationM": 4019,
+   "km": 479.9
   }
  },
  "ai": {
@@ -249,13 +261,18 @@
     "date": "2026-09-17",
     "seconds": 10839,
     "sessions": 3
+   },
+   {
+    "date": "2026-09-18",
+    "seconds": 42953,
+    "sessions": 5
    }
   ],
-  "lastSynced": "2026-09-17T00:00:00+08:00",
-  "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時；歷史僅回溯到本機保留的 session 記錄。9/5、9/7～9/9、9/13、9/14 沒有找到獨立的 session 紀錄（工作內容多半發生在跟這個 dashboard 對話同一個跨日長 session 裡，估算工具看不到「目前 session」，抓不到準確用量，故不補這幾天的數字）；9/6 是用 git commit 時間範圍粗估、封頂 3 小時的近似值；9/10～9/12、9/15 則是從實際的獨立 session 記錄估算，較為準確。",
-  "periodEnd": "2026-09-17",
+  "lastSynced": "2026-09-19T12:00:00+08:00",
+  "note": "使用時間為 Claude Code session 起訖時間估算，單一 session 上限 3 小時；歷史僅回溯到本機保留的 session 記錄。9/5、9/7～9/9、9/13、9/14 沒有找到獨立的 session 紀錄（工作內容多半發生在跟這個 dashboard 對話同一個跨日長 session 裡，估算工具看不到「目前 session」，抓不到準確用量，故不補這幾天的數字）；9/6 是用 git commit 時間範圍粗估、封頂 3 小時的近似值；9/10～9/12、9/15～9/18 則是從實際的獨立 session 記錄估算，較為準確。",
+  "periodEnd": "2026-09-19",
   "periodStart": "2026-08-27",
-  "projectCount": 8,
+  "projectCount": 10,
   "projectLinks": {
    "Resume": "https://github.com/taiwankiss/resume",
    "Sport-Journey": "https://github.com/taiwankiss/sport-journey",
@@ -269,24 +286,26 @@
    "Dashboard Project",
    "Blender Video",
    "20260909 桃山",
-   "Brand Site"
+   "Brand Site",
+   "Higgsfield",
+   "Taobao's sheet"
   ],
-  "totalSeconds": 163770
+  "totalSeconds": 206723
  },
  "english": {
   "latest": {
-   "date": "2026-09-17",
-   "toeic_predicted": 860,
-   "toeic_lc": 450,
-   "toeic_rc": 410,
+   "date": "2026-09-19",
+   "toeic_predicted": 825,
+   "toeic_lc": 440,
+   "toeic_rc": 385,
    "goal_score": 750,
-   "study_time_sec": 3134,
+   "study_time_sec": 473,
    "goal_percent": 0,
-   "questions_count": 83,
-   "vocab_count": 40,
-   "note": "Santa · 推薦學習 3 組（今日進行中）",
+   "questions_count": 3,
+   "vocab_count": 0,
+   "note": "Santa · 推薦學習 0 組（今日進行中）",
    "source": "santa",
-   "addedAt": "2026-09-17T00:00:00+08:00"
+   "addedAt": "2026-09-19T00:00:00+08:00"
   },
   "history": [
    {
@@ -498,9 +517,37 @@
     "note": "Santa · 推薦學習 4 組",
     "source": "santa",
     "addedAt": "2026-09-17T00:00:00+08:00"
+   },
+   {
+    "addedAt": "2026-09-18T00:00:00+08:00",
+    "date": "2026-09-17",
+    "goal_percent": 0,
+    "goal_score": 750,
+    "note": "Santa · 推薦學習 3 組",
+    "questions_count": 83,
+    "source": "santa",
+    "study_time_sec": 3134,
+    "toeic_lc": 450,
+    "toeic_predicted": 860,
+    "toeic_rc": 410,
+    "vocab_count": 40
+   },
+   {
+    "addedAt": "2026-09-19T00:00:00+08:00",
+    "date": "2026-09-18",
+    "goal_percent": 0,
+    "goal_score": 750,
+    "note": "Santa · 推薦學習 2 組",
+    "questions_count": 31,
+    "source": "santa",
+    "study_time_sec": 2243,
+    "toeic_lc": 450,
+    "toeic_predicted": 860,
+    "toeic_rc": 410,
+    "vocab_count": 10
    }
   ],
-  "lastUpdated": "2026-09-17T00:00:00+08:00"
+  "lastUpdated": "2026-09-19T00:00:00+08:00"
  },
  "goals": {
   "enTargetScore": 850,
