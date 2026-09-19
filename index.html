@@ -105,20 +105,20 @@
     display:flex;flex-direction:column;justify-content:center;
   }
 
-  /* 站名獨立在玻璃面板外，18px 的 1.5 倍 = 27px */
+  /* 站名放在橫幅左欄、標語正上方 */
   .page-title{
-    text-align:center;margin:0 0 20px;
-    font:italic 800 32px/1.2 "Poppins",var(--cjk);
+    text-align:left;margin:0 0 6px;
+    font:italic 800 22px/1.15 "Poppins",var(--cjk);
     letter-spacing:.02em;color:var(--ink);
-    text-shadow:0 2px 24px rgba(249,140,30,.35);
+    text-shadow:0 2px 20px rgba(249,140,30,.35);
   }
-  @media(max-width:600px){ .page-title{font-size:24px;} }
+  @media(max-width:600px){ .page-title{font-size:18px;} }
 
   /* ---------- the glass cards ---------- */
   /* 橫幅 + 四張指標卡各自是一張獨立的玻璃卡片，共用這一組外觀 */
   .card{
     position:relative;
-    border:1px solid rgba(255,255,255,.12);
+    border:.5px solid rgba(255,255,255,.12);
     border-radius:12px;
     overflow:hidden;
     background:linear-gradient(180deg,rgba(30,26,21,.52),rgba(7,6,5,.80));
@@ -143,7 +143,7 @@
 
   @supports ((mask-composite:exclude) or (-webkit-mask-composite:xor)){
     .card::after{
-      content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
+      content:"";position:absolute;inset:0;border-radius:inherit;padding:.5px;
       pointer-events:none;z-index:2;
       background:conic-gradient(from var(--ring-a,0deg) at 50% 50%,
         rgba(255,255,255,.06) 0deg,
@@ -219,7 +219,7 @@
   .mode{
     padding:7px 13px;border-radius:8px;background:rgba(255,255,255,.07);
     font:500 11px/1 var(--cjk);color:var(--ink-70);cursor:pointer;
-    border:1px solid rgba(255,255,255,.09);
+    border:.5px solid rgba(255,255,255,.09);
     -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.09);
     transition:background .18s,color .18s,border-color .18s;
@@ -236,7 +236,7 @@
   .feed .list{display:flex;flex-direction:column;gap:0;}
   .feed .fr{display:flex;align-items:center;gap:9px;padding:3.5px 8px;border-radius:5px;}
   .feed .fr.lead{background:linear-gradient(90deg,rgba(249,140,30,.22),rgba(249,140,30,.06));
-    border:1px solid rgba(249,140,30,.38);}
+    border:.5px solid rgba(249,140,30,.38);}
   .feed .fr .d{font:500 9px/1 var(--mono);color:var(--ink-45);width:31px;flex:none;}
   .feed .fr .t{font:400 10.5px/1.2 var(--cjk);color:var(--ink-70);flex:1;min-width:0;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -319,7 +319,7 @@
   .info{
     flex:none;
     width:13px;height:13px;border-radius:50%;padding:0;
-    border:1px solid rgba(255,184,77,.7);background:transparent;
+    border:.5px solid rgba(255,184,77,.7);background:transparent;
     color:var(--accent-lt);font:600 8.5px/1 var(--mono);
     display:flex;align-items:center;justify-content:center;cursor:pointer;
     transition:background .15s,color .15s,border-color .15s;
@@ -346,7 +346,7 @@
 
   .plus{
     width:24px;height:24px;border-radius:7px;flex:none;
-    border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--ink-45);
+    border:.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--ink-45);
     display:flex;align-items:center;justify-content:center;cursor:pointer;
     -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
@@ -405,7 +405,7 @@
   .readout{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
     min-height:30px;padding:7px 9px;border-radius:7px;
-    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);
+    background:rgba(255,255,255,.05);border:.5px solid rgba(255,255,255,.06);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
   }
   .readout .sel{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;}
@@ -413,6 +413,7 @@
   .readout .sel .n{font:600 13px/1 var(--mono);color:var(--accent-lt);}
   .readout .sel .m{font:600 13px/1 var(--mono);}
   .readout .sel .x{font:500 11px/1 var(--mono);color:var(--ink-50);}
+  .readout .sel .nm{font:400 11.5px/1.3 var(--cjk);color:var(--ink-70);}
 
   /* 上下線改掛在各欄位上，中間的 gap 自然把線斷開成左右兩段 */
   .pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
@@ -460,6 +461,14 @@
     stroke-linecap:round;stroke-linejoin:round;}
   .recent .r .m.tag{color:var(--accent-lt);}
   .recent .none{font:400 10.5px/1.5 var(--cjk);color:var(--ink-34);}
+  /* 近期活動／學習日誌：固定顯示約 3.5 列（第 4 列露出一半當作可捲動的提示），
+     往下捲看過往紀錄；捲軸隱藏，只保留滾動手勢 */
+  .recent .rlist{
+    display:flex;flex-direction:column;gap:4.5px;
+    max-height:64px;overflow-y:auto;
+    scrollbar-width:none;-ms-overflow-style:none;
+  }
+  .recent .rlist::-webkit-scrollbar{display:none;width:0;height:0;}
 
   .foot{margin-top:auto;padding-top:12px;font:400 9.5px/1.4 var(--mono);color:var(--ink-34);}
 
@@ -554,16 +563,18 @@
 <div class="grain" aria-hidden="true"></div>
 
 <div class="shell">
-  <h1 class="page-title">WEI'S DASHBOARD</h1>
   <div class="board">
 
     <div class="band card">
       <div class="rule"></div>
       <div class="who">
         <div class="stamp" id="stamp">—</div>
-        <p class="slogan">聚沙成塔，積少成多</p>
+        <div class="brand">
+          <h1 class="page-title">WEI'S DASHBOARD</h1>
+          <p class="slogan">聚沙成塔，積少成多</p>
+        </div>
         <div class="modes">
-          <button class="mode" id="mode-7" aria-pressed="true">近 7 天</button>
+          <button class="mode" id="mode-15" aria-pressed="true">近 15 天</button>
           <button class="mode" id="mode-30" aria-pressed="false">近 30 天</button>
         </div>
       </div>
@@ -679,7 +690,7 @@
 (function(){
   "use strict";
 
-  var WINDOW_DAYS = 7;
+  var WINDOW_DAYS = 15;
   var state = { running:null, cycling:null, ai:null, english:null, goals:null, weather:null };
   var sel = { running:null, cycling:null, ai:null, english:null };
   var totals = { running:"", cycling:"" };   // i 按鈕帶出的累計文字
@@ -849,10 +860,11 @@
       ? '差 <em>'+fmtKm(diff)+'</em> '+unit
       : '<em>已達標 +'+fmtKm(-diff)+'</em> '+unit)+'</div>';
   }
-  // 7 天跟 30 天的目標各自獨立設定（不是線性換算），
-  // 依目前選的視窗直接取對應的數字
+  // 30 天用月目標、7 天用週目標；15 天沒有自己的設定值，取月目標的一半
   function windowGoal(weeklyVal, monthlyVal){
-    return WINDOW_DAYS>=30 ? monthlyVal : weeklyVal;
+    if(WINDOW_DAYS>=30) return monthlyVal;
+    if(WINDOW_DAYS>=15 && monthlyVal!=null) return monthlyVal*WINDOW_DAYS/30;
+    return weeklyVal;
   }
 
   function daysInWindow(doc){
@@ -866,6 +878,7 @@
       t.durationSec = (t.durationSec||0) + (m.duration_sec||0);
       t.elevationM = (t.elevationM||0) + (m.elevation_gain_m||0);
       t.manual = true;
+      if(!t.name && m.note) t.name = m.note;
     });
     return wanted.map(function(dt){ return byDate[dt] || {date:dt, km:0, durationSec:0, elevationM:0}; });
   }
@@ -892,14 +905,25 @@
       ? windowGoal(goals.runWeeklyKm, goals.runMonthlyKm)
       : windowGoal(goals.rideWeeklyKm, goals.rideMonthlyKm);
 
+    // 沒有逐日名稱的舊資料，退回用 syncedRecent 依日期比對
+    function nameOn(dt, own){
+      if(own) return own;
+      var hit = (doc.syncedRecent||[]).filter(function(a){return a.date===dt;})[0];
+      return hit ? hit.name : "";
+    }
+
     var s = sel[kind] ? days.filter(function(d){return d.date===sel[kind];})[0] : null;
     var inner = null;
     if(s){
+      var sPace = (s.km>0 && s.durationSec>0) ? s.durationSec/s.km : 0;
+      var sName = nameOn(s.date, s.name);
       inner = '<span class="d">'+esc(md(s.date))+'</span>'+
         '<span class="m">'+fmtKm(s.km)+' km</span>'+
         (kind==="cycling"
-          ? '<span class="x">↑ '+Math.round(s.elevationM||0)+' m</span>'
-          : '<span class="x">'+(s.durationSec? fmtHM(s.durationSec):'—')+'</span>');
+          ? '<span class="x">↑ '+Math.round(s.elevationM||0)+' m</span>'+
+            (sName? '<span class="nm">'+esc(sName)+'</span>' : '')
+          : '<span class="x">'+(s.durationSec? fmtHM(s.durationSec):'—')+'</span>'+
+            '<span class="x">'+(sPace? fmtPace(sPace)+'/km' : '—')+'</span>');
     }
 
     var t = doc.totals || {};
@@ -917,20 +941,26 @@
           '<div><div class="k">本月里程</div><div class="v">'+fmtKm(mo.km||0)+' km</div></div>'+
         '</div>';
 
-    var recItems = (doc.syncedRecent||[]).slice(0,3).map(function(a){
-      return {date:a.date, name:a.name, met:fmtKm(a.km)+' km', tag:false};
+    // 近期活動：整段歷史由新到舊，可往下捲。距離趨近 0 的誤觸紀錄不列。
+    var recItems = [];
+    (doc.days||[]).forEach(function(d){
+      if(!(d.km>=0.05)) return;
+      recItems.push({date:d.date, name:nameOn(d.date, d.name)||(kind==="cycling"?"騎乘":"跑步"),
+        km:d.km, sec:d.durationSec, tag:false});
     });
-    (doc.manualEntries||[]).slice(-2).reverse().forEach(function(m){
-      recItems.unshift({date:m.date, name:m.note||"手動紀錄",
-        met:(m.distance_km!=null? fmtKm(m.distance_km)+' km':'手動'), tag:true});
+    (doc.manualEntries||[]).forEach(function(m){
+      recItems.push({date:m.date, name:m.note||"手動紀錄",
+        km:m.distance_km, sec:m.duration_sec, tag:true});
     });
+    recItems.sort(function(x,y){ return x.date<y.date ? 1 : (x.date>y.date ? -1 : 0); });
     var rec = recItems.map(function(r,i){
-      var last = i===recItems.length-1;
-      return '<div class="r'+(last?' faded':'')+'">'+
+      var met = r.km!=null ? fmtKm(r.km)+' km' : '手動';
+      if(kind==="running" && r.km>0 && r.sec>0) met += ' · '+fmtPace(r.sec/r.km);
+      return '<div class="r">'+
         rowIcon(i)+
         '<span class="d">'+esc(md(r.date))+'</span>'+
         '<span class="n">'+esc(r.name)+'</span>'+
-        '<span class="m'+(r.tag?' tag':'')+'">'+esc(r.met)+'</span></div>';
+        '<span class="m'+(r.tag?' tag':'')+'">'+esc(met)+'</span></div>';
     });
 
     // 累計文字改由標題列的 i 按鈕帶出，不再佔用大數字那一列
@@ -952,7 +982,7 @@
       readoutHtml(inner)+
       pairHtml+
       '<div class="recent"><div class="k">近期活動</div>'+
-        (rec.length? rec.join("") : '<div class="none">尚無紀錄</div>')+'</div>';
+        (rec.length? '<div class="rlist">'+rec.join("")+'</div>' : '<div class="none">尚無紀錄</div>')+'</div>';
 
     dot.className = "dot" + (winKm>0 ? "" : " idle");
   }
@@ -1017,7 +1047,7 @@
           '<div><div class="k">LC 聽力</div><div class="v">—</div></div>'+
           '<div><div class="k">RC 閱讀</div><div class="v">—</div></div>'+
         '</div>'+
-        '<div class="recent"><div class="k">近期測驗</div><div class="none">尚無紀錄</div></div>'+
+        '<div class="recent"><div class="k">學習日誌</div><div class="none">尚無紀錄</div></div>'+
         '<div class="foot">手動上傳截圖 · 由 Claude 讀圖擷取</div>';
       dot.className = "dot warn";
       return;
@@ -1060,15 +1090,20 @@
         '<div><div class="k">LC 聽力</div><div class="v">'+(latest.toeic_lc!=null? num(latest.toeic_lc):'—')+'</div></div>'+
         '<div><div class="k">RC 閱讀</div><div class="v">'+(latest.toeic_rc!=null? num(latest.toeic_rc):'—')+'</div></div>'+
       '</div>'+
-      '<div class="recent"><div class="k">近期測驗</div>'+
-        (doc.history||[]).slice(-3).reverse().map(function(h,i){
-          // 日期 / 預測分數 / 題目數 · 詞彙數 —— 跟 note 無關，一律照數值欄位排
-          return '<div class="r">'+rowIcon(i)+
-            '<span class="d">'+esc(md(h.date))+'</span>'+
-            '<span class="n">'+(h.toeic_predicted!=null? num(h.toeic_predicted)+' 分':'—')+'</span>'+
-            '<span class="m">'+(h.questions_count!=null? num(h.questions_count)+' 題':'—')+
-              ' · '+(h.vocab_count!=null? num(h.vocab_count)+' 詞':'—')+'</span></div>';
-        }).join("")+'</div>'+
+      '<div class="recent"><div class="k">學習日誌</div>'+
+        ((doc.history||[]).length
+          ? '<div class="rlist">'+(doc.history||[]).slice().sort(function(x,y){
+              return x.date<y.date ? 1 : (x.date>y.date ? -1 : 0);
+            }).map(function(h,i){
+              // 日期 / 預測分數 / 學習時間 · 題數 · 詞彙數 —— 跟 note 無關，一律照數值欄位排
+              return '<div class="r">'+rowIcon(i)+
+                '<span class="d">'+esc(md(h.date))+'</span>'+
+                '<span class="n">'+(h.toeic_predicted!=null? num(h.toeic_predicted)+' 分':'—')+'</span>'+
+                '<span class="m">'+(h.study_time_sec!=null? fmtHM(h.study_time_sec):'—')+
+                  '·'+(h.questions_count!=null? num(h.questions_count)+'題':'—')+
+                  '·'+(h.vocab_count!=null? num(h.vocab_count)+'詞':'—')+'</span></div>';
+            }).join("")+'</div>'
+          : '<div class="none">尚無紀錄</div>')+'</div>'+
       '<div class="foot">手動維護 · 資料來源 Santa</div>';
 
     dot.className = "dot";
@@ -1128,12 +1163,12 @@
   // window toggle
   function setWindow(n){
     WINDOW_DAYS = n;
-    document.getElementById("mode-7").setAttribute("aria-pressed", n===7 ? "true":"false");
+    document.getElementById("mode-15").setAttribute("aria-pressed", n===15 ? "true":"false");
     document.getElementById("mode-30").setAttribute("aria-pressed", n===30 ? "true":"false");
     sel.running = sel.cycling = sel.ai = sel.english = null;
     renderAll();
   }
-  document.getElementById("mode-7").addEventListener("click", function(){ setWindow(7); });
+  document.getElementById("mode-15").addEventListener("click", function(){ setWindow(15); });
   document.getElementById("mode-30").addEventListener("click", function(){ setWindow(30); });
 
   // ---------- capabilities ----------
