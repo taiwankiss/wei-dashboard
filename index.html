@@ -583,7 +583,7 @@
         <div class="stamp" id="stamp">—</div>
         <h1 class="page-title">WEI'S DASHBOARD</h1>
         <div class="modes">
-          <button class="mode" id="mode-15" aria-pressed="true">近 15 天</button>
+          <button class="mode" id="mode-30" aria-pressed="true">近 30 天</button>
           <button class="mode" id="mode-all" aria-pressed="false">全部</button>
         </div>
       </div>
@@ -699,7 +699,7 @@
 (function(){
   "use strict";
 
-  var WINDOW_DAYS = 15;   // 15 = 近 15 天（長條圖）；0 = 全部（折線圖，從各卡片第一筆紀錄到今天）
+  var WINDOW_DAYS = 30;   // 30 = 近 30 天（長條圖）；0 = 全部（折線圖，從各卡片第一筆紀錄到今天）
   var state = { running:null, cycling:null, ai:null, english:null, goals:null, weather:null };
   var sel = { running:null, cycling:null, ai:null, english:null };
   var totals = { running:"", cycling:"" };   // i 按鈕帶出的累計文字
@@ -871,12 +871,12 @@
   function chartHtml(kind, days, valueOf){
     return WINDOW_DAYS>0 ? barsHtml(kind, days, valueOf) : lineHtml(kind, days, valueOf);
   }
-  // 視窗內的日期：近 15 天，或「全部」＝從 firstDate 到今天
+  // 視窗內的日期：近 30 天，或「全部」＝從 firstDate 到今天
   function windowDates(firstDate){
-    if(WINDOW_DAYS>0 || !firstDate) return lastDays(WINDOW_DAYS>0 ? WINDOW_DAYS : 15);
+    if(WINDOW_DAYS>0 || !firstDate) return lastDays(WINDOW_DAYS>0 ? WINDOW_DAYS : 30);
     var end = tpeToday(), out = [], dt = firstDate;
     while(dt<=end){ out.push(dt); dt = shiftDay(dt,1); }
-    return out.length>1 ? out : lastDays(15);
+    return out.length>1 ? out : lastDays(30);
   }
   function minDate(list){
     var m = null;
@@ -1230,12 +1230,12 @@
   // window toggle
   function setWindow(n){
     WINDOW_DAYS = n;
-    document.getElementById("mode-15").setAttribute("aria-pressed", n===15 ? "true":"false");
+    document.getElementById("mode-30").setAttribute("aria-pressed", n===30 ? "true":"false");
     document.getElementById("mode-all").setAttribute("aria-pressed", n===0 ? "true":"false");
     sel.running = sel.cycling = sel.ai = sel.english = null;
     renderAll();
   }
-  document.getElementById("mode-15").addEventListener("click", function(){ setWindow(15); });
+  document.getElementById("mode-30").addEventListener("click", function(){ setWindow(30); });
   document.getElementById("mode-all").addEventListener("click", function(){ setWindow(0); });
 
   // ---------- capabilities ----------
