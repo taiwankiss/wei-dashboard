@@ -406,6 +406,15 @@
   .line .pt:hover::after,.line .pt[aria-pressed="true"]::after{opacity:1;}
   .line .pt[aria-pressed="true"]::after{background:#fff;}
   .line .pt:focus-visible{outline:2px solid var(--accent-lt);outline-offset:-2px;}
+  /* 進場：長條由左至右一根一根從底部升起。用獨立的 scale 屬性，不跟 hover 的 transform 打架；
+     有資料的長條要把原本的兩組流光動畫一併寫進來，delay 也對應寫成三個值。 */
+  @keyframes barRise{from{scale:1 0;}to{scale:1 1;}}
+  .bars.enter .b{transform-origin:50% 100%;animation:barRise .55s cubic-bezier(.2,.8,.25,1) backwards;}
+  .bars.enter .b.has{animation:barFlow 8s linear infinite,barGlow 5.5s ease-in-out infinite,
+    barRise .55s cubic-bezier(.2,.8,.25,1) backwards;}
+  @media(prefers-reduced-motion:reduce){
+    .bars.enter .b,.bars.enter .b.has{animation:none;}
+  }
   .bars .b:hover{filter:brightness(1.3);transform:translateY(-1px);}
   .bars .b[aria-pressed="true"]{outline:1px solid var(--accent-lt);outline-offset:1px;}
   .bars .b:focus-visible{outline:2px solid var(--accent-lt);outline-offset:1px;}
@@ -704,6 +713,10 @@
   var sel = { running:null, cycling:null, ai:null, english:null };
   var totals = { running:"", cycling:"" };   // i 按鈕帶出的累計文字
   var db = null, sample = null, sampleImages = false, staticMode = false;
+  var ENTER = {};      // 各卡片圖表進場動畫的起點時間；切換區間時清空重來
+  var lineData = {}, lineRaf = {};   // 折線圖各點的目標高度，供 rAF 逐格更新用
+  var ENTER_STAGGER = 1.3, BAR_DUR = .55, LINE_DUR = .8;   // 秒：全部長條／點依序出發的總時間、單根／單點的動作時間
+  var REDUCE_MOTION = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
   var ANIM_EPOCH = Date.now();   // 長條圖流光動畫的共同起點，重繪時用它算出目前該在的相位，避免看起來「跳一下」
 
   // ---------- date / format helpers ----------
@@ -821,11 +834,21 @@
   function hideToast(){ toast.classList.remove("show"); }
 
   // ---------- shared pieces ----------
+  // 進場動畫已經過的秒數；null 表示已播完（或使用者偏好減少動態），不必再帶進場樣式。
+  // 重繪不會讓動畫重來：起點固定，每次重繪只是依「已過時間」算出目前該在的位置。
+  function enterElapsed(kind, dur){
+    if(REDUCE_MOTION) return null;
+    if(ENTER[kind]==null) ENTER[kind] = Date.now();
+    var e = (Date.now()-ENTER[kind])/1000;
+    return e < ENTER_STAGGER+dur+.05 ? e : null;
+  }
   function barsHtml(kind, days, valueOf){
+    var enter = enterElapsed(kind, BAR_DUR);
+    var step = ENTER_STAGGER/Math.max(1,days.length);
     var max = 0;
     days.forEach(function(d){ max = Math.max(max, valueOf(d)||0); });
     if(max<=0) max = 1;
-    return '<div class="bars" role="group" aria-label="每日數據">'+days.map(function(d,i){
+    return '<div class="bars'+(enter!=null?' enter':'')+'" role="group" aria-label="每日數據">'+days.map(function(d,i){
       var v = valueOf(d)||0;
       var h = v>0 ? Math.max(8, Math.round((v/max)*50)) : 5;
       var on = sel[kind]===d.date;
@@ -833,39 +856,70 @@
       // 用「距共同起點的經過時間」而不是固定值算相位，這樣點擊選取造成的重繪
       // 換出新的柱子元素時，動畫會接續在原本該有的相位上繼續跑，畫面不會跳一下。
       var delay = (-((Date.now()-ANIM_EPOCH)/1000 + i*0.55)).toFixed(2);
+      // 進場中：有資料的長條 delay 依序是 流光、發光、升起；沒資料的只有升起
+      var rise = (i*step-(enter||0)).toFixed(2)+'s';
+      var dl = enter!=null ? (v>0 ? num(delay)+'s,'+num(delay)+'s,'+rise : rise) : num(delay)+'s';
       return '<button class="b'+(v>0?' has':'')+'" data-kind="'+esc(kind)+'" data-date="'+esc(d.date)+'" '+
-        'aria-pressed="'+(on?"true":"false")+'" style="height:'+num(h)+'px;animation-delay:'+num(delay)+'s" '+
+        'aria-pressed="'+(on?"true":"false")+'" style="height:'+num(h)+'px;animation-delay:'+dl+'" '+
         'title="'+esc(md(d.date))+'" aria-label="'+esc(md(d.date))+'"></button>';
     }).join("")+'</div>';
   }
   // 折線圖：x 取每格中心點，與底下透明按鈕對齊
+  // 折線圖進場：所有點先在底線上排成一條橫線，再由左至右各自移到定位。
+  // 幾何依「已過時間」算出；進場中由 rAF 逐格改 path 與點位，重繪也不會重來。
+  function lineGeometry(ld, e){
+    var n = ld.n, step = ENTER_STAGGER/Math.max(1,n);
+    var ys = ld.targets.map(function(t,i){
+      if(e==null) return t;
+      var k = Math.min(1, Math.max(0, (e-i*step)/LINE_DUR));
+      return 48+(t-48)*(1-Math.pow(1-k,3));
+    });
+    var xs = ys.map(function(_,i){ return (i+0.5)*100/n; });
+    var line = ys.map(function(y,i){ return (i?"L":"M")+xs[i].toFixed(2)+" "+y.toFixed(2); }).join(" ");
+    var area = line+" L"+xs[n-1].toFixed(2)+" 52 L"+xs[0].toFixed(2)+" 52 Z";
+    return {ys:ys, line:line, area:area};
+  }
+  function paintLine(kind){
+    var ld = lineData[kind], el = document.querySelector("#body-"+kind+" .line");
+    if(!ld || !el) return false;
+    var e = enterElapsed(kind, LINE_DUR), g = lineGeometry(ld, e);
+    el.querySelector(".la").setAttribute("d", g.area);
+    el.querySelector(".lp").setAttribute("d", g.line);
+    var pts = el.querySelectorAll(".pt");
+    for(var i=0;i<pts.length;i++) pts[i].style.setProperty("--y", ((52-g.ys[i])/52*100).toFixed(1)+"%");
+    return e!=null;
+  }
+  function tickLine(kind){
+    if(lineRaf[kind]) return;
+    (function loop(){
+      lineRaf[kind] = 0;
+      if(paintLine(kind)) lineRaf[kind] = requestAnimationFrame(loop);
+    })();
+  }
   function lineHtml(kind, days, valueOf){
     var n = days.length, max = 0;
     days.forEach(function(d){ max = Math.max(max, valueOf(d)||0); });
     if(max<=0) max = 1;
-    var pts = days.map(function(d,i){
-      var v = valueOf(d)||0;
-      return {x:(i+0.5)*100/n, y:48-(v/max)*44, d:d};
-    });
-    var line = pts.map(function(q,i){ return (i?"L":"M")+q.x.toFixed(2)+" "+q.y.toFixed(2); }).join(" ");
-    var area = line+" L"+pts[n-1].x.toFixed(2)+" 52 L"+pts[0].x.toFixed(2)+" 52 Z";
-    var g = "lg-"+kind;
+    var ld = lineData[kind] = {n:n, targets:days.map(function(d){ return 48-((valueOf(d)||0)/max)*44; })};
+    var e = enterElapsed(kind, LINE_DUR), g = lineGeometry(ld, e);
+    var gid = "lg-"+kind;
+    if(e!=null) setTimeout(function(){ tickLine(kind); }, 0);   // 等這次 innerHTML 寫進 DOM 後再開始逐格更新
     return '<div class="line" role="group" aria-label="每日數據">'+
       '<svg viewBox="0 0 100 52" preserveAspectRatio="none" aria-hidden="true">'+
         '<defs>'+
-          '<linearGradient id="'+g+'" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="52">'+
+          '<linearGradient id="'+gid+'" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="52">'+
             '<stop offset="0" stop-color="#FFE49A"/><stop offset="1" stop-color="#F97316"/></linearGradient>'+
-          '<linearGradient id="'+g+'a" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="52">'+
+          '<linearGradient id="'+gid+'a" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="52">'+
             '<stop offset="0" stop-color="#FF9522" stop-opacity=".38"/><stop offset="1" stop-color="#FF9522" stop-opacity="0"/></linearGradient>'+
         '</defs>'+
-        '<path d="'+area+'" fill="url(#'+g+'a)"/>'+
-        '<path d="'+line+'" fill="none" stroke="url(#'+g+')" stroke-width="1.8" stroke-linejoin="round" '+
+        '<path class="la" d="'+g.area+'" fill="url(#'+gid+'a)"/>'+
+        '<path class="lp" d="'+g.line+'" fill="none" stroke="url(#'+gid+')" stroke-width="1.8" stroke-linejoin="round" '+
           'stroke-linecap="round" vector-effect="non-scaling-stroke"/>'+
       '</svg>'+
-      pts.map(function(q){
-        var on = sel[kind]===q.d.date;
-        return '<button class="pt" data-kind="'+esc(kind)+'" data-date="'+esc(q.d.date)+'" aria-pressed="'+(on?"true":"false")+'" '+
-          'style="--y:'+((52-q.y)/52*100).toFixed(1)+'%" title="'+esc(md(q.d.date))+'" aria-label="'+esc(md(q.d.date))+'"></button>';
+      days.map(function(d,i){
+        var on = sel[kind]===d.date;
+        return '<button class="pt" data-kind="'+esc(kind)+'" data-date="'+esc(d.date)+'" aria-pressed="'+(on?"true":"false")+'" '+
+          'style="--y:'+((52-g.ys[i])/52*100).toFixed(1)+'%" title="'+esc(md(d.date))+'" aria-label="'+esc(md(d.date))+'"></button>';
       }).join("")+'</div>';
   }
   function chartHtml(kind, days, valueOf){
@@ -1233,6 +1287,7 @@
     document.getElementById("mode-30").setAttribute("aria-pressed", n===30 ? "true":"false");
     document.getElementById("mode-all").setAttribute("aria-pressed", n===0 ? "true":"false");
     sel.running = sel.cycling = sel.ai = sel.english = null;
+    ENTER = {};   // 切換區間視同重新進場，動畫從頭播
     renderAll();
   }
   document.getElementById("mode-30").addEventListener("click", function(){ setWindow(30); });
