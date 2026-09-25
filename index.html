@@ -717,6 +717,8 @@
   var lineData = {}, lineRaf = {};   // 折線圖各點的目標高度，供 rAF 逐格更新用
   var ENTER_STAGGER = 1.3, BAR_DUR = .55, LINE_DUR = .8;   // 秒：全部長條／點依序出發的總時間、單根／單點的動作時間
   var REDUCE_MOTION = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var PENDING = {};                 // 還沒進畫面、在等進場動畫的卡片
+  var WAIT = -1000;                 // 尚未進入畫面：「已過時間」設成很大的負數，長條停在最矮、折線停在橫線
   var ANIM_EPOCH = Date.now();   // 長條圖流光動畫的共同起點，重繪時用它算出目前該在的相位，避免看起來「跳一下」
 
   // ---------- date / format helpers ----------
@@ -836,9 +838,22 @@
   // ---------- shared pieces ----------
   // 進場動畫已經過的秒數；null 表示已播完（或使用者偏好減少動態），不必再帶進場樣式。
   // 重繪不會讓動畫重來：起點固定，每次重繪只是依「已過時間」算出目前該在的位置。
+  var hasObserver = typeof IntersectionObserver==="function";
+  // 用當下版面即時判斷，不看觀察器的舊結果：載入時骨架屏很矮，下方卡片一度會落在畫面內，等資料填進來才被推到畫面外
+  function inView(kind){
+    var el = document.getElementById("body-"+kind);
+    if(!el) return true;
+    var r = el.getBoundingClientRect();
+    return r.top < window.innerHeight-120 && r.bottom > 0;
+  }
   function enterElapsed(kind, dur){
     if(REDUCE_MOTION) return null;
-    if(ENTER[kind]==null) ENTER[kind] = Date.now();
+    if(ENTER[kind]==null){
+      // 滑到才播：卡片還沒進畫面就先停在起始狀態，等 IntersectionObserver 通知再開始
+      if(hasObserver && !inView(kind)){ PENDING[kind] = true; return WAIT; }
+      PENDING[kind] = false;
+      ENTER[kind] = Date.now();
+    }
     var e = (Date.now()-ENTER[kind])/1000;
     return e < ENTER_STAGGER+dur+.05 ? e : null;
   }
@@ -903,7 +918,7 @@
     var ld = lineData[kind] = {n:n, targets:days.map(function(d){ return 48-((valueOf(d)||0)/max)*44; })};
     var e = enterElapsed(kind, LINE_DUR), g = lineGeometry(ld, e);
     var gid = "lg-"+kind;
-    if(e!=null) setTimeout(function(){ tickLine(kind); }, 0);   // 等這次 innerHTML 寫進 DOM 後再開始逐格更新
+    if(e!=null && e>WAIT) setTimeout(function(){ tickLine(kind); }, 0);   // 等這次 innerHTML 寫進 DOM 後再開始逐格更新
     return '<div class="line" role="group" aria-label="每日數據">'+
       '<svg viewBox="0 0 100 52" preserveAspectRatio="none" aria-hidden="true">'+
         '<defs>'+
@@ -1262,6 +1277,23 @@
     renderFeed();
     renderStamp();
     syncListFade();
+  }
+
+  // 滑到才播進場動畫：圖表區進入畫面（上緣 120px 內容露出）才開始，手機上下方的卡片不會在看不到時就跑完。
+  // 只在「還在等」的卡片重繪一次；播過的卡片來回捲動不會重播。
+  if(hasObserver){
+    var io = new IntersectionObserver(function(entries){
+      var wake = false;
+      entries.forEach(function(en){
+        var k = en.target.id.replace("body-","");
+        if(en.isIntersecting && PENDING[k]){ PENDING[k] = false; ENTER[k] = Date.now(); wake = true; }
+      });
+      if(wake) renderAll();
+    }, {rootMargin:"0px 0px -120px 0px", threshold:0});
+    ["running","cycling","english","ai"].forEach(function(k){
+      var el = document.getElementById("body-"+k);
+      if(el) io.observe(el);
+    });
   }
 
   // bar clicks (delegated — bars are re-rendered constantly)
