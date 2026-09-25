@@ -395,6 +395,17 @@
   @media(prefers-reduced-motion:reduce){
     .bars .b.has{animation:none;background-position:0 -36px;}
   }
+  /* 「全部」模式的折線圖：svg 畫線與面積，上面疊一排透明按鈕接點擊，點位與 svg 的 x 座標對齊 */
+  .line{position:relative;height:52px;margin:8px 0;display:flex;}
+  .line svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;
+    filter:drop-shadow(0 0 5px rgba(255,150,40,.55));pointer-events:none;}
+  .line .pt{flex:1;position:relative;height:100%;background:none;border:0;padding:0;cursor:pointer;min-width:0;}
+  .line .pt::after{
+    content:"";position:absolute;left:50%;bottom:var(--y);width:7px;height:7px;margin:0 0 -3.5px -3.5px;
+    border-radius:50%;background:#FFCF6B;box-shadow:0 0 8px rgba(255,170,50,.9);opacity:0;transition:opacity .12s;}
+  .line .pt:hover::after,.line .pt[aria-pressed="true"]::after{opacity:1;}
+  .line .pt[aria-pressed="true"]::after{background:#fff;}
+  .line .pt:focus-visible{outline:2px solid var(--accent-lt);outline-offset:-2px;}
   .bars .b:hover{filter:brightness(1.3);transform:translateY(-1px);}
   .bars .b[aria-pressed="true"]{outline:1px solid var(--accent-lt);outline-offset:1px;}
   .bars .b:focus-visible{outline:2px solid var(--accent-lt);outline-offset:1px;}
@@ -573,7 +584,7 @@
         <h1 class="page-title">WEI'S DASHBOARD</h1>
         <div class="modes">
           <button class="mode" id="mode-15" aria-pressed="true">近 15 天</button>
-          <button class="mode" id="mode-30" aria-pressed="false">近 30 天</button>
+          <button class="mode" id="mode-all" aria-pressed="false">全部</button>
         </div>
       </div>
       <div class="feed">
@@ -688,7 +699,7 @@
 (function(){
   "use strict";
 
-  var WINDOW_DAYS = 15;
+  var WINDOW_DAYS = 15;   // 15 = 近 15 天（長條圖）；0 = 全部（折線圖，從各卡片第一筆紀錄到今天）
   var state = { running:null, cycling:null, ai:null, english:null, goals:null, weather:null };
   var sel = { running:null, cycling:null, ai:null, english:null };
   var totals = { running:"", cycling:"" };   // i 按鈕帶出的累計文字
@@ -827,6 +838,53 @@
         'title="'+esc(md(d.date))+'" aria-label="'+esc(md(d.date))+'"></button>';
     }).join("")+'</div>';
   }
+  // 折線圖：x 取每格中心點，與底下透明按鈕對齊
+  function lineHtml(kind, days, valueOf){
+    var n = days.length, max = 0;
+    days.forEach(function(d){ max = Math.max(max, valueOf(d)||0); });
+    if(max<=0) max = 1;
+    var pts = days.map(function(d,i){
+      var v = valueOf(d)||0;
+      return {x:(i+0.5)*100/n, y:48-(v/max)*44, d:d};
+    });
+    var line = pts.map(function(q,i){ return (i?"L":"M")+q.x.toFixed(2)+" "+q.y.toFixed(2); }).join(" ");
+    var area = line+" L"+pts[n-1].x.toFixed(2)+" 52 L"+pts[0].x.toFixed(2)+" 52 Z";
+    var g = "lg-"+kind;
+    return '<div class="line" role="group" aria-label="每日數據">'+
+      '<svg viewBox="0 0 100 52" preserveAspectRatio="none" aria-hidden="true">'+
+        '<defs>'+
+          '<linearGradient id="'+g+'" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="52">'+
+            '<stop offset="0" stop-color="#FFE49A"/><stop offset="1" stop-color="#F97316"/></linearGradient>'+
+          '<linearGradient id="'+g+'a" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="52">'+
+            '<stop offset="0" stop-color="#FF9522" stop-opacity=".38"/><stop offset="1" stop-color="#FF9522" stop-opacity="0"/></linearGradient>'+
+        '</defs>'+
+        '<path d="'+area+'" fill="url(#'+g+'a)"/>'+
+        '<path d="'+line+'" fill="none" stroke="url(#'+g+')" stroke-width="1.8" stroke-linejoin="round" '+
+          'stroke-linecap="round" vector-effect="non-scaling-stroke"/>'+
+      '</svg>'+
+      pts.map(function(q){
+        var on = sel[kind]===q.d.date;
+        return '<button class="pt" data-kind="'+esc(kind)+'" data-date="'+esc(q.d.date)+'" aria-pressed="'+(on?"true":"false")+'" '+
+          'style="--y:'+((52-q.y)/52*100).toFixed(1)+'%" title="'+esc(md(q.d.date))+'" aria-label="'+esc(md(q.d.date))+'"></button>';
+      }).join("")+'</div>';
+  }
+  function chartHtml(kind, days, valueOf){
+    return WINDOW_DAYS>0 ? barsHtml(kind, days, valueOf) : lineHtml(kind, days, valueOf);
+  }
+  // 視窗內的日期：近 15 天，或「全部」＝從 firstDate 到今天
+  function windowDates(firstDate){
+    if(WINDOW_DAYS>0 || !firstDate) return lastDays(WINDOW_DAYS>0 ? WINDOW_DAYS : 15);
+    var end = tpeToday(), out = [], dt = firstDate;
+    while(dt<=end){ out.push(dt); dt = shiftDay(dt,1); }
+    return out.length>1 ? out : lastDays(15);
+  }
+  function minDate(list){
+    var m = null;
+    list.forEach(function(x){ if(x && (m===null || x<m)) m = x; });
+    return m;
+  }
+  function winUnit(){ return WINDOW_DAYS>0 ? WINDOW_DAYS+"天" : "全部"; }
+
   // 列前的藍色線條圖示，每列錯開相位，畫線的動作就會一列接一列跑。
   // 跟長條圖一樣用共同起點的經過時間算 delay，這樣任何一張卡片的重繪
   // 都不會讓這些圖示的畫線動畫跳一下重新起算。
@@ -858,15 +916,15 @@
       ? '差 <em>'+fmtKm(diff)+'</em> '+unit
       : '<em>已達標 +'+fmtKm(-diff)+'</em> '+unit)+'</div>';
   }
-  // 30 天用月目標、7 天用週目標；15 天沒有自己的設定值，取月目標的一半
-  function windowGoal(weeklyVal, monthlyVal){
-    if(WINDOW_DAYS>=30) return monthlyVal;
-    if(WINDOW_DAYS>=15 && monthlyVal!=null) return monthlyVal*WINDOW_DAYS/30;
-    return weeklyVal;
+  // 視窗天數 × 月目標 / 30；沒有月目標就用週目標 × 天數 / 7
+  function windowGoal(weeklyVal, monthlyVal, nDays){
+    if(monthlyVal!=null) return monthlyVal*nDays/30;
+    return weeklyVal!=null ? weeklyVal*nDays/7 : null;
   }
 
   function daysInWindow(doc){
-    var wanted = lastDays(WINDOW_DAYS);
+    var wanted = windowDates(minDate((doc && doc.days || []).map(function(d){return d.date;})
+      .concat((doc && doc.manualEntries || []).map(function(m){return m.date;}))));
     var byDate = {};
     (doc && doc.days || []).forEach(function(d){ byDate[d.date] = d; });
     (doc && doc.manualEntries || []).forEach(function(m){
@@ -900,8 +958,8 @@
     var winClimb = days.reduce(function(a,d){return a+(d.elevationM||0);},0);
     var goals = state.goals || {};
     var goal = kind==="running"
-      ? windowGoal(goals.runWeeklyKm, goals.runMonthlyKm)
-      : windowGoal(goals.rideWeeklyKm, goals.rideMonthlyKm);
+      ? windowGoal(goals.runWeeklyKm, goals.runMonthlyKm, days.length)
+      : windowGoal(goals.rideWeeklyKm, goals.rideMonthlyKm, days.length);
 
     // 沒有逐日名稱的舊資料，退回用 syncedRecent 依日期比對
     function nameOn(dt, own){
@@ -970,13 +1028,13 @@
       '<div class="headline">'+
         '<div class="hl-main">'+
           '<div class="big"><span class="v">'+fmtKm(winKm)+'</span>'+
-          '<span class="u-wrap"><span class="u">km / '+WINDOW_DAYS+'天</span>'+
+          '<span class="u-wrap"><span class="u">km / '+winUnit()+'</span>'+
           '<button class="info" data-info="'+esc(kind)+'" title="累計數據" aria-label="累計數據">i</button>'+
           '</span></div>'+
           goalLine(winKm, goal, 'km')+
         '</div>'+
       '</div>'+
-      barsHtml(kind, days, function(d){return d.km;})+
+      chartHtml(kind, days, function(d){return d.km;})+
       readoutHtml(inner)+
       pairHtml+
       '<div class="recent"><div class="k">近期活動</div>'+
@@ -996,7 +1054,7 @@
       dot.className = "dot warn";
       return;
     }
-    var wanted = lastDays(WINDOW_DAYS), byDate = {};
+    var wanted = windowDates(minDate((doc.daily||[]).map(function(d){return d.date;}))), byDate = {};
     (doc.daily||[]).forEach(function(d){ byDate[d.date]=d; });
     var days = wanted.map(function(dt){ return byDate[dt] || {date:dt, seconds:0, sessions:0}; });
     var winSec = days.reduce(function(a,d){return a+(d.seconds||0);},0);
@@ -1009,9 +1067,9 @@
     body.innerHTML =
       '<div class="headline"><div class="hl-main">'+
         '<div class="big"><span class="v">'+fmtHours(winSec)+'</span>'+
-        '<span class="u">小時 / '+WINDOW_DAYS+'天</span></div>'+
+        '<span class="u">小時 / '+winUnit()+'</span></div>'+
         '<div class="goal">Claude 使用紀錄自動同步</div></div></div>'+
-      barsHtml("ai", days, function(d){return d.seconds;})+
+      chartHtml("ai", days, function(d){return d.seconds;})+
       readoutHtml(inner)+
       '<div class="pair">'+
         '<div><div class="k">目前專案</div><div class="v">'+num(doc.projectCount||0)+'</div></div>'+
@@ -1038,7 +1096,7 @@
       body.innerHTML =
         '<div class="headline"><div class="hl-main">'+
           '<div class="big"><span class="v">—</span>'+
-          '<span class="u">小時 / '+WINDOW_DAYS+'天</span></div>'+
+          '<span class="u">小時 / '+winUnit()+'</span></div>'+
           '<div class="goal">'+(tgt!=null? '目標 '+num(tgt)+' 分 · 尚未上傳紀錄' : '尚未上傳學習紀錄')+'</div></div></div>'+
         readoutHtml(null)+
         '<div class="pair">'+
@@ -1053,7 +1111,7 @@
     var score = latest.toeic_predicted;
 
     // 逐日學習時間長條圖 —— 與跑步／騎車同一套視覺語彙
-    var wanted = lastDays(WINDOW_DAYS), byDate = {};
+    var wanted = windowDates(minDate((doc.history||[]).map(function(h){return h.date;}))), byDate = {};
     (doc.history||[]).forEach(function(h){
       if(!h.date) return;
       var t = byDate[h.date] || (byDate[h.date] = {date:h.date, seconds:0, questions:0, vocab:0, score:null});
@@ -1077,12 +1135,12 @@
     body.innerHTML =
       '<div class="headline"><div class="hl-main">'+
         '<div class="big"><span class="v">'+fmtHours(winSec)+'</span>'+
-        '<span class="u">小時 / '+WINDOW_DAYS+'天</span></div>'+
+        '<span class="u">小時 / '+winUnit()+'</span></div>'+
         (score!=null
           ? '<div class="goal">多益預測 <em>'+num(score)+'</em></div>'
           : '<div class="goal">尚無多益預測分數</div>')+
       '</div></div>'+
-      barsHtml("english", days, function(d){return d.seconds;})+
+      chartHtml("english", days, function(d){return d.seconds;})+
       readoutHtml(inner)+
       '<div class="pair">'+
         '<div><div class="k">LC 聽力</div><div class="v">'+(latest.toeic_lc!=null? num(latest.toeic_lc):'—')+'</div></div>'+
@@ -1154,7 +1212,7 @@
 
   // bar clicks (delegated — bars are re-rendered constantly)
   document.addEventListener("click", function(e){
-    var b = e.target.closest ? e.target.closest(".bars .b") : null;
+    var b = e.target.closest ? e.target.closest(".bars .b, .line .pt") : null;
     if(!b) return;
     var k = b.getAttribute("data-kind"), d = b.getAttribute("data-date");
     sel[k] = (sel[k]===d) ? null : d;
@@ -1173,12 +1231,12 @@
   function setWindow(n){
     WINDOW_DAYS = n;
     document.getElementById("mode-15").setAttribute("aria-pressed", n===15 ? "true":"false");
-    document.getElementById("mode-30").setAttribute("aria-pressed", n===30 ? "true":"false");
+    document.getElementById("mode-all").setAttribute("aria-pressed", n===0 ? "true":"false");
     sel.running = sel.cycling = sel.ai = sel.english = null;
     renderAll();
   }
   document.getElementById("mode-15").addEventListener("click", function(){ setWindow(15); });
-  document.getElementById("mode-30").addEventListener("click", function(){ setWindow(30); });
+  document.getElementById("mode-all").addEventListener("click", function(){ setWindow(0); });
 
   // ---------- capabilities ----------
   // 兩種執行環境用同一份檔案：
