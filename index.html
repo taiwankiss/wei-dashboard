@@ -198,8 +198,6 @@
   .stats .v{font:400 19px/1.1 var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .kpis4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
   .kpis4 > div{position:relative;overflow:hidden;padding:16px 18px;display:flex;flex-direction:column;gap:8px;}
-  /* 每張小卡頂端一條由深到淺的色條，四張各取同色系的不同段 */
-  .kpis4 > div::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--stripe);}
   .kpis4 .k{font:400 11px/1.2 var(--cjk);color:var(--ink-50);}
   .kpis4 .v{font:400 23px/1.1 var(--sans);color:var(--tone);white-space:nowrap;}
   .rows{padding:20px 22px;display:flex;flex-direction:column;gap:10px;}
@@ -796,11 +794,11 @@
     KINDS.forEach(function(k){ recs[k] = records(k); firsts.push(minKey(recs[k])); });
     var dates = windowDates(minDate(firsts));
     function d(k){ return daysOf(recs[k], dates); }
-    return tickerHtml()+'<div class="ov">'+
+    return '<div class="ov">'+
       '<div class="side">'+kpiHtml("running", d("running"), .6)+kpiHtml("cycling", d("cycling"), .75)+'</div>'+
       '<div class="orbit-wrap sec">'+orbitOverview(dates, recs)+'</div>'+
       '<div class="side">'+kpiHtml("english", d("english"), .9)+kpiHtml("ai", d("ai"), 1.05)+'</div>'+
-    '</div>'+timelineHtml();
+    '</div>'+timelineHtml()+tickerHtml();
   }
 
   // ---------- 單項頁 ----------
@@ -962,11 +960,10 @@
       list = [["活躍天數", act.length+" / "+n], ["總時數", f1(total)+" h"], ["活躍日平均", act.length? f1(total/act.length)+" h":"—"],
         ["專案數", num((state.ai||{}).projectCount||0)]];
     }
-    // 四張小卡各取同色系不同段：色條由深到淺、數字顏色交錯
-    var stripes = [pal[0]+","+pal[1], pal[1]+","+pal[2], pal[2]+","+pal[3], pal[0]+","+pal[3]];
+    // 四張小卡的數字顏色取同色系不同段、交錯排列
     var tones = [pal[2], pal[3], pal[1], pal[2]];
     return list.map(function(x, i){
-      return '<div class="panel up" style="--stripe:linear-gradient(90deg,'+stripes[i]+');--tone:'+tones[i]+';animation-delay:'+(0.2+i*0.08).toFixed(2)+'s">'+
+      return '<div class="panel up" style="--tone:'+tones[i]+';animation-delay:'+(0.2+i*0.08).toFixed(2)+'s">'+
         '<span class="k">'+esc(x[0])+'</span><span class="v">'+esc(x[1])+'</span></div>';
     }).join("");
   }
