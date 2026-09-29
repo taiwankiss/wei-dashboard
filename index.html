@@ -64,11 +64,23 @@
   .brand .s .wx{color:var(--ink-70);}
   .brand .s .wx.stale{opacity:.5;}
   .top .sp{flex:1;}
-  .seg{display:flex;padding:4px;gap:4px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);}
-  .seg button{height:36px;padding:0 16px;border:0;border-radius:999px;background:transparent;color:var(--ink-70);
-    font:500 13px/1 var(--cjk);cursor:pointer;transition:background .2s,color .2s;}
-  .seg button[aria-pressed="true"]{background:var(--ink);color:#16122A;font-weight:700;}
-  .seg button:focus-visible,.back:focus-visible,.tab:focus-visible,.kpi:focus-visible,.plus:focus-visible{outline:2px solid var(--accent-lt);outline-offset:2px;}
+  /* 玻璃質感切換：半透明底 + 背景模糊 + 內側高光，中間那顆玻璃滑塊在兩格之間滑動；預設停在左格 */
+  .sws{display:flex;align-items:center;gap:12px;}
+  .gsw{position:relative;display:inline-grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:3px;border-radius:999px;
+    background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+    border:1px solid rgba(255,255,255,.18);
+    -webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(255,255,255,.05),0 8px 24px rgba(0,0,0,.35);}
+  .gsw .thumb{position:absolute;left:3px;top:3px;bottom:3px;width:calc((100% - 6px)/2);border-radius:999px;
+    background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(255,255,255,.14));
+    border:1px solid rgba(255,255,255,.4);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 4px 14px rgba(0,0,0,.35);
+    transition:transform .4s cubic-bezier(.3,.7,.2,1);}
+  .gsw[data-pos="1"] .thumb{transform:translateX(100%);}
+  .gsw button{position:relative;z-index:1;min-width:78px;height:34px;padding:0 14px;border:0;border-radius:999px;background:transparent;
+    color:var(--ink-60);font:500 12px/1 var(--sans);letter-spacing:.05em;cursor:pointer;transition:color .3s;}
+  .gsw button[aria-pressed="true"]{color:#fff;font-weight:600;text-shadow:0 1px 6px rgba(0,0,0,.35);}
+  .gsw button:focus-visible,.back:focus-visible,.tab:focus-visible,.kpi:focus-visible,.plus:focus-visible{outline:2px solid var(--accent-lt);outline-offset:2px;}
   .back{height:44px;display:inline-flex;align-items:center;gap:8px;padding:0 16px 0 12px;border-radius:999px;
     border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:var(--ink);text-decoration:none;
     font:400 13px/1 var(--cjk);}
@@ -175,6 +187,25 @@
   .ticker .ti .m{font-family:var(--mono),var(--cjk);color:var(--ink-70);}
   @media(prefers-reduced-motion:reduce){ .ticker .tv{overflow-x:auto;} .ticker .tt{position:static;} .ticker .dup{display:none !important;} }
   @media(max-width:700px){ .ticker{height:40px;padding-left:14px;gap:12px;} .ticker .lbl{font-size:10px;} }
+
+  /* ---------- 倒數日跑馬燈（手機版用；三個倒數日各自一個膠囊，橫向循環） ---------- */
+  .cdm{display:none;position:relative;height:52px;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 22px,#000 calc(100% - 22px),transparent);
+            mask-image:linear-gradient(90deg,transparent,#000 22px,#000 calc(100% - 22px),transparent);}
+  .cdm .tt{position:absolute;left:0;top:0;height:100%;display:flex;align-items:center;white-space:nowrap;
+    animation:marquee var(--dur,30s) linear infinite;}
+  .cdm .dup{display:flex;align-items:center;}
+  .cdm:hover .tt{animation-play-state:paused;}
+  .cdi{flex:none;display:inline-flex;align-items:center;gap:10px;margin-right:12px;padding:8px 14px;border-radius:12px;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);}
+  .cdi .d{font:500 18px/1 var(--mono);color:var(--c,#B79CFF);}
+  .cdi .n{display:flex;flex-direction:column;gap:4px;}
+  .cdi .n b{font:400 12px/1 var(--cjk);}
+  .cdi .n span{font:400 10px/1 var(--mono);color:var(--ink-50);}
+  html[data-theme="hud"] .cdi{border-radius:0;background:rgba(255,149,34,.08);border-color:rgba(255,149,34,.35);
+    clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);}
+  html[data-theme="hud"] .cdi .d{color:#FFB054;}
+  @media(prefers-reduced-motion:reduce){ .cdm{overflow-x:auto;} .cdm .tt{position:static;} .cdm .dup{display:none;} }
 
   /* ---------- 單項頁 ---------- */
   .dt-grid{display:grid;grid-template-columns:minmax(0,600px) minmax(0,1fr);gap:40px;align-items:start;margin-top:18px;}
@@ -286,9 +317,10 @@
     background:linear-gradient(180deg,rgba(255,149,34,0),rgba(255,149,34,.06),rgba(255,149,34,0));animation:hudScan 7s linear infinite;}
   @keyframes hudScan{from{transform:translateY(-180px)}to{transform:translateY(100vh)}}
   html[data-theme="hud"] .brand .t{letter-spacing:.14em;}
-  html[data-theme="hud"] .seg{border-radius:0;border-color:rgba(255,149,34,.4);background:transparent;}
-  html[data-theme="hud"] .seg button{border-radius:0;letter-spacing:.06em;}
-  html[data-theme="hud"] .seg button[aria-pressed="true"]{background:#FF9522;color:#1A0F04;}
+  html[data-theme="hud"] .gsw{border-color:rgba(255,170,80,.32);
+    background:linear-gradient(180deg,rgba(255,149,34,.14),rgba(255,149,34,.03));}
+  html[data-theme="hud"] .gsw .thumb{background:linear-gradient(180deg,rgba(255,190,110,.55),rgba(255,149,34,.22));border-color:rgba(255,200,130,.55);
+    box-shadow:inset 0 1px 0 rgba(255,235,200,.7),0 4px 14px rgba(255,120,20,.25);}
   html[data-theme="hud"] .ticker{margin-top:24px;border-radius:0;background:rgba(20,12,6,.8);border-color:rgba(255,149,34,.3);
     clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);}
   html[data-theme="hud"] .ticker .lbl{color:#FF9522;}
@@ -369,14 +401,22 @@
     .kpi .big .v{font-size:44px;}
     .tl{padding:18px 18px;}
     .tl .track{display:none;}
-    .tl .list{display:flex;}
+    .cdm{display:block;}
+    .hud-top{display:none;}
     .stats,.kpis4{grid-template-columns:repeat(2,minmax(0,1fr));}
     .selcard,.rows,.trend{padding-left:18px;padding-right:18px;}
     .selcard .h .hint{display:none;}
     .rw{grid-template-columns:44px minmax(0,1fr) 64px;}
     .rw .bars{grid-column:1 / -1;grid-row:2;}
+    /* 切換開關縮成 0.6 倍，疊成兩列靠右，放在 WEI'S DASHBOARD 右邊 */
+    .top{gap:10px 12px;}
     .top .sp{display:none;}
-    .top .grow-row{width:100%;}
+    .top .back{order:0;margin-right:100%;flex:none;white-space:nowrap;}
+    .brand{order:1;flex:1 1 0;min-width:0;}
+    .brand .s{white-space:normal;letter-spacing:.02em;font-size:10px;line-height:1.5;}
+    .sws{order:2;margin-left:auto;flex-direction:column;align-items:flex-end;gap:6px;zoom:.6;}
+    .tabs{order:3;width:100%;}
+    .adds{order:4;}
   }
 
   .copyright{text-align:center;margin:26px 0 0;font:400 10px/1.5 var(--mono);letter-spacing:.08em;color:rgba(238,234,248,.26);}
@@ -472,13 +512,17 @@
       <button class="plus" id="add-cycling" title="新增騎車紀錄" aria-label="新增騎車紀錄"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
       <button class="plus" id="add-english" title="新增英文學習紀錄" aria-label="新增英文學習紀錄"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
     </div>
-    <div class="seg" id="theme-seg" role="group" aria-label="版面">
-      <button id="th-hud" aria-pressed="false">A 遙測</button>
-      <button id="th-orbit" aria-pressed="true">C 軌道</button>
-    </div>
-    <div class="seg" role="group" aria-label="統計區間">
-      <button id="mode-30" aria-pressed="true">近 30 天</button>
-      <button id="mode-all" aria-pressed="false">全部</button>
+    <div class="sws">
+      <div class="gsw" id="range-sw" data-pos="0" role="group" aria-label="統計區間">
+        <span class="thumb" aria-hidden="true"></span>
+        <button id="mode-30" aria-pressed="true">30 Days</button>
+        <button id="mode-all" aria-pressed="false">All</button>
+      </div>
+      <div class="gsw" id="theme-sw" data-pos="0" role="group" aria-label="版面">
+        <span class="thumb" aria-hidden="true"></span>
+        <button id="th-orbit" aria-pressed="true">Orbit</button>
+        <button id="th-hud" aria-pressed="false">Passion</button>
+      </div>
     </div>
   </header>
 
@@ -835,10 +879,7 @@
             '<span><b style="color:'+c+'">'+(it.days===0?"今天":"D-"+it.days)+'</b> '+esc(it.name)+(it.target?' '+esc(it.target):'')+'</span></div>';
         }).join("")+
       '</div>'+
-      '<div class="list">'+items.map(function(it,i){
-        return '<div><b style="color:'+cols[i%cols.length]+'">'+(it.days===0?"今天":"D-"+it.days)+'</b>'+
-          '<span>'+esc(it.name)+'</span><span>'+esc(md(it.date))+(it.target?' · '+esc(it.target):'')+'</span></div>';
-      }).join("")+'</div>'+
+      cdMarquee(items)+
     '</div>';
   }
 
@@ -897,6 +938,25 @@
     });
     return best===null ? "—" : "D-"+best;
   }
+  // 尚未到來的倒數日（由近到遠），桌機的晶片／時間軸與手機的跑馬燈共用
+  function countdownItems(){
+    var today = tpeToday();
+    return ((state.goals && state.goals.events) || []).map(function(ev){
+      var d = Math.round((new Date(ev.date+"T00:00:00Z") - new Date(today+"T00:00:00Z"))/86400000);
+      return {name:ev.name, date:ev.date, days:d, target:ev.target};
+    }).filter(function(it){ return it.days>=0; }).sort(function(a,b){ return a.days-b.days; });
+  }
+  // 每個倒數日一個獨立膠囊，內容放兩份、整條往左移一半，接縫處剛好銜接
+  function cdMarquee(items){
+    if(!items.length) return "";
+    var cols = [META.english.pal[1], META.running.pal[1], META.cycling.pal[1], META.ai.pal[1]];
+    var one = items.map(function(it, i){
+      return '<span class="cdi" style="--c:'+cols[i%cols.length]+'"><span class="d">'+(it.days===0?"今天":"D-"+it.days)+'</span>'+
+        '<span class="n"><b>'+esc(it.name)+'</b><span>'+esc(md(it.date))+(it.target?' · '+esc(it.target):'')+'</span></span></span>';
+    }).join("");
+    return '<div class="cdm" role="region" aria-label="倒數日"><div class="tt" style="--dur:'+(items.length*10)+'s">'+one+
+      '<span class="dup" aria-hidden="true">'+one+'</span></div></div>';
+  }
   function hudChipsHtml(){
     var today = tpeToday();
     var items = ((state.goals && state.goals.events) || []).map(function(ev){
@@ -906,7 +966,7 @@
     return '<div class="hud-top">'+items.map(function(it){
       return '<div class="hud-chip"><span class="d">'+(it.days===0?"今天":"D-"+it.days)+'</span>'+
         '<span class="n"><b>'+esc(it.name)+'</b><span>'+esc(md(it.date))+(it.target?' · '+esc(it.target):'')+'</span></span></div>';
-    }).join("")+'</div>';
+    }).join("")+'</div>'+cdMarquee(countdownItems());
   }
   function hudCardHtml(kind, days, idx){
     var M = META[kind], N = days.length, total = sumOf(days,"v"), act = activeOf(days);
@@ -1360,6 +1420,8 @@
   function renderAll(){
     var kind = VIEW, view = document.getElementById("view");
     document.documentElement.setAttribute("data-theme", THEME);
+    document.getElementById("theme-sw").setAttribute("data-pos", THEME==="hud" ? "1":"0");
+    document.getElementById("range-sw").setAttribute("data-pos", WINDOW_DAYS===0 ? "1":"0");
     document.getElementById("th-hud").setAttribute("aria-pressed", THEME==="hud" ? "true":"false");
     document.getElementById("th-orbit").setAttribute("aria-pressed", THEME==="orbit" ? "true":"false");
     document.body.setAttribute("data-view", kind || "overview");
