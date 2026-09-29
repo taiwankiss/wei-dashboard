@@ -154,6 +154,28 @@
   .tl .list b{font:500 14px/1 var(--mono);min-width:58px;}
   .tl .list span:last-child{margin-left:auto;color:var(--ink-50);font-size:12px;}
 
+  /* ---------- 事件跑馬燈 ---------- */
+  .ticker{display:flex;align-items:center;gap:16px;margin-top:16px;height:44px;padding:0 0 0 18px;border-radius:12px;
+    background:rgba(4,8,14,.72);overflow:hidden;}
+  .ticker .lbl{flex:none;display:flex;align-items:center;gap:8px;font:600 11px/1 var(--mono);letter-spacing:.16em;color:var(--en);}
+  .ticker .lbl i{width:6px;height:6px;border-radius:50%;background:var(--en);animation:blink 1.2s steps(1) infinite;}
+  @keyframes blink{50%{opacity:.2}}
+  .ticker .tv{position:relative;flex:1;min-width:0;height:100%;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 40px,#000 calc(100% - 40px),transparent);
+            mask-image:linear-gradient(90deg,transparent,#000 40px,#000 calc(100% - 40px),transparent);}
+  .ticker .tt{position:absolute;left:0;top:0;height:100%;display:flex;align-items:center;white-space:nowrap;
+    animation:marquee 60s linear infinite;}
+  .ticker .tt .dup{display:flex;align-items:center;}
+  .ticker:hover .tt{animation-play-state:paused;}
+  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .ticker .ti{display:inline-flex;align-items:baseline;gap:8px;padding-right:36px;font:400 12px/1 var(--mono);}
+  .ticker .ti::before{content:"›";color:var(--ink-34);}
+  .ticker .ti .d{color:var(--ink-40);}
+  .ticker .ti .s{font-weight:500;letter-spacing:.06em;}
+  .ticker .ti .m{font-family:var(--mono),var(--cjk);color:var(--ink-70);}
+  @media(prefers-reduced-motion:reduce){ .ticker .tv{overflow-x:auto;} .ticker .tt{position:static;} .ticker .dup{display:none !important;} }
+  @media(max-width:700px){ .ticker{height:40px;padding-left:14px;gap:12px;} .ticker .lbl{font-size:10px;} }
+
   /* ---------- 單項頁 ---------- */
   .dt-grid{display:grid;grid-template-columns:minmax(0,600px) minmax(0,1fr);gap:40px;align-items:start;margin-top:18px;}
   .dt-right{display:flex;flex-direction:column;gap:18px;min-width:0;}
@@ -499,6 +521,7 @@
   function dowOf(iso){ return DOW[new Date(iso+"T00:00:00Z").getUTCDay()]; }
   function f1(n){ return (Math.round(n*10)/10).toFixed(1); }
   function comma(n){ return Math.round(Number(n)||0).toLocaleString("en-US"); }
+  function sessTx(n){ n = Number(n)||0; return n+(n===1?" session":" sessions"); }
   function winTag(){ return WINDOW_DAYS>0 ? WINDOW_DAYS+"D" : "全部"; }
   function minKey(obj){
     var m = null;
@@ -723,12 +746,57 @@
     '</div>';
   }
 
+  // ---------- 事件跑馬燈 ----------
+  // 從各來源的逐日紀錄整理出最近的事件，像終端機日誌一樣一條條橫向捲過
+  function eventsList(){
+    var out = [];
+    ["running","cycling"].forEach(function(k){
+      var by = records(k);
+      Object.keys(by).forEach(function(dt){
+        var d = by[dt];
+        if(!(d.v>0)) return;
+        out.push({date:dt, kind:k, src:"STRAVA", msg:META[k].code+" "+(d.name||META[k].zh)+" "+f1(d.km)+" km"+
+          (k==="cycling" && d.elev ? " ↑"+comma(d.elev)+" m" : (k==="running" && d.sec ? " · "+fmtPace(d.sec/d.km)+"/km" : ""))});
+      });
+    });
+    var en = records("english"), prevScore = null;
+    Object.keys(en).sort().forEach(function(dt){
+      var d = en[dt];
+      if(d.v>0) out.push({date:dt, kind:"english", src:"SANTA", msg:fmtHM(d.sec)+" · "+num(d.q)+" 題 · "+num(d.vocab)+" 詞"+(d.live?" · 進行中":"")});
+      if(d.score!=null){
+        if(prevScore!=null && d.score!==prevScore)
+          out.push({date:dt, kind:"english", src:"TOEIC", msg:"多益預測 "+prevScore+" → "+d.score+(d.score>prevScore?" ▲":" ▼")});
+        prevScore = d.score;
+      }
+    });
+    var ai = records("ai");
+    Object.keys(ai).forEach(function(dt){
+      var d = ai[dt];
+      if(d.v>0) out.push({date:dt, kind:"ai", src:"CLAUDE", msg:fmtHM(d.sec)+" · "+sessTx(d.sessions)});
+    });
+    return out.sort(function(a,b){ return a.date<b.date ? 1 : (a.date>b.date ? -1 : 0); }).slice(0, 16);
+  }
+  function tickerHtml(){
+    var ev = eventsList();
+    if(!ev.length) return "";
+    var one = ev.map(function(e){
+      return '<span class="ti"><span class="d">'+esc(md(e.date))+'</span>'+
+        '<span class="s" style="color:'+META[e.kind].pal[1]+'">'+esc(e.src)+'</span>'+
+        '<span class="m">'+esc(e.msg)+'</span></span>';
+    }).join("");
+    // 內容放兩份、整條往左移一半，接縫處剛好銜接成無限循環
+    return '<div class="ticker panel sec" role="region" aria-label="最近事件">'+
+      '<span class="lbl"><i></i>EVENT LOG</span>'+
+      '<div class="tv"><div class="tt" style="animation-duration:'+(ev.length*4.5)+'s">'+one+'<span aria-hidden="true" class="dup">'+one+'</span></div></div>'+
+    '</div>';
+  }
+
   function renderOverview(){
     var recs = {}, firsts = [];
     KINDS.forEach(function(k){ recs[k] = records(k); firsts.push(minKey(recs[k])); });
     var dates = windowDates(minDate(firsts));
     function d(k){ return daysOf(recs[k], dates); }
-    return '<div class="ov">'+
+    return tickerHtml()+'<div class="ov">'+
       '<div class="side">'+kpiHtml("running", d("running"), .6)+kpiHtml("cycling", d("cycling"), .75)+'</div>'+
       '<div class="orbit-wrap sec">'+orbitOverview(dates, recs)+'</div>'+
       '<div class="side">'+kpiHtml("english", d("english"), .9)+kpiHtml("ai", d("ai"), 1.05)+'</div>'+
@@ -778,7 +846,7 @@
       var p3 = [p2[0]+(right?18:-18), m.y], tx = p3[0]+(right?6:-6), anchor = right?"start":"end";
       var delay = (1.3+k*0.15).toFixed(2);
       var sub = (kind==="running"||kind==="cycling") ? (x.d.name||"") :
-        (kind==="english" ? num(x.d.q)+" 題 · "+num(x.d.vocab)+" 詞" : num(x.d.sessions)+" sessions");
+        (kind==="english" ? num(x.d.q)+" 題 · "+num(x.d.vocab)+" 詞" : sessTx(x.d.sessions));
       leads += '<path class="draw" d="M'+r1(p1[0])+' '+r1(p1[1])+'L'+r1(p2[0])+' '+r1(p2[1])+'L'+r1(p3[0])+' '+r1(p3[1])+'" '+
         'fill="none" stroke="'+pal[2]+'" stroke-width="1" pathLength="100" style="animation-delay:'+delay+'s;animation-duration:.7s"></path>';
       tags += '<g class="up" style="animation-delay:'+delay+'s">'+
@@ -913,7 +981,7 @@
     act.forEach(function(d){ max = Math.max(max, d.v); secMax = Math.max(secMax, Number(d[secKey])||0); });
     var rows = act.map(function(d, i){
       var name = (kind==="running"||kind==="cycling") ? (d.name || META[kind].zh)
-        : (kind==="english" ? num(d.q)+" 題 · "+num(d.vocab)+" 詞"+(d.live?" · 進行中":"") : num(d.sessions)+" sessions");
+        : (kind==="english" ? num(d.q)+" 題 · "+num(d.vocab)+" 詞"+(d.live?" · 進行中":"") : sessTx(d.sessions));
       var delay = (0.5+i*0.06).toFixed(2);
       return '<button class="rw" data-sel="'+esc(d.date)+'" aria-pressed="'+(sel[kind]===d.date?"true":"false")+'">'+
         '<span class="d">'+esc(md(d.date))+'</span>'+
