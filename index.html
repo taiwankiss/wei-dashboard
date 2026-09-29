@@ -1,498 +1,274 @@
 <!-- 這兩個 meta 標籤在 Artifact 環境是多餘的（平台會自動注入），
      但這份檔案同時也原封不動地當成 GitHub Pages 的 index.html 使用，
      那裡沒有任何外層 wrapper —— 少了 viewport，手機瀏覽器會以桌面寬度
-     渲染整頁再縮小塞進螢幕，兩欄版面、文字微小的症狀就是這樣來的。 -->
+     渲染整頁再縮小塞進螢幕。 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WD</title>
-<!-- 只有獨立托管（GitHub Pages）用得到這些——Artifact 環境的 favicon
-     另外走平台自己的 emoji 機制，不受這些標籤影響，兩邊互不衝突。
-     apple-touch-icon 是手機「加入主畫面」捷徑用的圖示。 -->
-<link rel="icon" href="icon.png" type="image/png">
-<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="Dashboard_icon.png" type="image/png">
+<link rel="apple-touch-icon" href="Dashboard_icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BBH+Bartle&family=Archivo:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Share+Tech+Mono&family=Poppins:ital,wght@1,800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <style>
   :root{
-    --ink:#eae7e2;
-    --ink-70:rgba(234,231,226,.72);
-    --ink-50:rgba(234,231,226,.5);
-    --ink-45:rgba(234,231,226,.45);
-    --ink-40:rgba(234,231,226,.4);
-    --ink-34:rgba(234,231,226,.34);
-    --accent:#F97316;
-    --accent-lt:#FFB347;
-    --cell:#101215;
+    --bg:#0A0912;
+    --ink:#EEEAF8;
+    --ink-70:rgba(238,234,248,.72);
+    --ink-60:rgba(238,234,248,.6);
+    --ink-50:rgba(238,234,248,.5);
+    --ink-45:rgba(238,234,248,.45);
+    --ink-40:rgba(238,234,248,.4);
+    --ink-34:rgba(238,234,248,.34);
+    --accent:#B79CFF;
+    --accent-lt:#D5C7FF;
     --hair:rgba(255,255,255,.09);
     --hair-soft:rgba(255,255,255,.06);
     --fill-04:rgba(255,255,255,.04);
     --fill-07:rgba(255,255,255,.07);
     --warn:#ff5a4f;
-    --sans:Archivo,"Noto Sans TC",system-ui,-apple-system,sans-serif;
-    --cjk:"Noto Sans TC",Archivo,system-ui,sans-serif;
-    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,monospace;
+    --sans:Sora,"Noto Sans TC",system-ui,-apple-system,sans-serif;
+    --cjk:"Noto Sans TC",Sora,system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+    /* 各項目的主色；單項頁面另外用 --k-deep / --k-mid / --k-light / --k-pale 四階同色系 */
+    --run:#FF9A3C; --ride:#FFD166; --en:#6FD3FF; --ai:#B79CFF;
   }
   *{box-sizing:border-box;}
-  /* 獨立托管時沒有外層樣式表，class 的 display 會蓋過 [hidden] 的預設值 */
   [hidden]{display:none !important;}
+  html,body{background:var(--bg);}
   body{
-    margin:0;
-    background:#000;
-    color:var(--ink);
-    font-family:var(--sans);
-    -webkit-font-smoothing:antialiased;
-    min-height:100vh;
+    margin:0;color:var(--ink);font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;min-height:100vh;
   }
+  a{color:inherit;}
 
-  /* ---------- ambient orb field (behind the glass) ---------- */
-  .orbs{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
-  /* 飄移與呼吸分開跑：drift 動 translate、breathe 動 scale/opacity，
-     兩者是不同的 CSS 屬性，可以疊加而不互相覆蓋，週期也就能各自獨立。 */
-  .orb{
-    position:absolute;border-radius:50%;
-    will-change:translate,scale,opacity;
-  }
-  .orb.a{width:540px;height:540px;top:-160px;left:-110px;
-    background:radial-gradient(circle,rgba(249,140,30,.55),rgba(249,140,30,0) 68%);
-    filter:blur(26px);animation:driftA 68s ease-in-out infinite,breatheL 15s ease-in-out infinite;}
-  .orb.b{width:300px;height:300px;top:16%;right:-70px;
-    background:radial-gradient(circle,rgba(255,184,77,.46),rgba(255,184,77,0) 66%);
-    filter:blur(18px);animation:driftB 47s ease-in-out infinite,breatheM 11s ease-in-out -3s infinite;}
-  .orb.c{width:700px;height:700px;bottom:-280px;left:22%;
-    background:radial-gradient(circle,rgba(230,110,20,.42),rgba(230,110,20,0) 70%);
-    filter:blur(58px);animation:driftC 86s ease-in-out infinite,breatheL 19s ease-in-out -7s infinite;}
-  .orb.d{width:190px;height:190px;top:52%;left:6%;
-    background:radial-gradient(circle,rgba(255,200,100,.52),rgba(255,200,100,0) 64%);
-    filter:blur(12px);animation:driftD 39s ease-in-out infinite,breatheS 7s ease-in-out -2s infinite;}
-  .orb.e{width:420px;height:420px;top:4%;left:42%;
-    background:radial-gradient(circle,rgba(235,90,20,.34),rgba(235,90,20,0) 70%);
-    filter:blur(44px);animation:driftE 74s ease-in-out infinite,breatheM 13s ease-in-out -5s infinite;}
-  .orb.f{width:150px;height:150px;bottom:20%;right:24%;
-    background:radial-gradient(circle,rgba(255,184,77,.55),rgba(255,184,77,0) 62%);
-    filter:blur(9px);animation:driftF 33s ease-in-out infinite,breatheS 6s ease-in-out -4s infinite;}
-  .orb.g{width:520px;height:520px;bottom:2%;right:-140px;
-    background:radial-gradient(circle,rgba(255,170,30,.30),rgba(255,170,30,0) 72%);
-    filter:blur(66px);animation:driftG 94s ease-in-out infinite,breatheL 17s ease-in-out -9s infinite;}
+  /* ---------- 背景：深紫光暈 + 星點 ---------- */
+  .sky{position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(900px 700px at 50% 42%,#1A1530,var(--bg) 70%);
+    transition:background .6s;}
+  body[data-view="running"] .sky{background:radial-gradient(900px 700px at 28% 36%,#2A1A10,var(--bg) 70%);}
+  body[data-view="cycling"] .sky{background:radial-gradient(900px 700px at 28% 36%,#27200E,var(--bg) 70%);}
+  body[data-view="english"] .sky{background:radial-gradient(900px 700px at 28% 36%,#0E1F2C,var(--bg) 70%);}
+  body[data-view="ai"] .sky{background:radial-gradient(900px 700px at 28% 36%,#1C1533,var(--bg) 70%);}
+  .star{position:absolute;border-radius:50%;background:#fff;opacity:.15;animation:twinkle 3.2s ease-in-out infinite;}
+  @keyframes twinkle{0%,100%{opacity:.12}50%{opacity:.75}}
 
-  @keyframes driftA{0%,100%{translate:0 0}35%{translate:90px 60px}70%{translate:30px 130px}}
-  @keyframes driftB{0%,100%{translate:0 0}50%{translate:-120px 70px}}
-  @keyframes driftC{0%,100%{translate:0 0}40%{translate:-140px -70px}75%{translate:80px -30px}}
-  @keyframes driftD{0%,100%{translate:0 0}50%{translate:70px -90px}}
-  @keyframes driftE{0%,100%{translate:0 0}45%{translate:130px 90px}80%{translate:-60px 40px}}
-  @keyframes driftF{0%,100%{translate:0 0}50%{translate:-80px -60px}}
-  @keyframes driftG{0%,100%{translate:0 0}50%{translate:-100px -120px}}
+  /* 環外的日期標註與旋轉刻度會超出容器一點點，裁掉水平溢出，手機才不會左右晃 */
+  .shell{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:28px 40px 24px;overflow-x:clip;}
+  @media(max-width:700px){ .shell{padding:18px 16px 20px;} }
 
-  /* 小光暈呼吸幅度大、快；大光暈幅度小、慢 */
-  @keyframes breatheS{0%,100%{scale:.94;opacity:.78}50%{scale:1.16;opacity:1}}
-  @keyframes breatheM{0%,100%{scale:.97;opacity:.84}50%{scale:1.10;opacity:1}}
-  @keyframes breatheL{0%,100%{scale:.98;opacity:.86}50%{scale:1.07;opacity:1}}
+  /* ---------- 頁首 ---------- */
+  .top{display:flex;align-items:center;gap:18px;flex-wrap:wrap;min-height:56px;}
+  .brand{display:flex;flex-direction:column;gap:7px;min-width:0;}
+  .brand .t{font:700 24px/1 var(--sans);letter-spacing:.06em;margin:0;}
+  .brand .s{font:400 11px/1 var(--mono);letter-spacing:.14em;color:var(--ink-50);white-space:nowrap;}
+  .brand .s .wx{color:var(--ink-70);}
+  .brand .s .wx.stale{opacity:.5;}
+  .top .sp{flex:1;}
+  .seg{display:flex;padding:4px;gap:4px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);}
+  .seg button{height:36px;padding:0 16px;border:0;border-radius:999px;background:transparent;color:var(--ink-70);
+    font:500 13px/1 var(--cjk);cursor:pointer;transition:background .2s,color .2s;}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:#16122A;font-weight:700;}
+  .seg button:focus-visible,.back:focus-visible,.tab:focus-visible,.kpi:focus-visible,.plus:focus-visible{outline:2px solid var(--accent-lt);outline-offset:2px;}
+  .back{height:44px;display:inline-flex;align-items:center;gap:8px;padding:0 16px 0 12px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:var(--ink);text-decoration:none;
+    font:400 13px/1 var(--cjk);}
+  .back svg{width:16px;height:16px;}
+  .tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{height:36px;display:inline-flex;align-items:center;gap:8px;padding:0 14px;border-radius:999px;flex:none;
+    background:rgba(255,255,255,.04);border:1px solid transparent;color:var(--ink-70);text-decoration:none;
+    font:500 12px/1 var(--mono);letter-spacing:.1em;}
+  .tab i{width:7px;height:7px;border-radius:50%;}
+  .tab[aria-current="page"]{background:linear-gradient(135deg,var(--k-deep),var(--k-mid));color:#140F08;font-weight:600;}
+  .tab[aria-current="page"] i{background:#140F08 !important;}
+  .plus{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);
+    color:var(--ink);cursor:pointer;display:none;align-items:center;justify-content:center;}
+  .plus svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.2;}
+  .adds[data-k="running"] #add-running,.adds[data-k="cycling"] #add-cycling,.adds[data-k="english"] #add-english{display:inline-flex;}
 
+  /* ---------- 卡片基底 ---------- */
+  .panel{border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);}
+  .cap{font:600 13px/1 var(--sans);letter-spacing:.16em;}
+  .cap-sub{font:400 12px/1.4 var(--cjk);color:var(--ink-50);}
+  .mono{font-family:var(--mono);}
+
+  /* ---------- 總覽 ---------- */
+  .ov{display:grid;grid-template-columns:330px minmax(0,1fr) 330px;gap:28px;align-items:center;margin-top:18px;}
+  .ov .side{display:flex;flex-direction:column;gap:28px;}
+  .kpi{display:flex;flex-direction:column;gap:12px;padding:22px 24px;text-decoration:none;color:inherit;
+    transition:transform .25s,border-color .25s,background .25s;}
+  .kpi:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.06);}
+  .kpi .h{display:flex;align-items:center;gap:10px;}
+  .kpi .h i{width:10px;height:10px;border-radius:50%;}
+  .kpi .h b{font:600 13px/1 var(--sans);letter-spacing:.14em;}
+  .kpi .h span{font:400 13px/1 var(--cjk);color:var(--ink-60);}
+  .kpi .h em{margin-left:auto;font:400 10px/1 var(--mono);font-style:normal;color:var(--ink-40);}
+  .kpi .big{display:flex;align-items:baseline;gap:8px;}
+  .kpi .big .v{font:300 54px/1 var(--sans);}
+  .kpi .big .u{font:400 12px/1 var(--mono);color:var(--ink-50);}
+  .bar{height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden;}
+  .bar > div{height:100%;border-radius:2px;}
+  .kpi .f{display:flex;gap:10px;font:400 12px/1.3 var(--cjk);color:var(--ink-60);}
+  .kpi .f span:last-child{margin-left:auto;text-align:right;}
+
+  .orbit{position:relative;width:100%;max-width:640px;aspect-ratio:1;margin:0 auto;}
+  .orbit > svg,.orbit > .radar,.orbit > .core{position:absolute;}
+  .orbit > svg{inset:0;width:100%;height:100%;overflow:visible;}
+  .radar{inset:3%;border-radius:50%;
+    background:conic-gradient(from 0deg,rgba(183,156,255,0) 0deg,rgba(183,156,255,0) 290deg,rgba(183,156,255,.22) 360deg);
+    -webkit-mask-image:radial-gradient(circle closest-side,transparent 36%,#000 37%,#000 96%,transparent 97%);
+            mask-image:radial-gradient(circle closest-side,transparent 36%,#000 37%,#000 96%,transparent 97%);
+    animation:spin 7s linear infinite;}
+  .spin-slow{transform-origin:50% 50%;transform-box:view-box;animation:spin 90s linear infinite;}
+  .spin-rev{transform-origin:50% 50%;transform-box:view-box;animation:spin 140s linear infinite reverse;}
+  .core{left:34.4%;top:34.4%;width:31.2%;height:31.2%;border-radius:50%;border:1px solid rgba(183,156,255,.4);
+    background:radial-gradient(circle,rgba(40,30,72,.95),rgba(14,11,26,.95));
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;
+    animation:coreGlow 4s ease-in-out infinite;}
+  @keyframes coreGlow{0%,100%{box-shadow:0 0 40px rgba(183,156,255,.25),inset 0 0 30px rgba(183,156,255,.12)}
+    50%{box-shadow:0 0 70px rgba(183,156,255,.45),inset 0 0 40px rgba(183,156,255,.22)}}
+  .core .dw{font:400 11px/1 var(--mono);letter-spacing:.2em;color:var(--ink-50);}
+  .core .dt{font:300 clamp(24px,4.2vw,40px)/1 var(--sans);}
+  .core .ck{font:400 clamp(11px,1.3vw,15px)/1 var(--mono);color:var(--ai);}
+  .core .wt{font:400 12px/1.2 var(--cjk);color:var(--ink-60);}
+  .ring-hit{cursor:pointer;}
+  .ring-hit:hover{filter:brightness(1.25);}
+
+  .tl{margin-top:24px;padding:20px 28px 22px;display:flex;flex-direction:column;gap:18px;}
+  .tl .hd{display:flex;align-items:baseline;gap:12px;}
+  .tl .track{position:relative;height:56px;margin:8px 0 0;}
+  .tl .line{position:absolute;left:0;right:0;top:12px;height:2px;
+    background:linear-gradient(90deg,var(--ai),var(--en) 30%,var(--run));}
+  .tl .mo{position:absolute;top:-6px;transform:translateX(-50%);font:400 10px/1 var(--mono);color:var(--ink-34);}
+  .tl .now{position:absolute;left:0;top:6px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--ai);}
+  .tl .nowt{position:absolute;left:0;top:32px;font:400 12px/1 var(--cjk);color:var(--ai);}
+  .tl .ev{position:absolute;top:2px;transform:translateX(-100%);display:flex;flex-direction:column;align-items:flex-end;}
+  .tl .ev i{width:2px;height:22px;}
+  .tl .ev span{margin-top:6px;font:400 12px/1 var(--cjk);white-space:nowrap;}
+  .tl .ev b{font:500 12px/1 var(--mono);}
+  .tl .travel{position:absolute;top:7px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#fff;
+    box-shadow:0 0 16px #fff;animation:travel 5s cubic-bezier(.5,0,.5,1) infinite;}
+  @keyframes travel{from{left:0%;opacity:0}10%{opacity:1}90%{opacity:1}to{left:100%;opacity:0}}
+  .tl .list{display:none;flex-direction:column;gap:10px;}
+  .tl .list div{display:flex;gap:12px;align-items:baseline;font:400 13px/1.3 var(--cjk);}
+  .tl .list b{font:500 14px/1 var(--mono);min-width:58px;}
+  .tl .list span:last-child{margin-left:auto;color:var(--ink-50);font-size:12px;}
+
+  /* ---------- 單項頁 ---------- */
+  .dt-grid{display:grid;grid-template-columns:minmax(0,600px) minmax(0,1fr);gap:40px;align-items:start;margin-top:18px;}
+  .dt-right{display:flex;flex-direction:column;gap:18px;min-width:0;}
+  .selcard{padding:24px 28px;display:flex;flex-direction:column;gap:16px;border-radius:18px;
+    background:linear-gradient(135deg,rgba(var(--k-rgb),.2),rgba(var(--k-deep-rgb),.05) 70%);
+    border:1px solid rgba(var(--k-rgb),.45);}
+  .selcard .h{display:flex;align-items:center;gap:10px;}
+  .selcard .h .tag{font:500 11px/1 var(--mono);letter-spacing:.16em;color:var(--k-light);}
+  .selcard .h .hint{margin-left:auto;font:400 12px/1 var(--cjk);color:var(--ink-45);}
+  .selcard .m{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .selcard .m .nm{font:700 24px/1.2 var(--cjk);min-width:0;}
+  .selcard .m .sp{flex:1;}
+  .selcard .m .v{font:300 44px/1 var(--sans);}
+  .selcard .m .u{font:400 12px/1 var(--mono);color:var(--ink-50);}
+  .grad-txt{background:linear-gradient(180deg,var(--k-pale),var(--k-mid) 60%,var(--k-deep));
+    -webkit-background-clip:text;background-clip:text;color:transparent;}
+  .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+  .stats > div{display:flex;flex-direction:column;gap:6px;min-width:0;}
+  .stats .k{font:400 11px/1.2 var(--cjk);color:var(--ink-50);}
+  .stats .v{font:400 19px/1.1 var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .kpis4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+  .kpis4 > div{position:relative;overflow:hidden;padding:16px 18px;display:flex;flex-direction:column;gap:8px;}
+  /* 每張小卡頂端一條由深到淺的色條，四張各取同色系的不同段 */
+  .kpis4 > div::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--stripe);}
+  .kpis4 .k{font:400 11px/1.2 var(--cjk);color:var(--ink-50);}
+  .kpis4 .v{font:400 23px/1.1 var(--sans);color:var(--tone);white-space:nowrap;}
+  .rows{padding:20px 22px;display:flex;flex-direction:column;gap:10px;}
+  .rows .hd{display:flex;align-items:baseline;gap:10px;padding:0 4px;}
+  .rows .hd .cap-sub{margin-left:auto;}
+  .rows .rl{display:flex;flex-direction:column;gap:4px;max-height:268px;overflow-y:auto;scrollbar-width:thin;}
+  .rw{display:grid;grid-template-columns:52px minmax(0,190px) minmax(0,1fr) 78px;align-items:center;gap:14px;
+    padding:8px 10px;border-radius:10px;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;width:100%;}
+  .rw:hover{background:rgba(255,255,255,.04);}
+  .rw[aria-pressed="true"]{background:rgba(var(--k-rgb),.13);}
+  .rw .d{font:400 12px/1 var(--mono);color:var(--ink-60);}
+  .rw .n{font:400 13px/1.2 var(--cjk);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .rw .bars{position:relative;height:12px;}
+  .rw .bars div{position:absolute;left:0;border-radius:3px;}
+  .rw .bars .p{top:0;height:6px;background:linear-gradient(90deg,var(--k-deep),var(--k-mid) 60%,var(--k-light));}
+  .rw .bars .s{top:8px;height:3px;background:rgba(var(--k-light-rgb),.4);}
+  .rw .x{font:400 13px/1 var(--mono);text-align:right;color:var(--k-pale);}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;padding:4px 4px 0;}
+  .chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:999px;
+    background:rgba(var(--k-rgb),.1);border:1px solid rgba(var(--k-rgb),.3);font:400 12px/1 var(--cjk);color:var(--k-pale);text-decoration:none;}
+  a.chip:hover{background:rgba(var(--k-rgb),.2);}
+  .trend{margin-top:24px;padding:20px 28px 16px;display:flex;flex-direction:column;gap:10px;}
+  .trend .hd{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .trend .hd .r{margin-left:auto;font:400 11px/1 var(--mono);color:var(--ink-40);}
+  .trend .plot{position:relative;height:120px;}
+  .trend svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
+  .trend .dot{position:absolute;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;
+    background:var(--bg);border:1.5px solid var(--k-light);}
+  .trend .ax{position:relative;height:14px;font:400 10px/1 var(--mono);color:var(--ink-40);}
+  .trend .ax span{position:absolute;transform:translateX(-50%);white-space:nowrap;}
+  .trend .ax span:first-child{transform:none;}
+  .trend .ax span.end{transform:translateX(-100%);color:var(--k-light);}
+  .empty{padding:18px 6px;font:400 13px/1.4 var(--cjk);color:var(--ink-45);}
+
+  /* ---------- 動態 ---------- */
+  @keyframes spin{to{transform:rotate(360deg)}}
+  /* 環狀圖順時針展開：用可動畫的角度變數推一個錐形遮罩 */
+  @property --rv{syntax:'<angle>';inherits:false;initial-value:0deg}
+  .reveal{-webkit-mask-image:conic-gradient(#000 var(--rv),transparent 0);mask-image:conic-gradient(#000 var(--rv),transparent 0);
+    animation:reveal 1.9s cubic-bezier(.3,.7,.2,1) forwards;}
+  @keyframes reveal{from{--rv:0deg}to{--rv:360deg}}
+  html.no-prop .reveal{-webkit-mask-image:none;mask-image:none;animation:fadeIn 1.2s ease backwards;}
+  .up{animation:up .8s cubic-bezier(.2,.8,.2,1) backwards;}
+  @keyframes up{from{opacity:0;transform:translateY(14px);filter:blur(6px)}}
+  .grow{transform-origin:0 50%;animation:grow 1.2s cubic-bezier(.2,.8,.2,1) backwards;}
+  @keyframes grow{from{transform:scaleX(0)}}
+  .draw{stroke-dasharray:100;animation:draw 2.2s cubic-bezier(.4,0,.2,1) backwards;}
+  @keyframes draw{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+  .arc{animation:arc 1.8s cubic-bezier(.2,.8,.2,1) backwards .4s;}
+  @keyframes arc{from{stroke-dashoffset:100}}
+  .fadeIn{animation:fadeIn 1.2s ease backwards;}
+  /* 趨勢線由左往右掃出來（虛線長度在 non-scaling-stroke 下不可靠，改用裁切） */
+  .wipe{animation:wipe 2.2s cubic-bezier(.4,0,.2,1) backwards;}
+  @keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+  @keyframes fadeIn{from{opacity:0}}
+  .ping{transform-box:fill-box;transform-origin:center;animation:ping 1.8s ease-out infinite;}
+  @keyframes ping{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.3);opacity:0}}
+  /* 滑到才播：區塊進入畫面前，進場動畫停在第一格 */
+  .sec:not(.in) .reveal,.sec:not(.in) .up,.sec:not(.in) .grow,.sec:not(.in) .draw,
+  .sec:not(.in) .arc,.sec:not(.in) .fadeIn,.sec:not(.in) .wipe{animation-play-state:paused;}
   @media(prefers-reduced-motion:reduce){
-    .orb{animation:none !important;}
+    *{animation:none !important;transition:none !important;}
+    .reveal{-webkit-mask-image:none;mask-image:none;}
   }
 
-  /* fine grain — keeps the glass from looking like flat plastic */
-  .grain{
-    position:fixed;inset:0;pointer-events:none;z-index:3;opacity:.038;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* ---------- 響應式 ---------- */
+  @media(max-width:1180px){
+    .ov{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
+    .ov .orbit-wrap{grid-column:1 / -1;order:-1;}
+    .ov .side{gap:20px;}
+    .dt-grid{grid-template-columns:minmax(0,1fr);}
+    .dt-grid .orbit{max-width:560px;}
+  }
+  @media(max-width:700px){
+    .brand .t{font-size:19px;}
+    .ov{grid-template-columns:minmax(0,1fr);gap:18px;}
+    .ov .side{gap:18px;}
+    .kpi .big .v{font-size:44px;}
+    .tl{padding:18px 18px;}
+    .tl .track{display:none;}
+    .tl .list{display:flex;}
+    .stats,.kpis4{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .selcard,.rows,.trend{padding-left:18px;padding-right:18px;}
+    .selcard .h .hint{display:none;}
+    .rw{grid-template-columns:44px minmax(0,1fr) 64px;}
+    .rw .bars{grid-column:1 / -1;grid-row:2;}
+    .top .sp{display:none;}
+    .top .grow-row{width:100%;}
   }
 
-  /* 依視窗高度垂直置中；內容比視窗高時容器會自己撐長，
-     justify-content 就沒有多餘空間可分配，不會發生上緣被切掉的老問題。 */
-  .shell{
-    position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:26px 18px;
-    min-height:100vh;min-height:100dvh;
-    display:flex;flex-direction:column;justify-content:center;
-  }
-
-  /* 站名放在橫幅左欄 */
-  .page-title{
-    text-align:left;margin:0 0 6px;
-    font:italic 800 22px/1.15 "Poppins",var(--cjk);
-    letter-spacing:.02em;color:var(--ink);
-    text-shadow:0 2px 20px rgba(249,140,30,.35);
-  }
-  @media(max-width:600px){ .page-title{font-size:18px;} }
-
-  /* ---------- the glass cards ---------- */
-  /* 橫幅 + 四張指標卡各自是一張獨立的玻璃卡片，共用這一組外觀 */
-  .card{
-    position:relative;
-    border:.5px solid rgba(255,255,255,.12);
-    border-radius:12px;
-    overflow:hidden;
-    background:linear-gradient(180deg,rgba(30,26,21,.52),rgba(7,6,5,.80));
-    -webkit-backdrop-filter:blur(26px) saturate(165%);
-    backdrop-filter:blur(26px) saturate(165%);
-    box-shadow:
-      0 24px 54px -22px rgba(0,0,0,.85),
-      0 2px 10px rgba(0,0,0,.4),
-      inset 0 1px 0 rgba(255,255,255,.10),
-      inset 0 -1px 0 rgba(255,255,255,.028);
-  }
-  /* specular sheen across the top edge */
-  .card::before{
-    content:"";position:absolute;left:0;right:0;top:0;height:110px;pointer-events:none;
-    background:linear-gradient(180deg,rgba(255,220,160,.05),rgba(255,255,255,0));
-  }
-  /* 沿著卡片邊緣繞行的流光。
-     用錐形漸層繞中心旋轉（不是線性漸層平移）—— 線性漸層在左右兩側會整條同時明暗，
-     看起來就不像光在沿著邊走。錐形漸層的亮部是真的繞著周長跑一圈。
-     mask 挖空中間只留 1px 外框；不支援的瀏覽器不繪製，靜態邊框仍在。 */
-  @property --ring-a{syntax:"<angle>";inherits:false;initial-value:0deg;}
-
-  @supports ((mask-composite:exclude) or (-webkit-mask-composite:xor)){
-    .card::after{
-      content:"";position:absolute;inset:0;border-radius:inherit;padding:.5px;
-      pointer-events:none;z-index:2;
-      background:conic-gradient(from var(--ring-a,0deg) at 50% 50%,
-        rgba(255,255,255,.06) 0deg,
-        rgba(255,255,255,.06) 186deg,
-        rgba(255,168,50,.50) 256deg,
-        rgba(255,226,140,.95) 285deg,
-        rgba(255,168,50,.50) 314deg,
-        rgba(255,255,255,.06) 360deg);
-      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-      -webkit-mask-composite:xor;
-      mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-      mask-composite:exclude;
-      animation:ringSpin 16s linear infinite;
-    }
-    /* 五張卡的流光錯開相位，不會同時繞到同一個角度 */
-    .band::after{animation-delay:0s;}
-    .cell:nth-child(1)::after{animation-delay:-3.2s;}
-    .cell:nth-child(2)::after{animation-delay:-6.4s;}
-    .cell:nth-child(3)::after{animation-delay:-9.6s;}
-    .cell:nth-child(4)::after{animation-delay:-12.8s;}
-  }
-  @keyframes ringSpin{to{--ring-a:360deg;}}
-
-  /* 線條流光：橫線往右、直線往上，跟長條圖同方向。首尾同色所以循環無縫。 */
-  @keyframes lineFlowX{from{background-position:0 0;}to{background-position:420px 0;}}
-  @keyframes lineFlowY{from{background-position:0 0;}to{background-position:0 -260px;}}
-  @media(prefers-reduced-motion:reduce){
-    .card::after,.band .rule,.band .rule::after{animation:none;}
-    .band .rule::after{opacity:0;}
-  }
-
-  /* ---------- header band ---------- */
-  .band{
-    display:flex;align-items:stretch;gap:22px;
-    padding:24px 28px 22px;
-    background:
-      radial-gradient(120% 180% at 8% 0%,rgba(255,150,40,.16),rgba(255,150,40,0) 58%),
-      linear-gradient(180deg,rgba(30,26,21,.52),rgba(7,6,5,.80));
-  }
-  /* 頂緣重點線：底層是無縫循環的藍色流光，再用 mask 保留原本往右淡出的收尾 */
-  .band .rule{position:absolute;left:0;top:0;right:0;height:2px;
-    background:linear-gradient(90deg,
-      #F97316 0%,#FB923C 25%,#FFD08A 50%,#FB923C 75%,#F97316 100%);
-    background-size:420px 100%;background-repeat:repeat-x;
-    -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 52%,transparent 90%);
-    mask-image:linear-gradient(90deg,#000 0%,#000 52%,transparent 90%);
-    animation:lineFlowX 9s linear infinite;
-  }
-  /* 疊一道高光從左掃到右，像光掠過玻璃邊緣 */
-  .band .rule::after{
-    content:"";position:absolute;top:0;bottom:0;left:0;width:220px;
-    background:linear-gradient(90deg,
-      transparent 0%,rgba(255,205,120,.55) 35%,rgba(255,255,255,.92) 50%,
-      rgba(255,205,120,.55) 65%,transparent 100%);
-    animation:ruleSweep 7s linear infinite;
-  }
-  @keyframes ruleSweep{
-    from{translate:-220px 0;}
-    to{translate:100vw 0;}
-  }
-  /* 左欄自己不設高度，靠 align-items:stretch 跟右欄一樣高，
-     三排再用 space-between 撐開，兩欄上下緣就對齊了 */
-  .band .who{flex:1;min-width:0;
-    display:flex;flex-direction:column;justify-content:space-between;gap:12px;}
-  .band .stamp{font:500 10px/1.5 var(--mono);letter-spacing:.14em;color:var(--ink-40);
-    font-variant-numeric:tabular-nums;}
-  .band .stamp .wx{color:var(--ink-70);letter-spacing:.08em;cursor:default;}
-  .band .stamp .wx.stale{opacity:.45;}
-  .band .modes{display:flex;gap:8px;flex-wrap:wrap;}
-  .mode{
-    padding:7px 13px;border-radius:8px;background:rgba(255,255,255,.07);
-    font:500 11px/1 var(--cjk);color:var(--ink-70);cursor:pointer;
-    border:.5px solid rgba(255,255,255,.09);
-    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.09);
-    transition:background .18s,color .18s,border-color .18s;
-  }
-  .mode:hover{background:rgba(255,255,255,.11);color:var(--ink);}
-  .mode[aria-pressed="true"]{
-    background:linear-gradient(180deg,rgba(255,160,40,.45),rgba(249,140,30,.28));
-    border-color:rgba(255,185,80,.55);color:#fff;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 4px 14px -6px rgba(249,140,30,.8);
-  }
-  .mode:focus-visible{outline:2px solid var(--accent-lt);outline-offset:2px;}
-  .feed{flex:none;width:352px;max-width:100%;padding-top:2px;}
-  .feed .cap{font:500 8.5px/1 var(--mono);letter-spacing:.14em;color:var(--ink-40);margin-bottom:6px;}
-  .feed .list{display:flex;flex-direction:column;gap:0;}
-  .feed .fr{display:flex;align-items:center;gap:9px;padding:3.5px 8px;border-radius:5px;}
-  .feed .fr.lead{background:linear-gradient(90deg,rgba(249,140,30,.22),rgba(249,140,30,.06));
-    border:.5px solid rgba(249,140,30,.38);}
-  .feed .fr .d{font:500 9px/1 var(--mono);color:var(--ink-45);width:31px;flex:none;}
-  .feed .fr .t{font:400 10.5px/1.2 var(--cjk);color:var(--ink-70);flex:1;min-width:0;
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .feed .fr.lead .t{font-weight:500;color:var(--ink);}
-  .feed .fr.faded{opacity:.5;}
-  .feed .fr .g{font:600 10.5px/1 var(--mono);color:var(--accent-lt);flex:none;text-align:right;}
-
-  /* ---------- metric grid ---------- */
-  .board{display:flex;flex-direction:column;gap:14px;}
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
-  .cell{
-    padding:28px 28px 25px;
-    display:flex;flex-direction:column;gap:14px;
-    transition:border-color .25s,box-shadow .25s;
-  }
-  .cell:hover{
-    border-color:rgba(255,184,77,.30);
-    box-shadow:
-      0 24px 54px -22px rgba(0,0,0,.85),
-      0 2px 10px rgba(0,0,0,.4),
-      0 0 26px -10px rgba(255,150,40,.35),
-      inset 0 1px 0 rgba(255,255,255,.12),
-      inset 0 -1px 0 rgba(255,255,255,.028);
-  }
-
-  @media(max-width:1040px){
-    .grid{grid-template-columns:repeat(2,1fr);}
-  }
-  @media(max-width:600px){
-    .grid{grid-template-columns:1fr;}
-    .board,.grid{gap:12px;}
-  }
-  .cell-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-  .cell-top .eyebrow{font:600 15px/1 var(--mono);letter-spacing:.16em;color:var(--ink-50);
-    display:flex;align-items:center;gap:11px;}
-
-  /* 區塊標題的線條圖示：pathLength 讓每個圖形的線長統一成 100，
-     不管形狀多複雜，同一組 dash 動畫就能畫得一樣勻 */
-  .sic{width:17px;height:17px;flex:none;overflow:visible;}
-  .sic polyline,.sic path,.sic circle{
-    fill:none;stroke:var(--accent-lt);stroke-width:1.5;
-    stroke-linecap:round;stroke-linejoin:round;
-    stroke-dasharray:100;stroke-dashoffset:100;
-    animation:drawSic 9s ease-in-out infinite;
-  }
-  @keyframes drawSic{
-    0%{stroke-dashoffset:100;opacity:.32;}
-    20%{stroke-dashoffset:0;opacity:1;}
-    68%{stroke-dashoffset:0;opacity:1;}
-    88%,100%{stroke-dashoffset:-100;opacity:.32;}
-  }
-  #cell-english .sic *{animation-delay:-4.4s;}
-  #cell-ai .sic *{animation-delay:-6.6s;}
-
-  /* 騎車 icon：車架跟座管固定常駐；兩個輪子改成留一個小缺口的
-     C 形，繞著各自的圓心持續旋轉，不會消失（上一版用 opacity
-     忽隱忽現，結果連 stroke-dashoffset 都沒解開，輪子整個沒畫出來）*/
-  #cell-cycling .sic path:not(.wheel),
-  #cell-cycling .sic circle{
-    animation:none;stroke-dashoffset:0;opacity:1;
-  }
-  #cell-cycling .sic path.wheel{
-    stroke-dashoffset:0;opacity:1;
-    animation:wheelSpin 2.2s linear infinite;
-  }
-  @keyframes wheelSpin{ to{transform:rotate(360deg);} }
-
-  @media(prefers-reduced-motion:reduce){
-    .sic polyline,.sic path,.sic circle{animation:none;stroke-dashoffset:0;opacity:.9;}
-    /* 上面那條全域規則的優先度不夠高，蓋不過下面這條用 #cell-cycling
-       限定範圍的動畫規則（選擇器更精確），所以要在這裡額外關掉 */
-    #cell-cycling .sic path.wheel{animation:none;}
-  }
-  .cell-top .right{display:flex;align-items:center;gap:9px;}
-  .cell-top .ctrls{display:flex;align-items:center;gap:9px;}
-
-  /* 累計數據收成一顆 i 按鈕，接在「/ 7天」後面，點了才跳出。
-     跟單位文字包在同一個 flex-end 容器裡，兩者下緣才會切齊 */
-  .headline .big .u-wrap{display:flex;align-items:flex-end;gap:5px;}
-  .info{
-    flex:none;
-    width:13px;height:13px;border-radius:50%;padding:0;
-    border:.5px solid rgba(255,184,77,.7);background:transparent;
-    color:var(--accent-lt);font:600 8.5px/1 var(--mono);
-    display:flex;align-items:center;justify-content:center;cursor:pointer;
-    transition:background .15s,color .15s,border-color .15s;
-  }
-  .info:hover{background:rgba(255,184,77,.2);border-color:var(--accent-lt);color:#fff;}
-  .info:focus-visible{outline:2px solid var(--accent-lt);outline-offset:2px;}
-  .dot{position:relative;width:6px;height:6px;border-radius:50%;background:var(--accent);flex:none;}
-  .dot.idle{background:rgba(234,231,226,.28);}
-  .dot.warn{background:var(--warn);}
-  /* 呼吸光暈：只在「有在動」的藍點上，灰／黃兩種狀態不裝，
-     不然閒置或警示也看起來像在正常運作，語意會混淆 */
-  .dot:not(.idle):not(.warn)::after{
-    content:"";position:absolute;inset:-4.55px;border-radius:50%;pointer-events:none;
-    background:radial-gradient(circle,rgba(255,150,40,.75),rgba(255,150,40,0) 68%);
-    animation:dotBreathe 6.8s ease-in-out infinite;
-  }
-  @keyframes dotBreathe{
-    0%,100%{opacity:.2625;transform:scale(.72);}
-    50%{opacity:.75;transform:scale(1.25);}
-  }
-  @media(prefers-reduced-motion:reduce){
-    .dot::after{animation:none;opacity:.6;transform:none;}
-  }
-
-  .plus{
-    width:24px;height:24px;border-radius:7px;flex:none;
-    border:.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--ink-45);
-    display:flex;align-items:center;justify-content:center;cursor:pointer;
-    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
-    transition:background .15s,color .15s,border-color .15s,box-shadow .15s;
-  }
-  .plus:hover{background:rgba(255,160,40,.38);border-color:rgba(255,185,80,.6);color:#fff;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 4px 12px -4px rgba(249,140,30,.7);}
-  .plus:focus-visible{outline:2px solid var(--accent-lt);outline-offset:2px;}
-  .plus svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.4;}
-  .plus[disabled]{opacity:.3;cursor:default;}
-
-  .headline{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
-  .headline .hl-main{min-width:0;}
-  .headline .big{display:flex;align-items:baseline;gap:6px;white-space:nowrap;}
-  .headline .goal{white-space:nowrap;}
-  /* 四張卡片的主數字單獨換字體：Share Tech Mono 沒有粗體字重，
-     用 400 撐大字級來補視覺份量，不然跟旁邊 IBM Plex Mono 的粗體
-     單位文字放在一起會顯得太細 */
-  .headline .big .v{font:400 37px/1 "Share Tech Mono",var(--mono);letter-spacing:0;}
-  .headline .big .u{font:500 12px/1 var(--mono);color:var(--ink-45);}
-  .headline .goal{font:400 11px/1.5 var(--cjk);color:var(--ink-45);margin-top:7px;}
-  .headline .goal em{font-style:normal;color:var(--accent-lt);}
-
-  .bars{display:flex;align-items:flex-end;gap:4px;height:52px;margin:8px 0;}
-  .bars .b{
-    flex:1;border-radius:3px;cursor:pointer;position:relative;
-    background:rgba(255,255,255,.10);min-height:5px;padding:0;border:0;
-    transition:filter .15s,transform .15s;
-  }
-  /* 同色系深淺單向循環：漸層首尾同色，做成 120px 的無縫磚重複鋪滿，
-     再等速把背景往上推一整格 —— 循環接點看不出來，方向永遠往上。 */
-  .bars .b.has{
-    background:linear-gradient(180deg,
-      #FFE49A 0%,#FFCF6B 12.5%,#FFB13B 25%,#FF9522 37.5%,#F97316 50%,
-      #FF9522 62.5%,#FFB13B 75%,#FFCF6B 87.5%,#FFE49A 100%);
-    background-size:100% 120px;
-    background-repeat:repeat-y;
-    box-shadow:0 0 14px -2px rgba(255,150,40,.50),inset 0 1px 0 rgba(255,255,255,.28);
-    animation:barFlow 8s linear infinite,barGlow 5.5s ease-in-out infinite;
-  }
-  @keyframes barFlow{
-    from{background-position:0 0;}
-    to{background-position:0 -120px;}
-  }
-  @keyframes barGlow{
-    0%,100%{box-shadow:0 0 13px -2px rgba(255,150,40,.46),inset 0 1px 0 rgba(255,255,255,.26);}
-    50%{box-shadow:0 0 19px -2px rgba(255,190,80,.70),inset 0 1px 0 rgba(255,255,255,.40);}
-  }
-  @media(prefers-reduced-motion:reduce){
-    .bars .b.has{animation:none;background-position:0 -36px;}
-  }
-  /* 「全部」模式的折線圖：svg 畫線與面積，上面疊一排透明按鈕接點擊，點位與 svg 的 x 座標對齊 */
-  .line{position:relative;height:52px;margin:8px 0;display:flex;}
-  .line svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;
-    filter:drop-shadow(0 0 5px rgba(255,150,40,.55));pointer-events:none;}
-  .line .pt{flex:1;position:relative;height:100%;background:none;border:0;padding:0;cursor:pointer;min-width:0;}
-  .line .pt::after{
-    content:"";position:absolute;left:50%;bottom:var(--y);width:7px;height:7px;margin:0 0 -3.5px -3.5px;
-    border-radius:50%;background:#FFCF6B;box-shadow:0 0 8px rgba(255,170,50,.9);opacity:0;transition:opacity .12s;}
-  .line .pt:hover::after,.line .pt[aria-pressed="true"]::after{opacity:1;}
-  .line .pt[aria-pressed="true"]::after{background:#fff;}
-  .line .pt:focus-visible{outline:2px solid var(--accent-lt);outline-offset:-2px;}
-  /* 進場：長條由左至右一根一根從底部升起。用獨立的 scale 屬性，不跟 hover 的 transform 打架；
-     有資料的長條要把原本的兩組流光動畫一併寫進來，delay 也對應寫成三個值。 */
-  @keyframes barRise{from{scale:1 0;}to{scale:1 1;}}
-  .bars.enter .b{transform-origin:50% 100%;animation:barRise .55s cubic-bezier(.2,.8,.25,1) backwards;}
-  .bars.enter .b.has{animation:barFlow 8s linear infinite,barGlow 5.5s ease-in-out infinite,
-    barRise .55s cubic-bezier(.2,.8,.25,1) backwards;}
-  @media(prefers-reduced-motion:reduce){
-    .bars.enter .b,.bars.enter .b.has{animation:none;}
-  }
-  .bars .b:hover{filter:brightness(1.3);transform:translateY(-1px);}
-  .bars .b[aria-pressed="true"]{outline:1px solid var(--accent-lt);outline-offset:1px;}
-  .bars .b:focus-visible{outline:2px solid var(--accent-lt);outline-offset:1px;}
-
-  .readout{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-    min-height:30px;padding:7px 9px;border-radius:7px;
-    background:rgba(255,255,255,.05);border:.5px solid rgba(255,255,255,.06);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
-  }
-  .readout .sel{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;}
-  .readout .sel .d{font:500 10px/1 var(--mono);color:var(--ink-45);}
-  .readout .sel .n{font:600 13px/1 var(--mono);color:var(--accent-lt);}
-  .readout .sel .m{font:600 13px/1 var(--mono);}
-  .readout .sel .x{font:500 11px/1 var(--mono);color:var(--ink-50);}
-  .readout .sel .nm{font:400 11.5px/1.3 var(--cjk);color:var(--ink-70);}
-
-  /* 上下線改掛在各欄位上，中間的 gap 自然把線斷開成左右兩段 */
-  .pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-  .pair{margin-top:6px;}
-  .pair > div{
-    border-bottom:1px solid var(--hair-soft);
-    padding:6px 0 4px;                 /* 上方分隔線移除，間距減半 */
-  }
-  .pair + .recent{margin-top:8px;}
-  .pair .k{font:500 9px/1 var(--mono);letter-spacing:.1em;color:var(--ink-40);}
-  .pair .v{font:600 14px/1 var(--mono);margin-top:7px;}
-
-  .recent{display:flex;flex-direction:column;gap:4.5px;}
-  .recent .k{font:500 9px/1 var(--mono);letter-spacing:.1em;color:var(--ink-40);}
-  .recent .r{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-  .recent .r.faded{opacity:.5;}
-  /* 每列前面的藍色線條圖示：用 stroke-dashoffset 讓線條反覆自己畫出來再退場 */
-  .recent .r .ic{flex:none;width:12px;height:12px;display:block;}
-  .recent .r .ic polyline{
-    fill:none;stroke:var(--accent-lt);stroke-width:1.5;
-    stroke-linecap:round;stroke-linejoin:round;
-    stroke-dasharray:17;stroke-dashoffset:17;
-    animation:drawIc 7.2s ease-in-out infinite;
-  }
-  @keyframes drawIc{
-    0%{stroke-dashoffset:17;opacity:.12;}
-    22%{stroke-dashoffset:0;opacity:1;}
-    68%{stroke-dashoffset:0;opacity:1;}
-    92%,100%{stroke-dashoffset:-17;opacity:.12;}
-  }
-  @media(prefers-reduced-motion:reduce){
-    .recent .r .ic polyline{animation:none;stroke-dashoffset:0;opacity:.85;}
-  }
-  .recent .r .d{font:500 10px/1 var(--mono);color:var(--ink-45);flex:none;
-    font-variant-numeric:tabular-nums;}
-  .recent .r .n{font:400 11.5px/1.3 var(--cjk);color:var(--ink-70);flex:1;min-width:0;
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .recent .r .m{font:500 11px/1 var(--mono);color:var(--ink-50);flex:none;}
-  /* 專案的儲存庫連結 */
-  .recent .r .lk{flex:none;display:flex;align-items:center;color:var(--ink-40);
-    text-decoration:none;transition:color .15s,transform .15s;}
-  .recent .r .lk:hover{color:var(--accent-lt);transform:translateY(-1px);}
-  .recent .r .lk:focus-visible{outline:2px solid var(--accent-lt);outline-offset:2px;border-radius:3px;}
-  .recent .r .lk svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.5;
-    stroke-linecap:round;stroke-linejoin:round;}
-  .recent .r .m.tag{color:var(--accent-lt);}
-  .recent .none{font:400 10.5px/1.5 var(--cjk);color:var(--ink-34);}
-  /* 近期活動／學習日誌：固定顯示約 3.5 列（第 4 列露出一半當作可捲動的提示），
-     往下捲看過往紀錄；捲軸隱藏，只保留滾動手勢 */
-  .recent .rlist{
-    display:flex;flex-direction:column;gap:4.5px;
-    max-height:64px;overflow-y:auto;
-    scrollbar-width:none;-ms-overflow-style:none;
-    -webkit-mask-image:linear-gradient(180deg,#000 0,#000 calc(100% - 26px),rgba(0,0,0,.08) 100%);
-    mask-image:linear-gradient(180deg,#000 0,#000 calc(100% - 26px),rgba(0,0,0,.08) 100%);
-  }
-  .recent .rlist::-webkit-scrollbar{display:none;width:0;height:0;}
-  /* 沒有更多內容可看（內容不超出、或已捲到底）就拿掉下緣的淡出 */
-  .recent .rlist.no-more{-webkit-mask-image:none;mask-image:none;}
-
-  .foot{margin-top:auto;padding-top:12px;font:400 9.5px/1.4 var(--mono);color:var(--ink-34);}
-
+  .copyright{text-align:center;margin:26px 0 0;font:400 10px/1.5 var(--mono);letter-spacing:.08em;color:rgba(238,234,248,.26);}
   .skel{background:linear-gradient(90deg,var(--fill-04) 25%,var(--fill-07) 37%,var(--fill-04) 63%);
     background-size:400% 100%;animation:sh 1.4s ease infinite;border-radius:5px;}
   @keyframes sh{0%{background-position:100% 0}100%{background-position:0 0}}
@@ -543,14 +319,14 @@
     border-radius:8px;padding:9px 10px;width:100%;
   }
   .fields input::placeholder{color:var(--ink-34);font-family:var(--cjk);}
-  .fields input:focus{outline:none;border-color:rgba(255,185,80,.6);
+  .fields input:focus{outline:none;border-color:rgba(183,156,255,.6);
     background:rgba(255,255,255,.08);box-shadow:0 0 0 3px rgba(249,140,30,.18);}
   .sheet-foot{display:flex;gap:9px;justify-content:flex-end;margin-top:18px;}
   .sheet-foot .btn{font:500 12px/1 var(--cjk);padding:10px 17px;border-radius:9px;cursor:pointer;
     border:1px solid transparent;transition:background .15s,border-color .15s;}
   .sheet-foot .ghost{background:rgba(255,255,255,.06);border-color:var(--hair);color:var(--ink-70);}
   .sheet-foot .ghost:hover{background:rgba(255,255,255,.11);color:var(--ink);}
-  .sheet-foot .primary{background:linear-gradient(180deg,#FFB020,#F97316);color:#1c1106;font-weight:600;
+  .sheet-foot .primary{background:linear-gradient(180deg,#D5C7FF,#B79CFF);color:#16122A;font-weight:600;
     border-color:rgba(255,185,80,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.2);}
   .sheet-foot .primary:hover{filter:brightness(1.1);}
   .sheet-foot .btn:focus-visible{outline:2px solid var(--accent-lt);outline-offset:2px;}
@@ -565,115 +341,33 @@
   /* 原本用 position:absolute 釘在 .shell 底部固定偏移，文字一變長
      （多了資料快照那段）就會跟卡片重疊 —— 改回正常文件流，
      不管文字多長、手機或桌機，永遠跟在卡片下方，高度也會被
-     .shell 正確計入，不會裁切。 */
-  .copyright{
-    text-align:center;margin:18px 0 0;
-    font:400 10px/1.5 var(--mono);letter-spacing:.08em;color:rgba(234,231,226,.26);
-  }
-  @media(max-width:860px){
-    .band{flex-wrap:wrap;}
-    .feed{width:100%;}
-  }
 </style>
 
-<div class="orbs" aria-hidden="true">
-  <span class="orb a"></span><span class="orb b"></span><span class="orb c"></span>
-  <span class="orb d"></span><span class="orb e"></span><span class="orb f"></span>
-  <span class="orb g"></span>
-</div>
-<div class="grain" aria-hidden="true"></div>
+<div class="sky" id="sky" aria-hidden="true"></div>
 
 <div class="shell">
-  <div class="board">
-
-    <div class="band card">
-      <div class="rule"></div>
-      <div class="who">
-        <div class="stamp" id="stamp">—</div>
-        <h1 class="page-title">WEI'S DASHBOARD</h1>
-        <div class="modes">
-          <button class="mode" id="mode-30" aria-pressed="true">近 30 天</button>
-          <button class="mode" id="mode-all" aria-pressed="false">全部</button>
-        </div>
-      </div>
-      <div class="feed">
-        <div class="cap">近期目標</div>
-        <div class="list" id="feed"><div class="skel" style="height:76px"></div></div>
-      </div>
+  <header class="top">
+    <a class="back" id="back" href="#" hidden>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>總覽
+    </a>
+    <div class="brand">
+      <h1 class="t" id="title">WEI'S DASHBOARD</h1>
+      <div class="s" id="stamp">—</div>
     </div>
-
-    <div class="grid">
-      <!-- RUN -->
-      <section class="cell card" id="cell-running">
-        <div class="cell-top">
-          <div class="eyebrow">
-            <svg class="sic" viewBox="0 0 16 16" aria-hidden="true"><circle pathLength="100" cx="11.6" cy="3" r="1.75"></circle><path pathLength="100" d="M10.4 5.9L7.9 9"></path><path pathLength="100" d="M4.3 7.2L6.8 5.5L10.4 5.9L12.8 7.5L14.5 6.2"></path><path pathLength="100" d="M2 13.4L5.1 11.3L7.9 9L11.3 10.4L10.1 14.2"></path></svg>
-            <span>RUN 跑步</span>
-          </div>
-          <div class="right">
-            <div class="ctrls">
-              <button class="plus" id="add-running" title="上傳跑步截圖" aria-label="上傳跑步截圖">
-                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              </button>
-              <span class="dot idle" id="dot-running"></span>
-            </div>
-          </div>
-        </div>
-        <div id="body-running"><div class="skel" style="height:190px"></div></div>
-      </section>
-
-      <!-- CYCLING -->
-      <section class="cell card" id="cell-cycling">
-        <div class="cell-top">
-          <div class="eyebrow">
-            <svg class="sic" viewBox="0 0 16 16" aria-hidden="true"><path class="wheel" pathLength="100" style="transform-origin:3.6px 11.7px" d="M5.78 12.71 A2.4 2.4 0 1 1 5.78 10.69"></path><path class="wheel" pathLength="100" style="transform-origin:12.4px 11.7px" d="M14.58 12.71 A2.4 2.4 0 1 1 14.58 10.69"></path><path pathLength="100" d="M8 11.7V9.3L6 7.3L8.8 5.3L10.2 7.3H11.6"></path><circle pathLength="100" cx="10.1" cy="3.3" r="0.75"></circle></svg>
-            <span>CYCLING 騎車</span>
-          </div>
-          <div class="right">
-            <div class="ctrls">
-              <button class="plus" id="add-cycling" title="上傳騎車截圖" aria-label="上傳騎車截圖">
-                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              </button>
-              <span class="dot idle" id="dot-cycling"></span>
-            </div>
-          </div>
-        </div>
-        <div id="body-cycling"><div class="skel" style="height:190px"></div></div>
-      </section>
-
-      <!-- EN -->
-      <section class="cell card" id="cell-english">
-        <div class="cell-top">
-          <div class="eyebrow">
-            <svg class="sic" viewBox="0 0 16 16" aria-hidden="true"><path pathLength="100" d="M8 4.6C6.4 3.2 3.9 2.9 1.6 3.4V12C3.9 11.5 6.4 11.8 8 13.2C9.6 11.8 12.1 11.5 14.4 12V3.4C12.1 2.9 9.6 3.2 8 4.6Z"></path></svg>
-            <span>EN 英文</span>
-          </div>
-          <div class="right">
-            <div class="ctrls">
-              <button class="plus" id="add-english" title="上傳英文學習截圖" aria-label="上傳英文學習截圖">
-                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              </button>
-              <span class="dot idle" id="dot-english"></span>
-            </div>
-          </div>
-        </div>
-        <div id="body-english"><div class="skel" style="height:190px"></div></div>
-      </section>
-
-      <!-- AI -->
-      <section class="cell card" id="cell-ai">
-        <div class="cell-top">
-          <div class="eyebrow">
-            <svg class="sic" viewBox="0 0 16 16" aria-hidden="true"><path pathLength="100" d="M8 1.7L9.55 6.45L14.3 8L9.55 9.55L8 14.3L6.45 9.55L1.7 8L6.45 6.45Z"></path></svg>
-            <span>AI 學習</span>
-          </div>
-          <div class="right"><div class="ctrls"><span class="dot idle" id="dot-ai"></span></div></div>
-        </div>
-        <div id="body-ai"><div class="skel" style="height:190px"></div></div>
-      </section>
+    <div class="sp"></div>
+    <nav class="tabs" id="tabs" aria-label="切換項目" hidden></nav>
+    <div class="adds" id="adds">
+      <button class="plus" id="add-running" title="新增跑步紀錄" aria-label="新增跑步紀錄"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+      <button class="plus" id="add-cycling" title="新增騎車紀錄" aria-label="新增騎車紀錄"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+      <button class="plus" id="add-english" title="新增英文學習紀錄" aria-label="新增英文學習紀錄"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
     </div>
+    <div class="seg" role="group" aria-label="統計區間">
+      <button id="mode-30" aria-pressed="true">近 30 天</button>
+      <button id="mode-all" aria-pressed="false">全部</button>
+    </div>
+  </header>
 
-  </div>
+  <main id="view"><div class="skel" style="height:560px;margin-top:18px"></div></main>
 
   <p class="copyright">Copyright © 2026 Wei. All rights reserved.</p>
 </div>
@@ -708,18 +402,14 @@
 (function(){
   "use strict";
 
-  var WINDOW_DAYS = 30;   // 30 = 近 30 天（長條圖）；0 = 全部（折線圖，從各卡片第一筆紀錄到今天）
+  var WINDOW_DAYS = 30;   // 30 = 近 30 天；0 = 全部（從第一筆紀錄到今天）
   var state = { running:null, cycling:null, ai:null, english:null, goals:null, weather:null };
-  var sel = { running:null, cycling:null, ai:null, english:null };
-  var totals = { running:"", cycling:"" };   // i 按鈕帶出的累計文字
+  var sel = { running:null, cycling:null, ai:null, english:null };   // 單項頁目前選取的日期
+  var VIEW = null;        // null = 總覽；否則為 running / cycling / english / ai
+  var DET = null;         // 單項頁目前的計算結果，點選日期時局部更新用
   var db = null, sample = null, sampleImages = false, staticMode = false;
-  var ENTER = {};      // 各卡片圖表進場動畫的起點時間；切換區間時清空重來
-  var lineData = {}, lineRaf = {};   // 折線圖各點的目標高度，供 rAF 逐格更新用
-  var ENTER_STAGGER = 1.3, BAR_DUR = .55, LINE_DUR = .8;   // 秒：全部長條／點依序出發的總時間、單根／單點的動作時間
   var REDUCE_MOTION = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
-  var PENDING = {};                 // 還沒進畫面、在等進場動畫的卡片
-  var WAIT = -1000;                 // 尚未進入畫面：「已過時間」設成很大的負數，長條停在最矮、折線停在橫線
-  var ANIM_EPOCH = Date.now();   // 長條圖流光動畫的共同起點，重繪時用它算出目前該在的相位，避免看起來「跳一下」
+  if(!(window.CSS && CSS.registerProperty)) document.documentElement.classList.add("no-prop");
 
   // ---------- date / format helpers ----------
   function tpeToday(){
@@ -779,48 +469,6 @@
 
   function tpeHour(){ return parseInt(hourFmt.format(new Date()),10)%24; }
 
-  function renderStamp(){
-    var el = document.getElementById("stamp");
-    var iso = tpeToday();
-    var dow = ["SUN","MON","TUE","WED","THU","FRI","SAT"][new Date(iso+"T00:00:00Z").getUTCDay()];
-
-    // PM 放在時間之前
-    var p = {};
-    clockFmt.formatToParts(new Date()).forEach(function(x){ p[x.type]=x.value; });
-    var clock = (p.dayPeriod||"")+" "+(p.hour||"")+":"+(p.minute||"")+":"+(p.second||"");
-
-    var wxHtml = "";
-    var tip = "";
-    var w = state.weather;
-    if(w){
-      // 午夜抓下來的逐時預報，依現在幾點取出對應那一格
-      var h = tpeHour();
-      var slot = null;
-      (w.hourly||[]).forEach(function(x){ if(x.h===h) slot = x; });
-      var code = slot ? slot.code : w.code;
-      var temp = slot ? slot.temp : w.tempC;
-      var pop  = slot ? slot.pop  : w.precipProb;
-      var m = WMO[code] || [];
-      var icon = m[1] || w.icon || "";
-      var text = m[0] || w.text || "";
-      var stale = w.date && w.date!==iso;
-
-      wxHtml = ' <span class="wx'+(stale?" stale":"")+'">'+esc(icon)+
-        (temp!=null? " "+Math.round(temp)+"°" : "")+'</span>';
-
-      tip = (w.location||"")+"　"+text+
-        (temp!=null? "　"+temp+"°C":"")+
-        (pop!=null? "　降雨機率 "+pop+"%":"")+
-        (w.low!=null&&w.high!=null? "　今日 "+Math.round(w.low)+"–"+Math.round(w.high)+"°":"")+
-        (stale? "　⚠ 預報日期 "+w.date+"，非今日":"")+
-        (w.updatedAt? "　更新於 "+String(w.updatedAt).slice(0,16).replace("T"," "):"");
-    }
-    // 天氣接在日期後面，再接星期與時間
-    el.innerHTML = esc(iso)+wxHtml+esc(" · "+dow+" · "+clock);
-    el.title = tip;
-  }
-  renderStamp();
-  setInterval(renderStamp,1000);
 
   // ---------- toast ----------
   var toast = document.getElementById("toast"),
@@ -835,491 +483,689 @@
   }
   function hideToast(){ toast.classList.remove("show"); }
 
-  // ---------- shared pieces ----------
-  // 進場動畫已經過的秒數；null 表示已播完（或使用者偏好減少動態），不必再帶進場樣式。
-  // 重繪不會讓動畫重來：起點固定，每次重繪只是依「已過時間」算出目前該在的位置。
-  var hasObserver = typeof IntersectionObserver==="function";
-  // 用當下版面即時判斷，不看觀察器的舊結果：載入時骨架屏很矮，下方卡片一度會落在畫面內，等資料填進來才被推到畫面外
-  function inView(kind){
-    var el = document.getElementById("body-"+kind);
-    if(!el) return true;
-    var r = el.getBoundingClientRect();
-    return r.top < window.innerHeight-120 && r.bottom > 0;
-  }
-  function enterElapsed(kind, dur){
-    if(REDUCE_MOTION) return null;
-    if(ENTER[kind]==null){
-      // 滑到才播：卡片還沒進畫面就先停在起始狀態，等 IntersectionObserver 通知再開始
-      if(hasObserver && !inView(kind)){ PENDING[kind] = true; return WAIT; }
-      PENDING[kind] = false;
-      ENTER[kind] = Date.now();
-    }
-    var e = (Date.now()-ENTER[kind])/1000;
-    return e < ENTER_STAGGER+dur+.05 ? e : null;
-  }
-  function barsHtml(kind, days, valueOf){
-    var enter = enterElapsed(kind, BAR_DUR);
-    var step = ENTER_STAGGER/Math.max(1,days.length);
-    var max = 0;
-    days.forEach(function(d){ max = Math.max(max, valueOf(d)||0); });
-    if(max<=0) max = 1;
-    return '<div class="bars'+(enter!=null?' enter':'')+'" role="group" aria-label="每日數據">'+days.map(function(d,i){
-      var v = valueOf(d)||0;
-      var h = v>0 ? Math.max(8, Math.round((v/max)*50)) : 5;
-      var on = sel[kind]===d.date;
-      // 每根柱子錯開相位，深淺變化就會像波浪一根接一根掃過去。
-      // 用「距共同起點的經過時間」而不是固定值算相位，這樣點擊選取造成的重繪
-      // 換出新的柱子元素時，動畫會接續在原本該有的相位上繼續跑，畫面不會跳一下。
-      var delay = (-((Date.now()-ANIM_EPOCH)/1000 + i*0.55)).toFixed(2);
-      // 進場中：有資料的長條 delay 依序是 流光、發光、升起；沒資料的只有升起
-      var rise = (i*step-(enter||0)).toFixed(2)+'s';
-      var dl = enter!=null ? (v>0 ? num(delay)+'s,'+num(delay)+'s,'+rise : rise) : num(delay)+'s';
-      return '<button class="b'+(v>0?' has':'')+'" data-kind="'+esc(kind)+'" data-date="'+esc(d.date)+'" '+
-        'aria-pressed="'+(on?"true":"false")+'" style="height:'+num(h)+'px;animation-delay:'+dl+'" '+
-        'title="'+esc(md(d.date))+'" aria-label="'+esc(md(d.date))+'"></button>';
-    }).join("")+'</div>';
-  }
-  // 折線圖：x 取每格中心點，與底下透明按鈕對齊
-  // 折線圖進場：所有點先在底線上排成一條橫線，再由左至右各自移到定位。
-  // 幾何依「已過時間」算出；進場中由 rAF 逐格改 path 與點位，重繪也不會重來。
-  function lineGeometry(ld, e){
-    var n = ld.n, step = ENTER_STAGGER/Math.max(1,n);
-    var ys = ld.targets.map(function(t,i){
-      if(e==null) return t;
-      var k = Math.min(1, Math.max(0, (e-i*step)/LINE_DUR));
-      return 48+(t-48)*(1-Math.pow(1-k,3));
-    });
-    var xs = ys.map(function(_,i){ return (i+0.5)*100/n; });
-    var line = ys.map(function(y,i){ return (i?"L":"M")+xs[i].toFixed(2)+" "+y.toFixed(2); }).join(" ");
-    var area = line+" L"+xs[n-1].toFixed(2)+" 52 L"+xs[0].toFixed(2)+" 52 Z";
-    return {ys:ys, line:line, area:area};
-  }
-  function paintLine(kind){
-    var ld = lineData[kind], el = document.querySelector("#body-"+kind+" .line");
-    if(!ld || !el) return false;
-    var e = enterElapsed(kind, LINE_DUR), g = lineGeometry(ld, e);
-    el.querySelector(".la").setAttribute("d", g.area);
-    el.querySelector(".lp").setAttribute("d", g.line);
-    var pts = el.querySelectorAll(".pt");
-    for(var i=0;i<pts.length;i++) pts[i].style.setProperty("--y", ((52-g.ys[i])/52*100).toFixed(1)+"%");
-    return e!=null;
-  }
-  function tickLine(kind){
-    if(lineRaf[kind]) return;
-    (function loop(){
-      lineRaf[kind] = 0;
-      if(paintLine(kind)) lineRaf[kind] = requestAnimationFrame(loop);
-    })();
-  }
-  function lineHtml(kind, days, valueOf){
-    var n = days.length, max = 0;
-    days.forEach(function(d){ max = Math.max(max, valueOf(d)||0); });
-    if(max<=0) max = 1;
-    var ld = lineData[kind] = {n:n, targets:days.map(function(d){ return 48-((valueOf(d)||0)/max)*44; })};
-    var e = enterElapsed(kind, LINE_DUR), g = lineGeometry(ld, e);
-    var gid = "lg-"+kind;
-    if(e!=null && e>WAIT) setTimeout(function(){ tickLine(kind); }, 0);   // 等這次 innerHTML 寫進 DOM 後再開始逐格更新
-    return '<div class="line" role="group" aria-label="每日數據">'+
-      '<svg viewBox="0 0 100 52" preserveAspectRatio="none" aria-hidden="true">'+
-        '<defs>'+
-          '<linearGradient id="'+gid+'" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="52">'+
-            '<stop offset="0" stop-color="#FFE49A"/><stop offset="1" stop-color="#F97316"/></linearGradient>'+
-          '<linearGradient id="'+gid+'a" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="52">'+
-            '<stop offset="0" stop-color="#FF9522" stop-opacity=".38"/><stop offset="1" stop-color="#FF9522" stop-opacity="0"/></linearGradient>'+
-        '</defs>'+
-        '<path class="la" d="'+g.area+'" fill="url(#'+gid+'a)"/>'+
-        '<path class="lp" d="'+g.line+'" fill="none" stroke="url(#'+gid+')" stroke-width="1.8" stroke-linejoin="round" '+
-          'stroke-linecap="round" vector-effect="non-scaling-stroke"/>'+
-      '</svg>'+
-      days.map(function(d,i){
-        var on = sel[kind]===d.date;
-        return '<button class="pt" data-kind="'+esc(kind)+'" data-date="'+esc(d.date)+'" aria-pressed="'+(on?"true":"false")+'" '+
-          'style="--y:'+((52-g.ys[i])/52*100).toFixed(1)+'%" title="'+esc(md(d.date))+'" aria-label="'+esc(md(d.date))+'"></button>';
-      }).join("")+'</div>';
-  }
-  function chartHtml(kind, days, valueOf){
-    return WINDOW_DAYS>0 ? barsHtml(kind, days, valueOf) : lineHtml(kind, days, valueOf);
-  }
-  // 視窗內的日期：近 30 天，或「全部」＝從 firstDate 到今天
-  function windowDates(firstDate){
-    if(WINDOW_DAYS>0 || !firstDate) return lastDays(WINDOW_DAYS>0 ? WINDOW_DAYS : 30);
-    var end = tpeToday(), out = [], dt = firstDate;
-    while(dt<=end){ out.push(dt); dt = shiftDay(dt,1); }
-    return out.length>1 ? out : lastDays(30);
+
+  // ---------- 項目設定 ----------
+  var KINDS = ["running","cycling","english","ai"];
+  var HASH = {running:"run", cycling:"ride", english:"en", ai:"ai"};
+  // pal：深 → 主 → 淺 → 最淺，單項頁的層次都從這四階取
+  var META = {
+    running:{code:"RUN",  zh:"跑步",    ring:"OUTER RING", pal:["#C2410C","#FF9A3C","#FFC98A","#FFE8CC"]},
+    cycling:{code:"RIDE", zh:"騎車",    ring:"RING 2",     pal:["#B98300","#FFD166","#FFE49E","#FFF4D6"]},
+    english:{code:"EN",   zh:"英文",    ring:"RING 3",     pal:["#1C7FB5","#6FD3FF","#A9E7FF","#DFF7FF"]},
+    ai:     {code:"AI",   zh:"AI 學習", ring:"INNER RING", pal:["#6A48D6","#B79CFF","#D5C7FF","#EFEAFF"]}
+  };
+  var DOW = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+  function rgbOf(hex){ return [1,3,5].map(function(i){ return parseInt(hex.substr(i,2),16); }).join(","); }
+  function dowOf(iso){ return DOW[new Date(iso+"T00:00:00Z").getUTCDay()]; }
+  function f1(n){ return (Math.round(n*10)/10).toFixed(1); }
+  function comma(n){ return Math.round(Number(n)||0).toLocaleString("en-US"); }
+  function winTag(){ return WINDOW_DAYS>0 ? WINDOW_DAYS+"D" : "全部"; }
+  function minKey(obj){
+    var m = null;
+    Object.keys(obj).forEach(function(k){ if(m===null || k<m) m = k; });
+    return m;
   }
   function minDate(list){
     var m = null;
     list.forEach(function(x){ if(x && (m===null || x<m)) m = x; });
     return m;
   }
-  function winUnit(){ return WINDOW_DAYS>0 ? WINDOW_DAYS+"天" : "全部"; }
-
-  // 列前的藍色線條圖示，每列錯開相位，畫線的動作就會一列接一列跑。
-  // 跟長條圖一樣用共同起點的經過時間算 delay，這樣任何一張卡片的重繪
-  // 都不會讓這些圖示的畫線動畫跳一下重新起算。
-  function rowIcon(i){
-    var delay = (-((Date.now()-ANIM_EPOCH)/1000 + i*1.0)).toFixed(2);
-    return '<svg class="ic" viewBox="0 0 12 12" aria-hidden="true">'+
-      '<polyline points="1,7.5 4,4 7.2,8 11,2.5" style="animation-delay:'+
-      num(delay)+'s"></polyline></svg>';
+  function rangeDates(from, to){
+    var out = [], dt = from;
+    while(dt<=to){ out.push(dt); dt = shiftDay(dt,1); }
+    return out;
+  }
+  // 視窗內的日期：近 30 天，或「全部」＝從 firstDate 到今天
+  function windowDates(firstDate){
+    if(WINDOW_DAYS>0 || !firstDate) return lastDays(WINDOW_DAYS>0 ? WINDOW_DAYS : 30);
+    var out = rangeDates(firstDate, tpeToday());
+    return out.length>1 ? out : lastDays(30);
   }
 
-  // 專案右側的資料夾圖示連結。網址存在 db 裡，只接受 http(s)，
-  // 不讓資料庫裡的字串變成可執行的 javascript: 連結。
+  // 把各來源的資料整理成「日期 → 當日紀錄」，v 是畫在環上的值（公里或小時）
+  function records(kind){
+    var doc = state[kind], by = {};
+    if(!doc) return by;
+    function slot(dt, init){ return by[dt] || (by[dt] = init); }
+    if(kind==="running" || kind==="cycling"){
+      (doc.days||[]).forEach(function(d){
+        if(!d.date) return;
+        var t = slot(d.date, {date:d.date, km:0, sec:0, elev:0, name:""});
+        t.km += Number(d.km)||0; t.sec += Number(d.durationSec)||0; t.elev += Number(d.elevationM)||0;
+        if(!t.name && d.name) t.name = d.name;
+      });
+      (doc.syncedRecent||[]).forEach(function(a){ if(by[a.date] && !by[a.date].name) by[a.date].name = a.name; });
+      (doc.manualEntries||[]).forEach(function(m){
+        if(!m.date) return;
+        var t = slot(m.date, {date:m.date, km:0, sec:0, elev:0, name:""});
+        t.km += Number(m.distance_km)||0; t.sec += Number(m.duration_sec)||0; t.elev += Number(m.elevation_gain_m)||0;
+        t.manual = true;
+        if(!t.name && m.note) t.name = m.note;
+      });
+      // 距離趨近 0 的誤觸紀錄不算一次活動
+      Object.keys(by).forEach(function(k){ var t = by[k]; t.v = t.km>=0.05 ? t.km : 0; });
+    } else if(kind==="english"){
+      (doc.history||[]).forEach(function(h){
+        if(!h.date) return;
+        var t = slot(h.date, {date:h.date, sec:0, q:0, vocab:0, score:null, lc:null, rc:null});
+        t.sec += Number(h.study_time_sec)||0; t.q += Number(h.questions_count)||0; t.vocab += Number(h.vocab_count)||0;
+        if(h.toeic_predicted!=null){ t.score = h.toeic_predicted; t.lc = h.toeic_lc; t.rc = h.toeic_rc; }
+      });
+      // 今天進行中的學習只存在 latest，還沒進 history
+      var L = doc.latest;
+      if(L && L.date && !by[L.date]){
+        by[L.date] = {date:L.date, sec:Number(L.study_time_sec)||0, q:Number(L.questions_count)||0,
+          vocab:Number(L.vocab_count)||0, score:L.toeic_predicted, lc:L.toeic_lc, rc:L.toeic_rc, live:true};
+      }
+      Object.keys(by).forEach(function(k){ by[k].v = by[k].sec/3600; });
+    } else {
+      (doc.daily||[]).forEach(function(d){
+        if(!d.date) return;
+        var t = slot(d.date, {date:d.date, sec:0, sessions:0});
+        t.sec += Number(d.seconds)||0; t.sessions += Number(d.sessions)||0;
+      });
+      Object.keys(by).forEach(function(k){ by[k].v = by[k].sec/3600; });
+    }
+    return by;
+  }
+  function daysOf(by, dates){
+    return dates.map(function(dt){ return by[dt] || {date:dt, v:0, km:0, sec:0, elev:0, q:0, vocab:0, sessions:0}; });
+  }
+  function sumOf(days, key){ return days.reduce(function(a,d){ return a+(Number(d[key])||0); },0); }
+  function activeOf(days){ return days.filter(function(d){ return d.v>0; }); }
+  function goalFor(kind, n){
+    var g = state.goals || {};
+    var monthly = kind==="running" ? g.runMonthlyKm : (kind==="cycling" ? g.rideMonthlyKm : null);
+    return monthly!=null ? monthly*n/30 : null;
+  }
+  function latestScore(){
+    var L = state.english && state.english.latest;
+    return L ? {score:L.toeic_predicted, lc:L.toeic_lc, rc:L.toeic_rc} : {score:null, lc:null, rc:null};
+  }
+
+  // 專案右側的資料夾圖示連結。只接受 http(s)，不讓資料庫裡的字串變成 javascript: 連結。
   function repoLink(url){
     if(typeof url!=="string" || !/^https?:\/\//i.test(url)) return "";
-    return '<a class="lk" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" '+
-      'title="開啟儲存庫" aria-label="開啟儲存庫">'+
-      '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.6 4.3A1.3 1.3 0 0 1 2.9 3h2.9l1.4 1.8h5A1.3 1.3 0 0 1 13.5 6v5.9a1.3 1.3 0 0 1-1.3 1.3H2.9a1.3 1.3 0 0 1-1.3-1.3z"></path></svg></a>';
+    return url;
   }
 
-  // 沒選任何一天就整塊不畫 —— 下方內容自然上移，選了才展開
-  function readoutHtml(inner){
-    if(!inner) return "";
-    return '<div class="readout"><div class="sel">'+inner+'</div></div>';
+  // ---------- 環狀圖幾何 ----------
+  function pt(c, r, deg){ var a = deg*Math.PI/180; return [c+r*Math.cos(a), c+r*Math.sin(a)]; }
+  function r1(n){ return n.toFixed(1); }
+  function sector(c, ra, rb, a0, a1){
+    var p0 = pt(c,rb,a0), p1 = pt(c,rb,a1), p2 = pt(c,ra,a1), p3 = pt(c,ra,a0);
+    var big = (a1-a0)>180 ? 1 : 0;
+    return "M"+r1(p0[0])+" "+r1(p0[1])+"A"+rb+" "+rb+" 0 "+big+" 1 "+r1(p1[0])+" "+r1(p1[1])+
+      "L"+r1(p2[0])+" "+r1(p2[1])+"A"+ra+" "+ra+" 0 "+big+" 0 "+r1(p3[0])+" "+r1(p3[1])+"Z";
   }
-  function goalLine(actual, goal, unit){
-    if(goal==null) return '<div class="goal">目標未設定</div>';
-    var diff = goal-actual;
-    return '<div class="goal">目標 '+Math.round(goal)+' · '+(diff>0
-      ? '差 <em>'+fmtKm(diff)+'</em> '+unit
-      : '<em>已達標 +'+fmtKm(-diff)+'</em> '+unit)+'</div>';
-  }
-  // 視窗天數 × 月目標 / 30；沒有月目標就用週目標 × 天數 / 7
-  function windowGoal(weeklyVal, monthlyVal, nDays){
-    if(monthlyVal!=null) return monthlyVal*nDays/30;
-    return weeklyVal!=null ? weeklyVal*nDays/7 : null;
+  function segAngles(i, n){
+    var step = 360/n, gap = Math.min(2.4, step*0.2), a0 = -90+i*step+gap/2;
+    return [a0, a0+step-gap, a0+(step-gap)/2];
   }
 
-  function daysInWindow(doc){
-    var wanted = windowDates(minDate((doc && doc.days || []).map(function(d){return d.date;})
-      .concat((doc && doc.manualEntries || []).map(function(m){return m.date;}))));
-    var byDate = {};
-    (doc && doc.days || []).forEach(function(d){ byDate[d.date] = d; });
-    (doc && doc.manualEntries || []).forEach(function(m){
-      if(!m.date) return;
-      var t = byDate[m.date] || (byDate[m.date] = {date:m.date, km:0, durationSec:0, elevationM:0, manual:true});
-      t.km = (t.km||0) + (m.distance_km||0);
-      t.durationSec = (t.durationSec||0) + (m.duration_sec||0);
-      t.elevationM = (t.elevationM||0) + (m.elevation_gain_m||0);
-      t.manual = true;
-      if(!t.name && m.note) t.name = m.note;
-    });
-    return wanted.map(function(dt){ return byDate[dt] || {date:dt, km:0, durationSec:0, elevationM:0}; });
-  }
-
-  // ---------- RUN / CYCLING ----------
-  function renderActivity(kind, doc){
-    var body = document.getElementById("body-"+kind);
-    var dot = document.getElementById("dot-"+kind);
-    if(!doc){
-      body.innerHTML =
-        '<div class="headline"><div class="hl-main">'+
-        '<div class="big"><span class="v">—</span></div>'+
-        '<div class="goal">尚未同步 Strava 資料</div></div></div>'+
-        readoutHtml(null);
-      dot.className = "dot warn";
-      return;
+  // ---------- 總覽 ----------
+  function kpiHtml(kind, days, delay){
+    var M = META[kind], pal = M.pal, N = days.length;
+    var total = sumOf(days, "v"), big, dec = 1, unit, w = 0, goalTx, side;
+    if(kind==="running" || kind==="cycling"){
+      var goal = goalFor(kind, N), sec = sumOf(days,"sec");
+      big = total; unit = "KM · "+winTag();
+      w = goal ? Math.min(1, total/goal) : 0;
+      goalTx = goal ? "目標 "+Math.round(goal)+" km · "+Math.round(total/goal*100)+"%" : "目標未設定";
+      side = kind==="running"
+        ? "配速 "+fmtPace(total>0 ? sec/total : 0)
+        : "爬升 "+comma(sumOf(days,"elev"))+" m";
+    } else if(kind==="english"){
+      var sc = latestScore();
+      big = total; unit = "HRS · "+winTag();
+      w = sc.score!=null ? sc.score/990 : 0;
+      goalTx = sc.score!=null ? "多益預測 "+num(sc.score) : "尚無多益預測";
+      side = (sc.lc!=null ? "LC "+num(sc.lc) : "")+(sc.rc!=null ? " · RC "+num(sc.rc) : "");
+    } else {
+      var act = activeOf(days).length;
+      big = total; unit = "HRS · "+winTag();
+      w = N ? act/N : 0;
+      goalTx = "活躍 "+act+" / "+N+" 天";
+      side = num((state.ai||{}).projectCount||0)+" 個專案";
     }
-    var days = daysInWindow(doc);
-    var winKm = days.reduce(function(a,d){return a+(d.km||0);},0);
-    var winSec = days.reduce(function(a,d){return a+(d.durationSec||0);},0);
-    var winClimb = days.reduce(function(a,d){return a+(d.elevationM||0);},0);
-    var goals = state.goals || {};
-    var goal = kind==="running"
-      ? windowGoal(goals.runWeeklyKm, goals.runMonthlyKm, days.length)
-      : windowGoal(goals.rideWeeklyKm, goals.rideMonthlyKm, days.length);
-
-    // 沒有逐日名稱的舊資料，退回用 syncedRecent 依日期比對
-    function nameOn(dt, own){
-      if(own) return own;
-      var hit = (doc.syncedRecent||[]).filter(function(a){return a.date===dt;})[0];
-      return hit ? hit.name : "";
-    }
-
-    var s = sel[kind] ? days.filter(function(d){return d.date===sel[kind];})[0] : null;
-    var inner = null;
-    if(s){
-      var sPace = (s.km>0 && s.durationSec>0) ? s.durationSec/s.km : 0;
-      var sName = nameOn(s.date, s.name);
-      inner = '<span class="d">'+esc(md(s.date))+'</span>'+
-        '<span class="m">'+fmtKm(s.km)+' km</span>'+
-        (kind==="cycling"
-          ? '<span class="x">↑ '+Math.round(s.elevationM||0)+' m</span>'+
-            (sName? '<span class="nm">'+esc(sName)+'</span>' : '')
-          : '<span class="x">'+(s.durationSec? fmtHM(s.durationSec):'—')+'</span>'+
-            '<span class="x">'+(sPace? fmtPace(sPace)+'/km' : '—')+'</span>');
-    }
-
-    var t = doc.totals || {};
-    var mo = doc.month || {};
-    var pace = (t.km>0 && t.durationSec>0) ? t.durationSec/t.km : 0;
-    var avgSpeed = (t.km>0 && t.durationSec>0) ? (t.km/(t.durationSec/3600)) : 0;
-
-    var pairHtml = kind==="cycling"
-      ? '<div class="pair">'+
-          '<div><div class="k">平均時速</div><div class="v">'+(avgSpeed? fmtKm(avgSpeed)+' km/h':'—')+'</div></div>'+
-          '<div><div class="k">本月里程</div><div class="v">'+fmtKm(mo.km||0)+' km</div></div>'+
-        '</div>'
-      : '<div class="pair">'+
-          '<div><div class="k">平均配速</div><div class="v">'+fmtPace(pace)+'</div></div>'+
-          '<div><div class="k">本月里程</div><div class="v">'+fmtKm(mo.km||0)+' km</div></div>'+
-        '</div>';
-
-    // 近期活動：整段歷史由新到舊，可往下捲。距離趨近 0 的誤觸紀錄不列。
-    var recItems = [];
-    (doc.days||[]).forEach(function(d){
-      if(!(d.km>=0.05)) return;
-      recItems.push({date:d.date, name:nameOn(d.date, d.name)||(kind==="cycling"?"騎乘":"跑步"),
-        km:d.km, sec:d.durationSec, tag:false});
-    });
-    (doc.manualEntries||[]).forEach(function(m){
-      recItems.push({date:m.date, name:m.note||"手動紀錄",
-        km:m.distance_km, sec:m.duration_sec, tag:true});
-    });
-    recItems.sort(function(x,y){ return x.date<y.date ? 1 : (x.date>y.date ? -1 : 0); });
-    var rec = recItems.map(function(r,i){
-      var met = r.km!=null ? fmtKm(r.km)+' km' : '手動';
-      if(kind==="running" && r.km>0 && r.sec>0) met += ' · '+fmtPace(r.sec/r.km);
-      return '<div class="r">'+
-        rowIcon(i)+
-        '<span class="d">'+esc(md(r.date))+'</span>'+
-        '<span class="n">'+esc(r.name)+'</span>'+
-        '<span class="m'+(r.tag?' tag':'')+'">'+esc(met)+'</span></div>';
-    });
-
-    // 累計文字改由標題列的 i 按鈕帶出，不再佔用大數字那一列
-    totals[kind] = (kind==="cycling"
-      ? '累計 '+fmtKm(t.km||0)+' km · 爬升 '+Math.round(t.elevationM||0)+' m'
-      : '累計 '+fmtKm(t.km||0)+' km · '+(t.count||0)+' 次')+' · 8/1 起';
-
-    body.innerHTML =
-      '<div class="headline">'+
-        '<div class="hl-main">'+
-          '<div class="big"><span class="v">'+fmtKm(winKm)+'</span>'+
-          '<span class="u-wrap"><span class="u">km / '+winUnit()+'</span>'+
-          '<button class="info" data-info="'+esc(kind)+'" title="累計數據" aria-label="累計數據">i</button>'+
-          '</span></div>'+
-          goalLine(winKm, goal, 'km')+
-        '</div>'+
-      '</div>'+
-      chartHtml(kind, days, function(d){return d.km;})+
-      readoutHtml(inner)+
-      pairHtml+
-      '<div class="recent"><div class="k">近期活動</div>'+
-        (rec.length? '<div class="rlist">'+rec.join("")+'</div>' : '<div class="none">尚無紀錄</div>')+'</div>';
-
-    dot.className = "dot" + (winKm>0 ? "" : " idle");
+    return '<a class="kpi panel sec" href="#'+HASH[kind]+'" aria-label="查看'+esc(M.zh)+'詳細">'+
+      '<div class="h"><i style="background:'+pal[1]+';box-shadow:0 0 12px '+pal[1]+'"></i>'+
+        '<b>'+esc(M.code)+'</b><span>'+esc(M.zh)+'</span><em>'+esc(M.ring)+'</em></div>'+
+      '<div class="big up" style="animation-delay:'+delay+'s">'+
+        '<span class="v cnt" data-to="'+total+'" data-dec="'+dec+'">'+f1(big)+'</span>'+
+        '<span class="u">'+esc(unit)+'</span></div>'+
+      '<div class="bar"><div class="grow" style="width:'+(w*100).toFixed(1)+'%;background:'+pal[1]+';animation-delay:'+delay+'s"></div></div>'+
+      '<div class="f"><span>'+esc(goalTx)+'</span><span>'+esc(side)+'</span></div>'+
+    '</a>';
   }
 
-  // ---------- AI ----------
-  function renderAi(doc){
-    var body = document.getElementById("body-ai");
-    var dot = document.getElementById("dot-ai");
-    if(!doc){
-      body.innerHTML =
-        '<div class="headline"><div class="big"><span class="v">—</span></div>'+
-        '<div class="goal">尚未計算使用估算</div></div>'+ readoutHtml(null);
-      dot.className = "dot warn";
-      return;
-    }
-    var wanted = windowDates(minDate((doc.daily||[]).map(function(d){return d.date;}))), byDate = {};
-    (doc.daily||[]).forEach(function(d){ byDate[d.date]=d; });
-    var days = wanted.map(function(dt){ return byDate[dt] || {date:dt, seconds:0, sessions:0}; });
-    var winSec = days.reduce(function(a,d){return a+(d.seconds||0);},0);
-
-    var s = sel.ai ? days.filter(function(d){return d.date===sel.ai;})[0] : null;
-    var inner = s ? '<span class="d">'+esc(md(s.date))+'</span>'+
-      '<span class="m">'+fmtHM(s.seconds||0)+'</span>'+
-      '<span class="x">'+num(s.sessions||0)+' 個 session</span>' : null;
-
-    body.innerHTML =
-      '<div class="headline"><div class="hl-main">'+
-        '<div class="big"><span class="v">'+fmtHours(winSec)+'</span>'+
-        '<span class="u">小時 / '+winUnit()+'</span></div>'+
-        '<div class="goal">Claude 使用紀錄自動同步</div></div></div>'+
-      chartHtml("ai", days, function(d){return d.seconds;})+
-      readoutHtml(inner)+
-      '<div class="pair">'+
-        '<div><div class="k">目前專案</div><div class="v">'+num(doc.projectCount||0)+'</div></div>'+
-        '<div><div class="k">累計時數</div><div class="v">'+fmtHours(doc.totalSeconds||0)+' h</div></div>'+
-      '</div>'+
-      '<div class="recent"><div class="k">專案</div>'+
-        ((doc.projects||[]).length
-          ? (doc.projects||[]).slice(0,3).map(function(p,i){
-              return '<div class="r">'+rowIcon(i)+'<span class="n">'+esc(p)+'</span>'+
-                repoLink((doc.projectLinks||{})[p])+'</div>'; }).join("")
-          : '<div class="none">尚無專案</div>')+'</div>'+
-      '<div class="foot">Claude Code session 起訖估算 · 上限 3h/session</div>';
-
-    dot.className = "dot" + (winSec>0 ? "" : " idle");
-  }
-
-  // ---------- EN ----------
-  function renderEnglish(doc){
-    var body = document.getElementById("body-english");
-    var dot = document.getElementById("dot-english");
-    var latest = doc && doc.latest;
-    if(!latest){
-      var tgt = (state.goals||{}).enTargetScore;
-      body.innerHTML =
-        '<div class="headline"><div class="hl-main">'+
-          '<div class="big"><span class="v">—</span>'+
-          '<span class="u">小時 / '+winUnit()+'</span></div>'+
-          '<div class="goal">'+(tgt!=null? '目標 '+num(tgt)+' 分 · 尚未上傳紀錄' : '尚未上傳學習紀錄')+'</div></div></div>'+
-        readoutHtml(null)+
-        '<div class="pair">'+
-          '<div><div class="k">LC 聽力</div><div class="v">—</div></div>'+
-          '<div><div class="k">RC 閱讀</div><div class="v">—</div></div>'+
-        '</div>'+
-        '<div class="recent"><div class="k">學習日誌</div><div class="none">尚無紀錄</div></div>'+
-        '<div class="foot">手動上傳截圖 · 由 Claude 讀圖擷取</div>';
-      dot.className = "dot warn";
-      return;
-    }
-    var score = latest.toeic_predicted;
-
-    // 逐日學習時間長條圖 —— 與跑步／騎車同一套視覺語彙
-    var wanted = windowDates(minDate((doc.history||[]).map(function(h){return h.date;}))), byDate = {};
-    (doc.history||[]).forEach(function(h){
-      if(!h.date) return;
-      var t = byDate[h.date] || (byDate[h.date] = {date:h.date, seconds:0, questions:0, vocab:0, score:null});
-      t.seconds += h.study_time_sec||0;
-      t.questions += h.questions_count||0;
-      t.vocab += h.vocab_count||0;
-      if(h.toeic_predicted!=null) t.score = h.toeic_predicted;
-    });
-    var days = wanted.map(function(dt){
-      return byDate[dt] || {date:dt, seconds:0, questions:0, vocab:0, score:null};
-    });
-    var winSec = days.reduce(function(a,d){return a+(d.seconds||0);},0);
-
-    var s = sel.english ? days.filter(function(d){return d.date===sel.english;})[0] : null;
-    // 內容順序：日期、學習時間、分數、題數 —— 大數字換成時間後，選取列也跟著把時間排前面
-    var inner = s ? '<span class="d">'+esc(md(s.date))+'</span>'+
-      '<span class="n">'+fmtHM(s.seconds||0)+'</span>'+
-      '<span class="m">'+(s.score!=null? num(s.score)+' 分':'—')+'</span>'+
-      '<span class="x">'+num(s.questions||0)+' 題</span>' : null;
-
-    body.innerHTML =
-      '<div class="headline"><div class="hl-main">'+
-        '<div class="big"><span class="v">'+fmtHours(winSec)+'</span>'+
-        '<span class="u">小時 / '+winUnit()+'</span></div>'+
-        (score!=null
-          ? '<div class="goal">多益預測 <em>'+num(score)+'</em></div>'
-          : '<div class="goal">尚無多益預測分數</div>')+
-      '</div></div>'+
-      chartHtml("english", days, function(d){return d.seconds;})+
-      readoutHtml(inner)+
-      '<div class="pair">'+
-        '<div><div class="k">LC 聽力</div><div class="v">'+(latest.toeic_lc!=null? num(latest.toeic_lc):'—')+'</div></div>'+
-        '<div><div class="k">RC 閱讀</div><div class="v">'+(latest.toeic_rc!=null? num(latest.toeic_rc):'—')+'</div></div>'+
-      '</div>'+
-      '<div class="recent"><div class="k">學習日誌</div>'+
-        ((doc.history||[]).length
-          ? '<div class="rlist">'+(doc.history||[]).slice().sort(function(x,y){
-              return x.date<y.date ? 1 : (x.date>y.date ? -1 : 0);
-            }).map(function(h,i){
-              // 日期 / 預測分數 / 學習時間 · 題數 · 詞彙數 —— 跟 note 無關，一律照數值欄位排
-              return '<div class="r">'+rowIcon(i)+
-                '<span class="d">'+esc(md(h.date))+'</span>'+
-                '<span class="n">'+(h.toeic_predicted!=null? num(h.toeic_predicted)+' 分':'—')+'</span>'+
-                '<span class="m">'+(h.study_time_sec!=null? fmtHM(h.study_time_sec):'—')+
-                  '·'+(h.questions_count!=null? num(h.questions_count)+'題':'—')+
-                  '·'+(h.vocab_count!=null? num(h.vocab_count)+'詞':'—')+'</span></div>';
-            }).join("")+'</div>'
-          : '<div class="none">尚無紀錄</div>')+'</div>'+
-      '<div class="foot">手動維護 · 資料來源 Santa</div>';
-
-    dot.className = "dot";
-  }
-
-  // ---------- feed ----------
-  // 近期目標：固定事件清單（存在 stats/goals.events），倒數天數每次渲染
-  // 都用 tpeToday() 重新算，所以每天自動往下數，不用手動更新
-  function renderFeed(){
-    var el = document.getElementById("feed");
-    var events = (state.goals && state.goals.events) || [];
-    var today = tpeToday();
-    var items = events.map(function(ev){
-      var days = Math.round((new Date(ev.date+"T00:00:00Z") - new Date(today+"T00:00:00Z")) / 86400000);
-      return {name:ev.name, date:ev.date, days:days, target:ev.target};
-    }).filter(function(it){ return it.days>=0; })
-      .sort(function(a,b){ return a.days-b.days; });
-
-    el.innerHTML = items.length
-      ? items.map(function(it,i){
-          var tag = it.days===0 ? "今天" : "D-"+it.days;
-          return '<div class="fr'+(i===0?" lead":"")+'">'+
-            '<span class="d">'+esc(tag)+'</span>'+
-            '<span class="t">'+esc(it.name)+'</span>'+
-            (it.target? '<span class="g">'+esc(it.target)+'</span>':'')+
-            '</div>';
-        }).join("")
-      : '<div class="fr"><span class="t">尚無設定目標</span></div>';
-  }
-
-  // 列表下緣的淡出只在「下方還有內容」時出現
-  function syncListFade(){
-    Array.prototype.forEach.call(document.querySelectorAll(".rlist"), function(el){
-      el.classList.toggle("no-more", el.scrollHeight - el.clientHeight - el.scrollTop <= 2);
-    });
-  }
-  document.addEventListener("scroll", function(e){
-    if(e.target && e.target.classList && e.target.classList.contains("rlist")) syncListFade();
-  }, true);
-
-  function renderAll(){
-    renderActivity("running", state.running);
-    renderActivity("cycling", state.cycling);
-    renderEnglish(state.english);
-    renderAi(state.ai);
-    renderFeed();
-    renderStamp();
-    syncListFade();
-  }
-
-  // 滑到才播進場動畫：圖表區進入畫面（上緣 120px 內容露出）才開始，手機上下方的卡片不會在看不到時就跑完。
-  // 只在「還在等」的卡片重繪一次；播過的卡片來回捲動不會重播。
-  if(hasObserver){
-    var io = new IntersectionObserver(function(entries){
-      var wake = false;
-      entries.forEach(function(en){
-        var k = en.target.id.replace("body-","");
-        if(en.isIntersecting && PENDING[k]){ PENDING[k] = false; ENTER[k] = Date.now(); wake = true; }
+  // 四圈由外到內：跑步、騎車、英文、AI
+  var RINGS = [["running",254],["cycling",208],["english",162],["ai",116]];
+  function orbitOverview(dates, recs){
+    var C = 320, N = dates.length, iso = tpeToday();
+    var ringsSvg = RINGS.map(function(rr, ri){
+      var kind = rr[0], R = rr[1], col = META[kind].pal[1];
+      var days = daysOf(recs[kind], dates), max = 0, track = "", path = "";
+      days.forEach(function(d){ max = Math.max(max, d.v); });
+      days.forEach(function(d, i){
+        var a = segAngles(i, N);
+        track += sector(C, R, R+2, a[0], a[1]);
+        if(d.v>0) path += sector(C, R, R+4+(d.v/(max||1))*34, a[0], a[1]);
       });
-      if(wake) renderAll();
-    }, {rootMargin:"0px 0px -120px 0px", threshold:0});
-    ["running","cycling","english","ai"].forEach(function(k){
-      var el = document.getElementById("body-"+k);
-      if(el) io.observe(el);
+      return '<svg class="reveal ring-svg" viewBox="-24 -24 688 688" style="animation-delay:'+(ri*0.18).toFixed(2)+'s;pointer-events:none" aria-hidden="true">'+
+        '<path class="ring-hit" data-go="'+kind+'" d="'+track+'" fill="rgba(255,255,255,.07)" style="pointer-events:auto"></path>'+
+        (path ? '<path class="ring-hit" data-go="'+kind+'" d="'+path+'" fill="'+col+'" style="pointer-events:auto;filter:drop-shadow(0 0 6px '+col+')"></path>' : '')+
+      '</svg>';
+    }).join("");
+    var circ = 2*Math.PI*300, dash = 1.2, gap = circ/N-dash;
+    var labIdx = [0, Math.round(N/4), Math.round(N/2), Math.round(3*N/4), N-1];
+    var labels = labIdx.map(function(i){
+      var a = segAngles(i, N), p = pt(C, 326, a[2]), last = i===N-1;
+      return '<text x="'+r1(p[0])+'" y="'+r1(p[1])+'" text-anchor="middle" dominant-baseline="middle" '+
+        'font-family="JetBrains Mono,monospace" font-size="11" fill="'+(last?"#FFFFFF":"rgba(238,234,248,.45)")+'">'+
+        (last ? "TODAY" : esc(md(dates[i])))+'</text>';
+    }).join("");
+    var ta = segAngles(N-1, N)[2], t1 = pt(C,108,ta), t2 = pt(C,296,ta);
+    var p = {};
+    clockFmt.formatToParts(new Date()).forEach(function(x){ p[x.type]=x.value; });
+    return '<div class="orbit">'+
+      '<div class="radar" aria-hidden="true"></div>'+
+      '<svg class="spin-slow" viewBox="-24 -24 688 688" aria-hidden="true">'+
+        '<circle cx="320" cy="320" r="300" fill="none" stroke="rgba(238,234,248,.35)" stroke-width="6" stroke-dasharray="'+dash+' '+r1(gap)+'"></circle>'+
+        '<circle cx="320" cy="320" r="300" fill="none" stroke="rgba(238,234,248,.08)" stroke-width="1"></circle></svg>'+
+      '<svg class="spin-rev" viewBox="-24 -24 688 688" aria-hidden="true">'+
+        '<circle cx="320" cy="320" r="310" fill="none" stroke="rgba(183,156,255,.35)" stroke-width="1" stroke-dasharray="40 14 4 14"></circle></svg>'+
+      ringsSvg+
+      '<svg viewBox="-24 -24 688 688" aria-hidden="true" style="pointer-events:none">'+
+        '<line x1="'+r1(t1[0])+'" y1="'+r1(t1[1])+'" x2="'+r1(t2[0])+'" y2="'+r1(t2[1])+'" stroke="#fff" stroke-width="1" stroke-dasharray="3 4" opacity=".7"></line>'+
+        '<circle cx="'+r1(t2[0])+'" cy="'+r1(t2[1])+'" r="4" fill="#fff"></circle>'+labels+'</svg>'+
+      '<div class="core" style="left:35.47%;top:35.47%;width:29.07%;height:29.07%">'+
+        '<span class="dw">'+esc(dowOf(iso))+'</span>'+
+        '<span class="dt">'+esc(iso.slice(5).replace("-","."))+'</span>'+
+        '<span class="ck" id="core-ck">'+esc((p.hour||"")+":"+(p.minute||"")+":"+(p.second||""))+'</span>'+
+        '<span class="wt" id="core-wt">'+esc(weatherShort())+'</span>'+
+      '</div>'+
+    '</div>';
+  }
+
+  function timelineHtml(){
+    var events = (state.goals && state.goals.events) || [], today = tpeToday();
+    var items = events.map(function(ev){
+      var d = Math.round((new Date(ev.date+"T00:00:00Z") - new Date(today+"T00:00:00Z"))/86400000);
+      return {name:ev.name, date:ev.date, days:d, target:ev.target};
+    }).filter(function(it){ return it.days>=0; }).sort(function(a,b){ return a.days-b.days; });
+    if(!items.length) return '<div class="tl panel sec"><div class="hd"><span class="cap">ORBIT TIMELINE</span><span class="cap-sub">尚無設定目標</span></div></div>';
+    var span = Math.max(30, items[items.length-1].days);
+    var cols = [META.english.pal[1], META.running.pal[1], META.cycling.pal[1], META.ai.pal[1]];
+    var months = [], dt = shiftDay(today,1);
+    while(dt<=shiftDay(today,span)){
+      if(dt.slice(8)==="01"){
+        var dd = Math.round((new Date(dt+"T00:00:00Z") - new Date(today+"T00:00:00Z"))/86400000);
+        months.push('<span class="mo" style="left:'+(dd/span*100).toFixed(1)+'%">'+esc(md(dt))+'</span>');
+      }
+      dt = shiftDay(dt,1);
+    }
+    return '<div class="tl panel sec">'+
+      '<div class="hd"><span class="cap">ORBIT TIMELINE</span><span class="cap-sub">今天 → 下一個目標</span></div>'+
+      '<div class="track">'+
+        '<div class="line"></div><span class="travel"></span>'+months.join("")+
+        '<span class="now"></span><span class="nowt">今天 '+esc(md(today))+'</span>'+
+        items.map(function(it,i){
+          var c = cols[i%cols.length];
+          return '<div class="ev" style="left:'+(it.days/span*100).toFixed(1)+'%"><i style="background:'+c+'"></i>'+
+            '<span><b style="color:'+c+'">'+(it.days===0?"今天":"D-"+it.days)+'</b> '+esc(it.name)+(it.target?' '+esc(it.target):'')+'</span></div>';
+        }).join("")+
+      '</div>'+
+      '<div class="list">'+items.map(function(it,i){
+        return '<div><b style="color:'+cols[i%cols.length]+'">'+(it.days===0?"今天":"D-"+it.days)+'</b>'+
+          '<span>'+esc(it.name)+'</span><span>'+esc(md(it.date))+(it.target?' · '+esc(it.target):'')+'</span></div>';
+      }).join("")+'</div>'+
+    '</div>';
+  }
+
+  function renderOverview(){
+    var recs = {}, firsts = [];
+    KINDS.forEach(function(k){ recs[k] = records(k); firsts.push(minKey(recs[k])); });
+    var dates = windowDates(minDate(firsts));
+    function d(k){ return daysOf(recs[k], dates); }
+    return '<div class="ov">'+
+      '<div class="side">'+kpiHtml("running", d("running"), .6)+kpiHtml("cycling", d("cycling"), .75)+'</div>'+
+      '<div class="orbit-wrap sec">'+orbitOverview(dates, recs)+'</div>'+
+      '<div class="side">'+kpiHtml("english", d("english"), .9)+kpiHtml("ai", d("ai"), 1.05)+'</div>'+
+    '</div>'+timelineHtml();
+  }
+
+  // ---------- 單項頁 ----------
+  var DC = 300, DR0 = 150, DMAX = 80;   // 單項環：中心、內徑、最長可伸出的長度
+  function detailSeg(d, i, n, max){
+    var a = segAngles(i, n);
+    return d.v>0 ? sector(DC, DR0, DR0+12+(d.v/(max||1))*DMAX*0.85, a[0], a[1])
+                 : sector(DC, DR0, DR0+14, a[0], a[1]);
+  }
+  function valueLabel(kind, d){
+    if(kind==="running" || kind==="cycling") return f1(d.km)+" km";
+    return fmtHM(d.sec);
+  }
+
+  function orbitDetail(kind, days){
+    var pal = META[kind].pal, n = days.length, max = 0;
+    days.forEach(function(d){ max = Math.max(max, d.v); });
+    var rMax = DR0+12+DMAX*0.85;
+    var segs = days.map(function(d, i){
+      var a = segAngles(i, n);
+      return '<g class="sg" data-sel="'+esc(d.date)+'">'+
+        '<path d="'+sector(DC, DR0, DR0+3, a[0], a[1])+'" fill="rgba(255,255,255,.09)"></path>'+
+        (d.v>0 ? '<path d="'+detailSeg(d, i, n, max)+'" fill="url(#kg-'+kind+')"></path>'
+               : '<path d="'+sector(DC, DR0, DR0+18, a[0], a[1])+'" fill="transparent"></path>')+
+      '</g>';
+    }).join("");
+    // 環外標註：本期數值最高的幾天
+    var top = days.map(function(d,i){ return {d:d, i:i}; }).filter(function(x){ return x.d.v>0; })
+      .sort(function(a,b){ return b.d.v-a.d.v; }).slice(0, 5);
+    var leads = "", tags = "";
+    // 先算每個標註的位置，同一側的依高度排序後往下推開，相鄰幾天的標註才不會疊在一起
+    var marks = top.map(function(x){
+      var a = segAngles(x.i, n)[2], rr = DR0+12+(x.d.v/(max||1))*DMAX*0.85;
+      var p1 = pt(DC, rr+6, a), p2 = pt(DC, rMax+26, a);
+      return {x:x, p1:p1, p2:p2, right:p2[0]>=DC, y:p2[1]};
+    });
+    [true,false].forEach(function(side){
+      var list = marks.filter(function(m){ return m.right===side; }).sort(function(a,b){ return a.y-b.y; });
+      for(var k=1;k<list.length;k++) if(list[k].y-list[k-1].y<38) list[k].y = list[k-1].y+38;
+    });
+    marks.forEach(function(m, k){
+      var x = m.x, right = m.right, p1 = m.p1, p2 = [m.p2[0], m.y];
+      var p3 = [p2[0]+(right?18:-18), m.y], tx = p3[0]+(right?6:-6), anchor = right?"start":"end";
+      var delay = (1.3+k*0.15).toFixed(2);
+      var sub = (kind==="running"||kind==="cycling") ? (x.d.name||"") :
+        (kind==="english" ? num(x.d.q)+" 題 · "+num(x.d.vocab)+" 詞" : num(x.d.sessions)+" sessions");
+      leads += '<path class="draw" d="M'+r1(p1[0])+' '+r1(p1[1])+'L'+r1(p2[0])+' '+r1(p2[1])+'L'+r1(p3[0])+' '+r1(p3[1])+'" '+
+        'fill="none" stroke="'+pal[2]+'" stroke-width="1" pathLength="100" style="animation-delay:'+delay+'s;animation-duration:.7s"></path>';
+      tags += '<g class="up" style="animation-delay:'+delay+'s">'+
+        '<text x="'+r1(tx)+'" y="'+r1(p3[1]-4)+'" text-anchor="'+anchor+'" font-family="JetBrains Mono,monospace" font-size="12" fill="'+pal[2]+'">'+
+          esc(md(x.d.date))+' · '+esc(valueLabel(kind, x.d))+'</text>'+
+        '<text x="'+r1(tx)+'" y="'+r1(p3[1]+13)+'" text-anchor="'+anchor+'" font-family="Noto Sans TC,sans-serif" font-size="13" fill="rgba(238,234,248,.85)">'+
+          esc(sub)+'</text></g>';
+    });
+    // 中央：本期總量、目標弧
+    var total = sumOf(days,"v"), prog = 0, l1, l2, l3, bigTx;
+    if(kind==="running" || kind==="cycling"){
+      var goal = goalFor(kind, n);
+      prog = goal ? Math.min(1, total/goal) : 0;
+      bigTx = f1(total); l1 = "KM · "+winTag();
+      l2 = goal ? "目標 "+Math.round(goal)+" km · "+Math.round(total/goal*100)+"%" : "目標未設定";
+      l3 = goal ? (goal>total ? "還差 "+f1(goal-total)+" km" : "已達標 +"+f1(total-goal)+" km") : "";
+    } else if(kind==="english"){
+      var sc = latestScore();
+      prog = sc.score!=null ? sc.score/990 : 0;
+      bigTx = f1(total); l1 = "HRS · "+winTag();
+      l2 = sc.score!=null ? "多益預測 "+num(sc.score)+" / 990" : "尚無多益預測";
+      var tgt = (state.goals||{}).enTargetScore;
+      l3 = (tgt!=null && sc.score!=null) ? (sc.score>=tgt ? "目標 "+num(tgt)+" 已達標" : "距目標 "+num(tgt)+" 還差 "+(tgt-sc.score)) : "";
+    } else {
+      var act = activeOf(days).length;
+      prog = n ? act/n : 0;
+      bigTx = f1(total); l1 = "HRS · "+winTag();
+      l2 = "活躍 "+act+" / "+n+" 天";
+      l3 = act ? "活躍日平均 "+f1(total/act)+" h" : "";
+    }
+    var gTicks = 2*Math.PI*282, gN = n;
+    return '<div class="orbit">'+
+      '<div class="radar" aria-hidden="true" style="inset:10%;background:conic-gradient(from 0deg,rgba('+rgbOf(pal[1])+',0) 0deg,rgba('+rgbOf(pal[1])+',0) 290deg,rgba('+rgbOf(pal[1])+',.2) 360deg);'+
+        '-webkit-mask-image:radial-gradient(circle closest-side,transparent 50%,#000 51%,#000 82%,transparent 83%);mask-image:radial-gradient(circle closest-side,transparent 50%,#000 51%,#000 82%,transparent 83%)"></div>'+
+      '<svg class="spin-slow" viewBox="-80 -80 760 760" aria-hidden="true">'+
+        '<circle cx="300" cy="300" r="282" fill="none" stroke="rgba(238,234,248,.3)" stroke-width="6" stroke-dasharray="1.2 '+r1(gTicks/gN-1.2)+'"></circle>'+
+        '<circle cx="300" cy="300" r="282" fill="none" stroke="rgba(238,234,248,.07)" stroke-width="1"></circle></svg>'+
+      '<svg class="reveal" viewBox="-80 -80 760 760" role="group" aria-label="每日數據，點選可查看當天">'+
+        '<defs><radialGradient id="kg-'+kind+'" gradientUnits="userSpaceOnUse" cx="300" cy="300" r="'+r1(rMax)+'">'+
+          '<stop offset="'+(DR0/rMax).toFixed(3)+'" stop-color="'+pal[0]+'"></stop>'+
+          '<stop offset="'+((DR0+DMAX*0.35)/rMax).toFixed(3)+'" stop-color="'+pal[1]+'"></stop>'+
+          '<stop offset="0.9" stop-color="'+pal[2]+'"></stop>'+
+          '<stop offset="1" stop-color="'+pal[3]+'"></stop></radialGradient></defs>'+
+        '<g style="filter:drop-shadow(0 0 8px rgba('+rgbOf(pal[1])+',.55))">'+segs+'</g></svg>'+
+      '<svg viewBox="-80 -80 760 760" aria-hidden="true" style="pointer-events:none">'+
+        '<defs><linearGradient id="ka-'+kind+'" x1="0" y1="0" x2="1" y2="1">'+
+          '<stop offset="0" stop-color="'+pal[0]+'"></stop><stop offset=".55" stop-color="'+pal[1]+'"></stop><stop offset="1" stop-color="'+pal[3]+'"></stop></linearGradient>'+
+          '<linearGradient id="kt-'+kind+'" x1="0" y1="0" x2="0" y2="1">'+
+          '<stop offset="0" stop-color="'+pal[3]+'"></stop><stop offset=".6" stop-color="'+pal[1]+'"></stop><stop offset="1" stop-color="'+pal[0]+'"></stop></linearGradient></defs>'+
+        '<path id="selSeg" d="" fill="none" stroke="#fff" stroke-width="2"></path>'+
+        '<path id="selPing" class="ping" d="" fill="none" stroke="#fff" stroke-width="1.5"></path>'+
+        '<circle cx="300" cy="300" r="128" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="6"></circle>'+
+        '<circle class="arc" cx="300" cy="300" r="128" fill="none" stroke="url(#ka-'+kind+')" stroke-width="6" stroke-linecap="round" '+
+          'pathLength="100" stroke-dasharray="100" stroke-dashoffset="'+(100-prog*100).toFixed(1)+'" transform="rotate(-90 300 300)"></circle>'+
+        '<circle cx="300" cy="300" r="112" fill="none" stroke="rgba('+rgbOf(pal[2])+',.25)" stroke-width="1" stroke-dasharray="2 5" class="spin-rev"></circle>'+
+        leads+tags+
+        '<text x="300" y="248" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" letter-spacing="2.4" fill="rgba(238,234,248,.5)">'+esc(l1)+'</text>'+
+        '<text class="up" x="300" y="312" text-anchor="middle" font-family="Sora,sans-serif" font-weight="300" font-size="64" fill="url(#kt-'+kind+')" '+
+          'style="animation-delay:.3s;filter:drop-shadow(0 0 18px rgba('+rgbOf(pal[1])+',.4))">'+esc(bigTx)+'</text>'+
+        '<text x="300" y="344" text-anchor="middle" font-family="Noto Sans TC,sans-serif" font-size="14" fill="'+pal[2]+'">'+esc(l2)+'</text>'+
+        '<text x="300" y="366" text-anchor="middle" font-family="Noto Sans TC,sans-serif" font-size="12" fill="rgba(238,234,248,.45)">'+esc(l3)+'</text>'+
+      '</svg>'+
+    '</div>';
+  }
+
+  function rankOf(days, d){
+    var act = activeOf(days).slice().sort(function(a,b){ return b.v-a.v; });
+    var i = act.indexOf(d);
+    return i<0 ? "—" : (i+1)+" / "+act.length;
+  }
+  function selCardHtml(kind, days){
+    var dt = sel[kind];
+    var d = dt ? days.filter(function(x){ return x.date===dt; })[0] : null;
+    var head = '<div class="h"><span class="tag">'+(d ? "SELECTED · "+esc(md(d.date))+" "+esc(dowOf(d.date)) : "SELECTED")+'</span>'+
+      '<span class="hint">點環上或列表中任一天切換</span></div>';
+    if(!d) return '<div class="selcard">'+head+'<div class="empty">這段期間沒有紀錄</div></div>';
+    if(!(d.v>0)) return '<div class="selcard">'+head+'<div class="m up"><span class="nm">當天沒有紀錄</span></div></div>';
+    var nm, v, u, stats;
+    if(kind==="running" || kind==="cycling"){
+      nm = d.name || META[kind].zh; v = f1(d.km); u = "KM";
+      stats = kind==="running"
+        ? [["移動時間", d.sec? fmtHM(d.sec):"—"], ["配速", d.sec? fmtPace(d.sec/d.km)+" /km":"—"], ["爬升", comma(d.elev)+" m"], ["本期排名", rankOf(days,d)]]
+        : [["移動時間", d.sec? fmtHM(d.sec):"—"], ["爬升", comma(d.elev)+" m"], ["均速", d.sec? f1(d.km/(d.sec/3600))+" km/h":"—"], ["本期排名", rankOf(days,d)]];
+    } else if(kind==="english"){
+      nm = d.live ? "Santa · 今日進行中" : "Santa 學習"; v = fmtHM(d.sec); u = "";
+      stats = [["題目", num(d.q)+" 題"], ["詞彙", num(d.vocab)+" 詞"], ["多益預測", d.score!=null? num(d.score):"—"], ["本期排名", rankOf(days,d)]];
+    } else {
+      var tot = sumOf(days,"v");
+      nm = "Claude Code"; v = fmtHM(d.sec); u = "";
+      stats = [["Sessions", num(d.sessions)], ["占本期", tot? Math.round(d.v/tot*100)+"%":"—"], ["本期排名", rankOf(days,d)], ["星期", dowOf(d.date)]];
+    }
+    return '<div class="selcard">'+head+
+      '<div class="m up"><span class="nm">'+esc(nm)+'</span><span class="sp"></span>'+
+        '<span class="v grad-txt">'+esc(v)+'</span>'+(u? '<span class="u">'+esc(u)+'</span>':'')+'</div>'+
+      '<div class="stats up" style="animation-delay:.1s">'+stats.map(function(s){
+        return '<div><span class="k">'+esc(s[0])+'</span><span class="v">'+esc(s[1])+'</span></div>';
+      }).join("")+'</div></div>';
+  }
+
+  function kpis4Html(kind, days){
+    var pal = META[kind].pal, act = activeOf(days), n = days.length, list;
+    var sec = sumOf(days,"sec"), total = sumOf(days,"v");
+    if(kind==="running"){
+      list = [["次數", act.length+" 次"], ["移動時間", fmtHM(sec)], ["平均配速", total? fmtPace(sec/total):"—"],
+        ["最長", act.length? f1(Math.max.apply(null, act.map(function(d){return d.km;})))+" km":"—"]];
+    } else if(kind==="cycling"){
+      list = [["趟數", act.length+" 趟"], ["移動時間", fmtHM(sec)], ["平均時速", sec? f1(total/(sec/3600))+" km/h":"—"], ["爬升", comma(sumOf(days,"elev"))+" m"]];
+    } else if(kind==="english"){
+      var sc = latestScore();
+      list = [["學習天數", act.length+" / "+n], ["總時數", fmtHM(sec)], ["總題數", comma(sumOf(days,"q"))+" 題"],
+        ["多益 LC / RC", (sc.lc!=null? num(sc.lc):"—")+" / "+(sc.rc!=null? num(sc.rc):"—")]];
+    } else {
+      list = [["活躍天數", act.length+" / "+n], ["總時數", f1(total)+" h"], ["活躍日平均", act.length? f1(total/act.length)+" h":"—"],
+        ["專案數", num((state.ai||{}).projectCount||0)]];
+    }
+    // 四張小卡各取同色系不同段：色條由深到淺、數字顏色交錯
+    var stripes = [pal[0]+","+pal[1], pal[1]+","+pal[2], pal[2]+","+pal[3], pal[0]+","+pal[3]];
+    var tones = [pal[2], pal[3], pal[1], pal[2]];
+    return list.map(function(x, i){
+      return '<div class="panel up" style="--stripe:linear-gradient(90deg,'+stripes[i]+');--tone:'+tones[i]+';animation-delay:'+(0.2+i*0.08).toFixed(2)+'s">'+
+        '<span class="k">'+esc(x[0])+'</span><span class="v">'+esc(x[1])+'</span></div>';
+    }).join("");
+  }
+
+  function rowsHtml(kind, days){
+    var act = activeOf(days).slice().reverse();
+    var cap, sub, secKey, secMax = 0, max = 0;
+    if(kind==="running"){ cap = "RUNS"; sub = "長條 = 距離 · 淡色 = 時間"; secKey = "sec"; }
+    else if(kind==="cycling"){ cap = "RIDES"; sub = "長條 = 距離 · 淡色 = 爬升"; secKey = "elev"; }
+    else if(kind==="english"){ cap = "STUDY LOG"; sub = "長條 = 時間 · 淡色 = 題數"; secKey = "q"; }
+    else { cap = "SESSIONS"; sub = "長條 = 時數 · 淡色 = session 數"; secKey = "sessions"; }
+    act.forEach(function(d){ max = Math.max(max, d.v); secMax = Math.max(secMax, Number(d[secKey])||0); });
+    var rows = act.map(function(d, i){
+      var name = (kind==="running"||kind==="cycling") ? (d.name || META[kind].zh)
+        : (kind==="english" ? num(d.q)+" 題 · "+num(d.vocab)+" 詞"+(d.live?" · 進行中":"") : num(d.sessions)+" sessions");
+      var delay = (0.5+i*0.06).toFixed(2);
+      return '<button class="rw" data-sel="'+esc(d.date)+'" aria-pressed="'+(sel[kind]===d.date?"true":"false")+'">'+
+        '<span class="d">'+esc(md(d.date))+'</span>'+
+        '<span class="n">'+esc(name)+'</span>'+
+        '<span class="bars"><div class="p grow" style="width:'+(d.v/(max||1)*100).toFixed(1)+'%;animation-delay:'+delay+'s"></div>'+
+          '<div class="s grow" style="width:'+((Number(d[secKey])||0)/(secMax||1)*100).toFixed(1)+'%;animation-delay:'+delay+'s"></div></span>'+
+        '<span class="x">'+esc(valueLabel(kind, d))+'</span></button>';
+    }).join("");
+    var extra = "";
+    if(kind==="ai"){
+      var doc = state.ai || {}, links = doc.projectLinks || {};
+      extra = '<div class="hd" style="margin-top:6px"><span class="cap">PROJECTS</span></div><div class="chips">'+
+        (doc.projects||[]).map(function(p){
+          var u = repoLink(links[p]);
+          return u ? '<a class="chip" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+esc(p)+' ↗</a>'
+                   : '<span class="chip">'+esc(p)+'</span>';
+        }).join("")+'</div>';
+    }
+    return '<div class="hd"><span class="cap">'+cap+'</span><span class="cap-sub">'+esc(sub)+'</span></div>'+
+      (rows ? '<div class="rl">'+rows+'</div>' : '<div class="empty">這段期間沒有紀錄</div>')+extra;
+  }
+
+  // 底部趨勢：跑步／騎車／AI 是 8 月起的累計，英文是多益預測分數
+  function trendHtml(kind, by){
+    var pal = META[kind].pal, first = minKey(by), today = tpeToday();
+    if(!first) return '<div class="hd"><span class="cap">TREND</span></div><div class="empty">尚無紀錄</div>';
+    var dates = rangeDates(first, today), n = dates.length;
+    function X(i){ return n>1 ? i/(n-1)*1000 : 0; }
+    var line = "", dots = [], cap, sub, note = "", goalPath = "", yMax, yMin = 0;
+    if(kind==="english"){
+      var pts = [];
+      dates.forEach(function(dt, i){ var t = by[dt]; if(t && t.score!=null) pts.push([i, Number(t.score)]); });
+      var tgt = (state.goals||{}).enTargetScore;
+      var vals = pts.map(function(p){ return p[1]; }).concat(tgt!=null? [tgt]:[]);
+      yMin = Math.max(0, Math.floor((Math.min.apply(null, vals.length? vals:[700])-30)/10)*10);
+      yMax = Math.min(990, Math.ceil((Math.max.apply(null, vals.length? vals:[900])+20)/10)*10);
+      var Y = function(v){ return 112-(v-yMin)/((yMax-yMin)||1)*104; };
+      pts.forEach(function(p, k){ line += (k?"L":"M")+r1(X(p[0]))+" "+r1(Y(p[1])); dots.push([X(p[0])/10, Y(p[1])/1.2]); });
+      if(tgt!=null) goalPath = "M0 "+r1(Y(tgt))+" L1000 "+r1(Y(tgt));
+      var last = pts.length ? pts[pts.length-1][1] : null;
+      cap = "TOEIC TREND"; sub = "多益預測分數"+(last!=null? " · 目前 "+last:"");
+      note = tgt!=null ? "虛線 = 目標 "+tgt+" 分" : "";
+    } else {
+      var cum = 0, series = [];
+      dates.forEach(function(dt){ var t = by[dt]; cum += t ? t.v : 0; series.push(cum); });
+      var monthly = kind==="running" ? (state.goals||{}).runMonthlyKm : (kind==="cycling" ? (state.goals||{}).rideMonthlyKm : null);
+      var goalEnd = monthly!=null ? monthly*n/30 : 0;
+      yMax = Math.max(cum, goalEnd)*1.08 || 1;
+      var Yc = function(v){ return 112-v/yMax*104; };
+      var prev = 0;
+      series.forEach(function(v, i){
+        line += i ? "L"+r1(X(i))+" "+r1(Yc(prev))+"L"+r1(X(i))+" "+r1(Yc(v)) : "M0 "+r1(Yc(v));
+        if(v!==prev || (i===0 && v>0)) dots.push([X(i)/10, Yc(v)/1.2]);
+        prev = v;
+      });
+      if(monthly!=null) goalPath = "M0 "+r1(Yc(0))+" L1000 "+r1(Yc(goalEnd));
+      var unit = kind==="ai" ? " h" : " km", act = Object.keys(by).filter(function(k){ return by[k].v>0; }).length;
+      cap = "CUMULATIVE";
+      sub = md(first)+" 起累計 "+f1(cum)+unit+" · "+act+(kind==="ai"?" 個活躍日":" 次")+
+        (kind==="cycling" ? " · 爬升 "+comma(Object.keys(by).reduce(function(a,k){ return a+(by[k].elev||0); },0))+" m" : "");
+      note = monthly!=null ? "虛線 = 每月 "+monthly+" km 目標" : "";
+    }
+    var area = line ? line+" L"+r1(kind==="english" ? X(dates.length-1) : 1000)+" 120 L0 120 Z" : "";
+    if(kind==="english" && line){
+      var firstX = line.match(/^M([\d.]+)/);
+      area = line+" L"+line.match(/L?([\d.]+) [\d.]+$/)[1]+" 120 L"+(firstX?firstX[1]:0)+" 120 Z";
+    }
+    var ax = ['<span style="left:0">'+esc(md(first))+'</span>'];
+    dates.forEach(function(dt, i){ if(i>0 && i<n-4 && dt.slice(8)==="01") ax.push('<span style="left:'+(X(i)/10).toFixed(2)+'%">'+esc(md(dt))+'</span>'); });
+    ax.push('<span class="end" style="left:100%">'+esc(md(today))+'</span>');
+    var rgb = rgbOf(pal[1]);
+    return '<div class="hd"><span class="cap">'+cap+'</span><span class="cap-sub">'+esc(sub)+'</span><span class="r">'+esc(note)+'</span></div>'+
+      '<div class="plot"><svg class="wipe" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true" style="animation-delay:.4s">'+
+        '<defs><linearGradient id="tl-'+kind+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="'+pal[0]+'"></stop><stop offset=".6" stop-color="'+pal[1]+'"></stop><stop offset="1" stop-color="'+pal[3]+'"></stop></linearGradient>'+
+        '<linearGradient id="ta-'+kind+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba('+rgb+',.32)"></stop><stop offset="1" stop-color="rgba('+rgb+',0)"></stop></linearGradient></defs>'+
+        (goalPath ? '<path d="'+goalPath+'" fill="none" stroke="rgba(238,234,248,.3)" stroke-width="1" stroke-dasharray="4 6" vector-effect="non-scaling-stroke"></path>' : '')+
+        (area ? '<path class="fadeIn" d="'+area+'" fill="url(#ta-'+kind+')" style="animation-delay:1.6s"></path>' : '')+
+        (line ? '<path d="'+line+'" fill="none" stroke="url(#tl-'+kind+')" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>' : '')+
+      '</svg>'+
+      dots.map(function(p, i){ return '<span class="dot fadeIn" style="left:'+p[0].toFixed(2)+'%;top:'+p[1].toFixed(2)+'%;animation-delay:'+(1.2+i*0.04).toFixed(2)+'s"></span>'; }).join("")+
+      '</div><div class="ax">'+ax.join("")+'</div>';
+  }
+
+  function renderDetail(kind){
+    var by = records(kind), dates = windowDates(minKey(by)), days = daysOf(by, dates);
+    if(!sel[kind] || dates.indexOf(sel[kind])<0){
+      var act = activeOf(days);
+      sel[kind] = act.length ? act[act.length-1].date : null;
+    }
+    DET = {kind:kind, days:days};
+    return '<div class="dt-grid">'+
+        '<div class="sec">'+orbitDetail(kind, days)+'</div>'+
+        '<div class="dt-right">'+
+          '<div class="sec" id="selbox">'+selCardHtml(kind, days)+'</div>'+
+          '<div class="kpis4 sec">'+kpis4Html(kind, days)+'</div>'+
+          '<div class="rows panel sec">'+rowsHtml(kind, days)+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="trend panel sec">'+trendHtml(kind, by)+'</div>';
+  }
+
+  // 點選日期只局部更新，不讓整頁的進場動畫重播
+  function syncSelection(){
+    if(!DET || DET.kind!==VIEW) return;
+    var kind = DET.kind, days = DET.days, dt = sel[kind];
+    var box = document.getElementById("selbox");
+    if(box) box.innerHTML = selCardHtml(kind, days);
+    Array.prototype.forEach.call(document.querySelectorAll("#view .rw"), function(b){
+      b.setAttribute("aria-pressed", b.getAttribute("data-sel")===dt ? "true" : "false");
+    });
+    var i = -1, max = 0;
+    days.forEach(function(d, k){ if(d.date===dt) i = k; max = Math.max(max, d.v); });
+    var dpath = i>=0 ? detailSeg(days[i], i, days.length, max) : "";
+    ["selSeg","selPing"].forEach(function(id){ var el = document.getElementById(id); if(el) el.setAttribute("d", dpath); });
+  }
+
+  // ---------- 天氣與時間 ----------
+  function weatherNow(){
+    var w = state.weather;
+    if(!w) return null;
+    var h = tpeHour(), slot = null;
+    (w.hourly||[]).forEach(function(x){ if(x.h===h) slot = x; });
+    var code = slot ? slot.code : w.code, m = WMO[code] || [];
+    return {icon:m[1]||w.icon||"", text:m[0]||w.text||"", temp:slot? slot.temp : w.tempC, pop:slot? slot.pop : w.precipProb,
+      loc:w.locationShort||w.location||"", stale:!!(w.date && w.date!==tpeToday()), w:w};
+  }
+  function weatherShort(){
+    var x = weatherNow();
+    return x ? x.loc+" "+(x.temp!=null? Math.round(x.temp)+"° ":"")+x.text : "";
+  }
+  function renderStamp(){
+    var el = document.getElementById("stamp"), iso = tpeToday();
+    var p = {};
+    clockFmt.formatToParts(new Date()).forEach(function(x){ p[x.type]=x.value; });
+    var clock = (p.dayPeriod||"")+" "+(p.hour||"")+":"+(p.minute||"")+":"+(p.second||"");
+    var x = weatherNow(), wx = "";
+    if(x){
+      wx = ' · <span class="wx'+(x.stale?" stale":"")+'">'+esc(x.icon)+(x.temp!=null? " "+Math.round(x.temp)+"°":"")+'</span>';
+      el.title = x.w.location+"　"+x.text+(x.temp!=null? "　"+x.temp+"°C":"")+(x.pop!=null? "　降雨機率 "+x.pop+"%":"")+
+        (x.w.low!=null&&x.w.high!=null? "　今日 "+Math.round(x.w.low)+"–"+Math.round(x.w.high)+"°":"")+
+        (x.stale? "　⚠ 預報日期 "+x.w.date+"，非今日":"");
+    }
+    el.innerHTML = esc(iso+" · "+dowOf(iso)+" · "+clock)+wx;
+    var ck = document.getElementById("core-ck");
+    if(ck) ck.textContent = (p.hour||"")+":"+(p.minute||"")+":"+(p.second||"");
+  }
+  setInterval(renderStamp, 1000);
+
+  // ---------- 數字跳動 ----------
+  function countUp(root){
+    if(REDUCE_MOTION) return;
+    Array.prototype.forEach.call(root.querySelectorAll(".cnt"), function(el){
+      var to = Number(el.getAttribute("data-to"))||0, dec = Number(el.getAttribute("data-dec"))||0, t0 = null;
+      function tick(t){
+        if(t0===null) t0 = t;
+        var k = Math.min(1, (t-t0)/1100), e = 1-Math.pow(1-k,3);
+        el.textContent = (to*e).toFixed(dec);
+        if(k<1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
     });
   }
 
-  // bar clicks (delegated — bars are re-rendered constantly)
-  document.addEventListener("click", function(e){
-    var b = e.target.closest ? e.target.closest(".bars .b, .line .pt") : null;
-    if(!b) return;
-    var k = b.getAttribute("data-kind"), d = b.getAttribute("data-date");
-    sel[k] = (sel[k]===d) ? null : d;
+  // 滑到才播：每個 .sec 進入畫面才加上 .in，進場動畫與數字跳動從那一刻開始
+  var io = (typeof IntersectionObserver==="function" && !REDUCE_MOTION) ? new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(!en.isIntersecting) return;
+      en.target.classList.add("in");
+      countUp(en.target);
+      io.unobserve(en.target);
+    });
+  }, {rootMargin:"0px 0px -80px 0px", threshold:0}) : null;
+  function armSections(){
+    if(io) io.disconnect();
+    Array.prototype.forEach.call(document.querySelectorAll("#view .sec"), function(el){
+      if(io) io.observe(el); else el.classList.add("in");
+    });
+  }
+
+  // ---------- 星空（只產生一次） ----------
+  (function(){
+    var sky = document.getElementById("sky"), seed = 7, html = "";
+    function rnd(){ seed = (seed*9301+49297)%233280; return seed/233280; }
+    for(var i=0;i<60;i++){
+      var s = (1+rnd()*1.6).toFixed(1);
+      html += '<span class="star" style="left:'+(rnd()*100).toFixed(2)+'%;top:'+(rnd()*100).toFixed(2)+'%;width:'+s+'px;height:'+s+'px;animation-delay:'+(rnd()*3).toFixed(2)+'s"></span>';
+    }
+    sky.innerHTML = html;
+  })();
+
+  // ---------- 畫面切換 ----------
+  function renderAll(){
+    var kind = VIEW, view = document.getElementById("view");
+    document.body.setAttribute("data-view", kind || "overview");
+    document.getElementById("back").hidden = !kind;
+    var tabs = document.getElementById("tabs");
+    tabs.hidden = !kind;
+    document.getElementById("adds").setAttribute("data-k", kind || "");
+    var title = document.getElementById("title");
+    if(kind){
+      var pal = META[kind].pal;
+      [["--k-deep",0],["--k-mid",1],["--k-light",2],["--k-pale",3]].forEach(function(v){ document.body.style.setProperty(v[0], pal[v[1]]); });
+      document.body.style.setProperty("--k-rgb", rgbOf(pal[1]));
+      document.body.style.setProperty("--k-deep-rgb", rgbOf(pal[0]));
+      document.body.style.setProperty("--k-light-rgb", rgbOf(pal[2]));
+      title.innerHTML = '<span class="grad-txt">'+esc(META[kind].code)+'</span> '+esc(META[kind].zh);
+      tabs.innerHTML = KINDS.map(function(k){
+        return '<a class="tab" href="#'+HASH[k]+'"'+(k===kind?' aria-current="page"':'')+'><i style="background:'+META[k].pal[1]+'"></i>'+esc(META[k].code)+'</a>';
+      }).join("");
+      view.innerHTML = renderDetail(kind);
+      syncSelection();
+    } else {
+      title.textContent = "WEI'S DASHBOARD";
+      DET = null;
+      view.innerHTML = renderOverview();
+    }
+    renderStamp();
+    armSections();
+  }
+
+  function route(){
+    var h = (location.hash||"").replace("#",""), k = null;
+    KINDS.forEach(function(x){ if(HASH[x]===h) k = x; });
+    var changed = k!==VIEW;
+    VIEW = k;
     renderAll();
+    if(changed) window.scrollTo(0,0);
+  }
+  window.addEventListener("hashchange", route);
+  var h0 = (location.hash||"").replace("#","");
+  KINDS.forEach(function(x){ if(HASH[x]===h0) VIEW = x; });
+
+  document.getElementById("back").addEventListener("click", function(e){
+    e.preventDefault();
+    // 用 replaceState 清掉 #，不留一個空的 # 在網址上
+    if(history.replaceState) history.replaceState(null, "", location.pathname+location.search);
+    else location.hash = "";
+    route();
   });
 
-  // 累計資訊：點 i 按鈕才跳出。按鈕會隨卡片重繪，所以用事件委派
   document.addEventListener("click", function(e){
-    var b = e.target.closest ? e.target.closest(".info[data-info]") : null;
-    if(!b) return;
-    var k = b.getAttribute("data-info");
-    showToast((k==="running"?"跑步 · ":"騎車 · ")+(totals[k]||"尚無累計資料"), false);
+    if(!e.target.closest) return;
+    var go = e.target.closest("[data-go]");
+    if(go){ location.hash = HASH[go.getAttribute("data-go")]; return; }
+    var s = e.target.closest("[data-sel]");
+    if(s && VIEW){ sel[VIEW] = s.getAttribute("data-sel"); syncSelection(); }
   });
 
-  // window toggle
   function setWindow(n){
     WINDOW_DAYS = n;
     document.getElementById("mode-30").setAttribute("aria-pressed", n===30 ? "true":"false");
     document.getElementById("mode-all").setAttribute("aria-pressed", n===0 ? "true":"false");
-    sel.running = sel.cycling = sel.ai = sel.english = null;
-    ENTER = {};   // 切換區間視同重新進場，動畫從頭播
     renderAll();
   }
   document.getElementById("mode-30").addEventListener("click", function(){ setWindow(30); });
@@ -1646,6 +1492,7 @@
       if(f) handleUpload(kind, f);
     });
   });
+
 
   renderAll();
 })();
