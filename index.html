@@ -162,7 +162,7 @@
 
   .tl{margin-top:24px;padding:20px 28px 22px;display:flex;flex-direction:column;gap:18px;}
   .tl .hd{display:flex;align-items:baseline;gap:12px;}
-  .tl .track{position:relative;height:82px;margin:8px 0 0;}
+  .tl .track{position:relative;height:74px;margin:8px 0 0;}
   .tl .line{position:absolute;left:0;right:0;top:12px;height:2px;
     background:linear-gradient(90deg,var(--ai),var(--en) 30%,var(--run));}
   .tl .mo{position:absolute;top:-6px;transform:translateX(-50%);font:400 10px/1 var(--mono);color:var(--ink-34);}
@@ -170,8 +170,7 @@
   .tl .nowt{position:absolute;left:0;top:32px;font:400 12px/1 var(--cjk);color:var(--ai);}
   .tl .ev{position:absolute;top:2px;transform:translateX(-100%);display:flex;flex-direction:column;align-items:flex-end;}
   .tl .ev i{width:2px;height:22px;}
-  .tl .ev.b i{height:46px;}
-  .tl .ev span{margin-top:6px;font:400 12px/1 var(--cjk);white-space:nowrap;}
+  .tl .ev span{margin-top:6px;font:400 12px/1.5 var(--cjk);white-space:nowrap;text-align:right;}
   .tl .ev b{font:500 12px/1 var(--mono);}
   .tl .travel{position:absolute;top:7px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#fff;
     box-shadow:0 0 16px #fff;animation:travel 5s cubic-bezier(.5,0,.5,1) infinite;}
@@ -892,11 +891,11 @@
       '<div class="hd"><span class="cap">ORBIT TIMELINE</span><span class="cap-sub">今天 → 下一個目標</span></div>'+
       '<div class="track">'+
         '<div class="line"></div><span class="travel"></span>'+months.join("")+
-        '<span class="now"></span><span class="nowt">今天 '+esc(md(today))+'</span>'+
+        '<span class="now"></span><span class="nowt">今天</span>'+
         items.map(function(it,i){
-          var c = cols[i%cols.length], tier = i%2===0 ? " b" : "";
-          return '<div class="ev'+tier+'" style="left:'+(it.days/span*100).toFixed(1)+'%"><i style="background:'+c+'"></i>'+
-            '<span><b style="color:'+c+'">'+(it.days===0?"今天":"D-"+it.days)+'</b> '+esc(it.name)+(it.target?' '+esc(it.target):'')+'</span></div>';
+          var c = cols[i%cols.length], pct = (it.days/span*100).toFixed(1)+'%';
+          return '<div class="ev" style="left:'+pct+'"><i style="background:'+c+'"></i>'+
+            '<span><b style="color:'+c+'">'+(it.days===0?"今天":"D-"+it.days)+'</b>'+(it.target?' 目標 '+esc(it.target):'')+'<br>'+esc(it.name)+'</span></div>';
         }).join("")+
       '</div>'+
       cdMarquee(items)+
