@@ -63,6 +63,7 @@
   .brand .s{font:400 11px/1 var(--mono);letter-spacing:.14em;color:var(--ink-50);white-space:nowrap;}
   .brand .s .wx{color:var(--ink-70);}
   .brand .s .wx.stale{opacity:.5;}
+  body:not([data-view="overview"]) .brand .s{display:none;}
   .top .sp{flex:1;}
   /* 玻璃質感切換：半透明底 + 背景模糊 + 內側高光，中間那顆玻璃滑塊在兩格之間滑動；預設停在左格 */
   .sws{display:flex;align-items:center;gap:12px;}
@@ -80,11 +81,8 @@
   .gsw button{position:relative;z-index:1;min-width:78px;height:34px;padding:0 14px;border:0;border-radius:999px;background:transparent;
     color:var(--ink-60);font:500 12px/1 var(--sans);letter-spacing:.05em;cursor:pointer;transition:color .3s;}
   .gsw button[aria-pressed="true"]{color:#fff;font-weight:600;text-shadow:0 1px 6px rgba(0,0,0,.35);}
-  .gsw button:focus-visible,.back:focus-visible,.tab:focus-visible,.kpi:focus-visible,.plus:focus-visible{outline:2px solid var(--accent-lt);outline-offset:2px;}
-  .back{height:44px;display:inline-flex;align-items:center;gap:8px;padding:0 16px 0 12px;border-radius:999px;
-    border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:var(--ink);text-decoration:none;
-    font:400 13px/1 var(--cjk);}
-  .back svg{width:16px;height:16px;}
+  .gsw button:focus-visible,.tab:focus-visible,.kpi:focus-visible,.plus:focus-visible{outline:2px solid var(--accent-lt);outline-offset:2px;}
+  .back{text-decoration:none;}
   .trow{display:flex;align-items:center;gap:12px;min-width:0;}
   .nv{flex:none;width:36px;height:36px;padding:0;border-radius:50%;cursor:pointer;color:var(--ink);
     display:inline-flex;align-items:center;justify-content:center;
@@ -427,8 +425,6 @@
     /* 兩個開關縮成 0.6 倍、標籤縮寫，排成一排靠右，放在標題右邊 */
     .top{gap:10px 12px;flex-wrap:wrap;}
     .top .sp{display:none;}
-    .back{order:0;flex:none;width:36px;height:36px;padding:0;justify-content:center;}
-    .back .bt{display:none;}
     .brand{order:1;flex:1 1 0;min-width:0;}
     .brand .s{white-space:normal;letter-spacing:.02em;font-size:10px;line-height:1.5;}
     .sws{order:2;margin-left:auto;flex-direction:row;align-items:center;gap:8px;zoom:.6;}
@@ -439,7 +435,6 @@
     .adds{order:4;}
     /* 單項頁：第一排只放返回符號、居中的項目名稱與開關，日期天氣那行收起來 */
     body:not([data-view="overview"]) .brand{align-items:center;text-align:center;}
-    body:not([data-view="overview"]) .brand .s{display:none;}
     body:not([data-view="overview"]) .trow{justify-content:center;gap:8px;}
     body:not([data-view="overview"]) .brand .t{font-size:17px;white-space:nowrap;}
     .nv{width:28px;height:28px;}
@@ -526,14 +521,12 @@
 
 <div class="shell">
   <header class="top">
-    <a class="back" id="back" href="#" hidden>
-      <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.5"></rect><rect x="9" y="2" width="5" height="5" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.5"></rect><rect x="2" y="9" width="5" height="5" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.5"></rect><rect x="9" y="9" width="5" height="5" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.5"></rect></svg><span class="bt">總覽</span>
+    <a class="back nv" id="back" href="#" aria-label="回總覽" title="回總覽" hidden>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
     </a>
     <div class="brand">
       <div class="trow">
-        <button class="nv" id="nav-prev" aria-label="上一個項目" title="上一個項目" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
         <h1 class="t" id="title">WEI'S DASHBOARD</h1>
-        <button class="nv" id="nav-next" aria-label="下一個項目" title="下一個項目" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
       </div>
       <div class="s" id="stamp">—</div>
     </div>
@@ -1453,8 +1446,6 @@
     document.getElementById("th-orbit").setAttribute("aria-pressed", THEME==="orbit" ? "true":"false");
     document.body.setAttribute("data-view", kind || "overview");
     document.getElementById("back").hidden = !kind;
-    document.getElementById("nav-prev").hidden = !kind;
-    document.getElementById("nav-next").hidden = !kind;
     var tabs = document.getElementById("tabs");
     tabs.hidden = !kind;
     document.getElementById("adds").setAttribute("data-k", kind || "");
@@ -1465,7 +1456,7 @@
       document.body.style.setProperty("--k-rgb", rgbOf(pal[1]));
       document.body.style.setProperty("--k-deep-rgb", rgbOf(pal[0]));
       document.body.style.setProperty("--k-light-rgb", rgbOf(pal[2]));
-      title.innerHTML = '<span class="grad-txt">'+esc(META[kind].code)+'</span> '+esc(META[kind].zh);
+      title.innerHTML = '<span class="grad-txt">'+esc(META[kind].code)+'</span> '+esc(kind==="ai" ? "學習" : META[kind].zh);
       tabs.innerHTML = KINDS.map(function(k){
         return '<a class="tab" href="#'+HASH[k]+'"'+(k===kind?' aria-current="page"':'')+'><i style="background:'+META[k].pal[1]+'"></i>'+esc(META[k].code)+'</a>';
       }).join("");
@@ -1494,8 +1485,6 @@
     viewDir = dir;
     location.hash = HASH[n];
   }
-  document.getElementById("nav-prev").addEventListener("click", function(){ stepView(-1); });
-  document.getElementById("nav-next").addEventListener("click", function(){ stepView(1); });
   document.addEventListener("keydown", function(e){
     if(!VIEW || !modal.hidden) return;
     if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
