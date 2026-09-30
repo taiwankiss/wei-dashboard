@@ -162,7 +162,7 @@
 
   .tl{margin-top:24px;padding:20px 28px 22px;display:flex;flex-direction:column;gap:18px;}
   .tl .hd{display:flex;align-items:baseline;gap:12px;}
-  .tl .track{position:relative;height:56px;margin:8px 0 0;}
+  .tl .track{position:relative;height:82px;margin:8px 0 0;}
   .tl .line{position:absolute;left:0;right:0;top:12px;height:2px;
     background:linear-gradient(90deg,var(--ai),var(--en) 30%,var(--run));}
   .tl .mo{position:absolute;top:-6px;transform:translateX(-50%);font:400 10px/1 var(--mono);color:var(--ink-34);}
@@ -170,6 +170,7 @@
   .tl .nowt{position:absolute;left:0;top:32px;font:400 12px/1 var(--cjk);color:var(--ai);}
   .tl .ev{position:absolute;top:2px;transform:translateX(-100%);display:flex;flex-direction:column;align-items:flex-end;}
   .tl .ev i{width:2px;height:22px;}
+  .tl .ev.b i{height:46px;}
   .tl .ev span{margin-top:6px;font:400 12px/1 var(--cjk);white-space:nowrap;}
   .tl .ev b{font:500 12px/1 var(--mono);}
   .tl .travel{position:absolute;top:7px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#fff;
@@ -538,11 +539,6 @@
       <button class="plus" id="add-english" title="新增英文學習紀錄" aria-label="新增英文學習紀錄"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
     </div>
     <div class="sws">
-      <div class="gsw" id="range-sw" data-pos="0" role="group" aria-label="統計區間">
-        <span class="thumb" aria-hidden="true"></span>
-        <button id="mode-30" aria-pressed="true" aria-label="30 Days"><span class="lg">30 Days</span><span class="sh">30</span></button>
-        <button id="mode-all" aria-pressed="false" aria-label="All"><span class="lg">All</span><span class="sh">∞</span></button>
-      </div>
       <div class="gsw" id="theme-sw" data-pos="0" role="group" aria-label="版面">
         <span class="thumb" aria-hidden="true"></span>
         <button id="th-orbit" aria-pressed="true" aria-label="Orbit"><span class="lg">Orbit</span><span class="sh">Orb</span></button>
@@ -898,8 +894,8 @@
         '<div class="line"></div><span class="travel"></span>'+months.join("")+
         '<span class="now"></span><span class="nowt">今天 '+esc(md(today))+'</span>'+
         items.map(function(it,i){
-          var c = cols[i%cols.length];
-          return '<div class="ev" style="left:'+(it.days/span*100).toFixed(1)+'%"><i style="background:'+c+'"></i>'+
+          var c = cols[i%cols.length], tier = i%2===0 ? " b" : "";
+          return '<div class="ev'+tier+'" style="left:'+(it.days/span*100).toFixed(1)+'%"><i style="background:'+c+'"></i>'+
             '<span><b style="color:'+c+'">'+(it.days===0?"今天":"D-"+it.days)+'</b> '+esc(it.name)+(it.target?' '+esc(it.target):'')+'</span></div>';
         }).join("")+
       '</div>'+
@@ -1441,7 +1437,6 @@
     var kind = VIEW, view = document.getElementById("view");
     document.documentElement.setAttribute("data-theme", THEME);
     document.getElementById("theme-sw").setAttribute("data-pos", THEME==="hud" ? "1":"0");
-    document.getElementById("range-sw").setAttribute("data-pos", WINDOW_DAYS===0 ? "1":"0");
     document.getElementById("th-hud").setAttribute("aria-pressed", THEME==="hud" ? "true":"false");
     document.getElementById("th-orbit").setAttribute("aria-pressed", THEME==="orbit" ? "true":"false");
     document.body.setAttribute("data-view", kind || "overview");
@@ -1548,15 +1543,6 @@
   }
   document.getElementById("th-hud").addEventListener("click", function(){ setTheme("hud"); });
   document.getElementById("th-orbit").addEventListener("click", function(){ setTheme("orbit"); });
-
-  function setWindow(n){
-    WINDOW_DAYS = n;
-    document.getElementById("mode-30").setAttribute("aria-pressed", n===30 ? "true":"false");
-    document.getElementById("mode-all").setAttribute("aria-pressed", n===0 ? "true":"false");
-    renderAll();
-  }
-  document.getElementById("mode-30").addEventListener("click", function(){ setWindow(30); });
-  document.getElementById("mode-all").addEventListener("click", function(){ setWindow(0); });
 
   // ---------- capabilities ----------
   // 兩種執行環境用同一份檔案：
