@@ -58,7 +58,7 @@
     "name": "傍晚跑步"
    }
   ],
-  "lastSynced": "2026-09-29T13:10:00+08:00",
+  "lastSynced": "2026-09-30T12:14:57+08:00",
   "manualEntries": [],
   "month": {
    "count": 6,
@@ -172,7 +172,7 @@
     "name": "巴拉卡 二子坪"
    }
   ],
-  "lastSynced": "2026-09-29T13:10:00+08:00",
+  "lastSynced": "2026-09-30T12:14:57+08:00",
   "manualEntries": [],
   "month": {
    "count": 4,
@@ -318,13 +318,18 @@
    },
    {
     "date": "2026-09-29",
-    "seconds": 109,
-    "sessions": 1
+    "seconds": 19073,
+    "sessions": 4
+   },
+   {
+    "date": "2026-09-30",
+    "seconds": 8923,
+    "sessions": 4
    }
   ],
-  "lastSynced": "2026-09-29T13:10:00+08:00",
-  "note": "使用時間為 Claude Code session 起訖時間估算：同一 session 內以 30 分鐘無活動切成多段，每段獨立封頂 3 小時再加總；歷史僅回溯到本機保留的 session 記錄。9/5、9/7～9/9、9/13、9/14 沒有找到獨立的 session 紀錄（工作內容多半發生在跟這個 dashboard 對話同一個跨日長 session 裡，估算工具看不到「目前 session」，抓不到準確用量，故不補這幾天的數字）；9/6 是用 git commit 時間範圍粗估、封頂 3 小時的近似值；9/10～9/12、9/15～9/19、9/22 則是從實際的獨立 session 記錄估算，較為準確；9/20 檢查過所有專案的 session 紀錄，當天只有兩筆孤立的背景訊號、沒有真正的對話內容，確認是 0；9/21 全天在爬奇萊南華（Strava 有紀錄），故不補這兩天；9/22 起連同這個 dashboard 對話本身一併計入（當天已結束、時間戳完整）；9/19 起的估算已排除資料夾搬家後留下的舊路徑重複紀錄；9/23、9/24 已以完整當日紀錄重算（9/23 較先前的部分用量增加）；9/25 已以完整當日紀錄重算；9/26～9/28 檢查所有專案均無 session 紀錄（9/26 騎車出遊），確認是 0；9/29 為截至更新當下的部分用量，之後更新會重算。",
-  "periodEnd": "2026-09-29",
+  "lastSynced": "2026-09-30T12:14:57+08:00",
+  "note": "使用時間為 Claude Code session 起訖時間估算：同一 session 內以 30 分鐘無活動切成多段，每段獨立封頂 3 小時再加總；歷史僅回溯到本機保留的 session 記錄。9/5、9/7～9/9、9/13、9/14 沒有找到獨立的 session 紀錄（工作內容多半發生在跟這個 dashboard 對話同一個跨日長 session 裡，估算工具看不到「目前 session」，抓不到準確用量，故不補這幾天的數字）；9/6 是用 git commit 時間範圍粗估、封頂 3 小時的近似值；9/10～9/12、9/15～9/19、9/22 則是從實際的獨立 session 記錄估算，較為準確；9/20 檢查過所有專案的 session 紀錄，當天只有兩筆孤立的背景訊號、沒有真正的對話內容，確認是 0；9/21 全天在爬奇萊南華（Strava 有紀錄），故不補這兩天；9/22 起連同這個 dashboard 對話本身一併計入（當天已結束、時間戳完整）；9/19 起的估算已排除資料夾搬家後留下的舊路徑重複紀錄；9/23、9/24 已以完整當日紀錄重算（9/23 較先前的部分用量增加）；9/25 已以完整當日紀錄重算；9/26～9/28 檢查所有專案均無 session 紀錄（9/26 騎車出遊），確認是 0；9/29 已以完整當日紀錄重算；9/30 為截至更新當下的部分用量，之後更新會重算。",
+  "periodEnd": "2026-09-30",
   "periodStart": "2026-08-27",
   "projectCount": 12,
   "projectLinks": {
@@ -346,22 +351,22 @@
    "20260921 奇萊南華",
    "Ai Portfolio"
   ],
-  "totalSeconds": 275999
+  "totalSeconds": 303886
  },
  "english": {
   "latest": {
-   "date": "2026-09-29",
-   "toeic_predicted": 855,
+   "date": "2026-09-30",
+   "toeic_predicted": 860,
    "toeic_lc": 450,
-   "toeic_rc": 405,
+   "toeic_rc": 410,
    "goal_score": 750,
-   "study_time_sec": 4692,
+   "study_time_sec": 2237,
    "goal_percent": 0,
-   "questions_count": 79,
+   "questions_count": 50,
    "vocab_count": 20,
-   "note": "Santa · 推薦學習 4 組（今日進行中）",
+   "note": "Santa · 推薦學習 2 組（今日進行中）",
    "source": "santa",
-   "addedAt": "2026-09-29T00:00:00+08:00"
+   "addedAt": "2026-09-30T00:00:00+08:00"
   },
   "history": [
    {
@@ -727,9 +732,23 @@
     "toeic_predicted": null,
     "toeic_rc": null,
     "vocab_count": 0
+   },
+   {
+    "date": "2026-09-29",
+    "toeic_predicted": 855,
+    "toeic_lc": 450,
+    "toeic_rc": 405,
+    "goal_score": 750,
+    "study_time_sec": 4692,
+    "goal_percent": 0,
+    "questions_count": 79,
+    "vocab_count": 20,
+    "note": "Santa · 推薦學習 4 組",
+    "source": "santa",
+    "addedAt": "2026-09-30T00:00:00+08:00"
    }
   ],
-  "lastUpdated": "2026-09-29T00:00:00+08:00"
+  "lastUpdated": "2026-09-30T00:00:00+08:00"
  },
  "goals": {
   "enTargetScore": 850,
@@ -758,161 +777,161 @@
   "updatedAt": "2026-09-14T00:00:00+08:00"
  },
  "weather": {
-  "date": "2026-09-29",
-  "high": 35.8,
+  "date": "2026-09-30",
+  "high": 36.2,
   "hourly": [
    {
     "code": 1,
     "h": 0,
     "pop": 0,
-    "temp": 24.8
+    "temp": 25.7
    },
    {
     "code": 1,
     "h": 1,
     "pop": 0,
-    "temp": 24.0
+    "temp": 25.5
    },
    {
-    "code": 1,
+    "code": 0,
     "h": 2,
     "pop": 0,
-    "temp": 24.6
+    "temp": 25.6
    },
    {
-    "code": 1,
+    "code": 0,
     "h": 3,
     "pop": 0,
-    "temp": 24.5
+    "temp": 25.3
    },
    {
     "code": 0,
     "h": 4,
     "pop": 0,
-    "temp": 24.5
+    "temp": 25.2
    },
    {
-    "code": 1,
+    "code": 0,
     "h": 5,
     "pop": 0,
-    "temp": 24.2
+    "temp": 25.0
    },
    {
-    "code": 2,
+    "code": 0,
     "h": 6,
-    "pop": 0,
-    "temp": 23.8
-   },
-   {
-    "code": 2,
-    "h": 7,
     "pop": 0,
     "temp": 24.8
    },
    {
-    "code": 2,
+    "code": 0,
+    "h": 7,
+    "pop": 0,
+    "temp": 26.6
+   },
+   {
+    "code": 0,
     "h": 8,
     "pop": 0,
-    "temp": 27.3
+    "temp": 28.4
    },
    {
-    "code": 2,
+    "code": 0,
     "h": 9,
     "pop": 0,
-    "temp": 29.8
+    "temp": 30.3
    },
    {
-    "code": 2,
+    "code": 0,
     "h": 10,
     "pop": 0,
-    "temp": 32.2
+    "temp": 32.1
    },
    {
-    "code": 1,
+    "code": 0,
     "h": 11,
     "pop": 0,
-    "temp": 34.3
+    "temp": 34.0
    },
    {
     "code": 0,
     "h": 12,
     "pop": 0,
-    "temp": 35.6
+    "temp": 35.5
    },
    {
-    "code": 1,
+    "code": 0,
     "h": 13,
-    "pop": 0,
-    "temp": 35.8
+    "pop": 1,
+    "temp": 36.2
    },
    {
     "code": 1,
     "h": 14,
-    "pop": 0,
-    "temp": 35.6
+    "pop": 4,
+    "temp": 35.0
    },
    {
-    "code": 0,
+    "code": 51,
     "h": 15,
-    "pop": 0,
-    "temp": 34.9
+    "pop": 12,
+    "temp": 33.7
    },
    {
-    "code": 1,
+    "code": 51,
     "h": 16,
-    "pop": 0,
-    "temp": 33.9
+    "pop": 22,
+    "temp": 32.7
    },
    {
     "code": 0,
     "h": 17,
-    "pop": 0,
-    "temp": 32.4
+    "pop": 27,
+    "temp": 31.7
    },
    {
     "code": 0,
     "h": 18,
-    "pop": 0,
-    "temp": 30.6
+    "pop": 21,
+    "temp": 30.3
    },
    {
     "code": 0,
     "h": 19,
-    "pop": 0,
-    "temp": 29.7
+    "pop": 9,
+    "temp": 29.1
    },
    {
     "code": 0,
     "h": 20,
     "pop": 0,
-    "temp": 28.7
+    "temp": 28.2
    },
    {
     "code": 0,
     "h": 21,
     "pop": 0,
-    "temp": 27.9
+    "temp": 27.3
    },
    {
     "code": 0,
     "h": 22,
     "pop": 0,
-    "temp": 27.1
+    "temp": 26.3
    },
    {
     "code": 0,
     "h": 23,
     "pop": 0,
-    "temp": 26.5
+    "temp": 25.3
    }
   ],
   "lat": 25.0143,
   "location": "新北市板橋區",
   "locationShort": "板橋",
   "lon": 121.4672,
-  "low": 23.8,
+  "low": 24.8,
   "source": "open-meteo",
-  "updatedAt": "2026-09-29T13:10:00+08:00"
+  "updatedAt": "2026-09-30T12:14:57+08:00"
  },
- "generatedAt": "2026-09-29T13:10:00+08:00"
+ "generatedAt": "2026-09-30T12:14:57+08:00"
 }
