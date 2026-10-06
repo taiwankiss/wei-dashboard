@@ -381,6 +381,24 @@
   .hc-bars{position:relative;height:96px;display:flex;align-items:flex-end;gap:4px;overflow:hidden;border-bottom:1px solid rgba(255,149,34,.35);}
   .hc-bars .b{flex:1 1 0;min-width:0;border-radius:2px 2px 0 0;transform-origin:50% 100%;animation:hudRise .8s cubic-bezier(.2,.8,.2,1) backwards;}
   @keyframes hudRise{from{transform:scaleY(0)}}
+  /* 長條本身很窄又有高有低，用偽元素把感應範圍撐成整欄高度（含間隙），空白日也點得到 */
+  .hc-bars .b{position:relative;cursor:pointer;}
+  .hc-bars .b::after{content:"";position:absolute;left:-2px;right:-2px;bottom:0;height:96px;}
+  .hc-bars .b.hi{filter:brightness(1.3);}
+  .hc-bars .b.z.hi{background:rgba(255,255,255,.22) !important;}
+  /* 長條的懸浮 bubble：整頁共用一個，滑到哪根就移到哪根上方 */
+  #tip{position:fixed;left:0;top:0;z-index:60;pointer-events:none;max-width:320px;padding:10px 14px 11px;
+    visibility:hidden;opacity:0;transition:opacity .12s;
+    background:rgba(20,12,6,.97);border:1px solid rgba(255,149,34,.55);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);}
+  #tip.on{visibility:visible;opacity:1;}
+  #tip .h{display:flex;align-items:baseline;gap:14px;justify-content:space-between;white-space:nowrap;}
+  #tip .d{font:500 11px/1 var(--mono);letter-spacing:.1em;color:#FFB054;}
+  #tip .v{font:600 16px/1 var(--sans);color:#FFF4E6;}
+  #tip .n{margin-top:8px;font:500 13px/1.4 var(--cjk);color:var(--ink);overflow-wrap:anywhere;}
+  #tip .n.z{color:var(--ink-50);font-weight:400;}
+  #tip .s{margin-top:4px;font:400 11px/1.6 var(--cjk);color:var(--ink-60);}
   .hc-sweep{position:absolute;top:0;bottom:0;left:0;width:70px;pointer-events:none;
     background:linear-gradient(90deg,rgba(255,200,120,0),rgba(255,200,120,.18));border-right:1px solid rgba(255,220,160,.75);
     animation:hudSweep 4.2s cubic-bezier(.55,0,.45,1) infinite;}
@@ -541,7 +559,7 @@
       <div class="gsw" id="theme-sw" data-pos="0" role="group" aria-label="版面">
         <span class="thumb" aria-hidden="true"></span>
         <button id="th-orbit" aria-pressed="true" aria-label="Orbit"><span class="lg">Orbit</span><span class="sh">Orb</span></button>
-        <button id="th-hud" aria-pressed="false" aria-label="Passion"><span class="lg">Passion</span><span class="sh">Pass</span></button>
+        <button id="th-hud" aria-pressed="false" aria-label="Cube"><span class="lg">Cube</span><span class="sh">Cube</span></button>
       </div>
     </div>
   </header>
@@ -985,6 +1003,7 @@
         '<span class="n"><b>'+esc(it.name)+'</b><span>'+esc(md(it.date))+(it.target?' · '+esc(it.target):'')+'</span></span></div>';
     }).join("")+'</div>'+cdMarquee(countdownItems());
   }
+  var HUDDAYS = {};   // 各卡片目前畫的那段日期，長條 bubble 靠 data-k / data-i 回頭查
   function hudCardHtml(kind, days, idx){
     var M = META[kind], N = days.length, total = sumOf(days,"v"), act = activeOf(days);
     var doc = state[kind] || {}, tot = doc.totals || {};
@@ -1014,9 +1033,10 @@
     }
     var max = 0, step = Math.min(.035, 1.2/Math.max(1,N)), base = idx*0.15;
     days.forEach(function(d){ max = Math.max(max, d.v); });
+    HUDDAYS[kind] = days;
     var bars = days.map(function(d, i){
       var on = d.v>0, h = on ? Math.max(8, Math.round(d.v/(max||1)*92)) : 3;
-      return '<div class="b" style="height:'+h+'px;animation-delay:'+(base+i*step).toFixed(3)+'s;'+
+      return '<div class="b'+(on?'':' z')+'" data-k="'+kind+'" data-i="'+i+'" style="height:'+h+'px;animation-delay:'+(base+i*step).toFixed(3)+'s;'+
         (on ? 'background:linear-gradient(180deg,#FFE2A8,#FF9522 55%,#E4610E);box-shadow:0 0 12px rgba(255,149,34,.55)' : 'background:rgba(255,255,255,.08)')+'"></div>';
     }).join("");
     var axIdx = [0, Math.round((N-1)/4), Math.round((N-1)/2), Math.round(3*(N-1)/4), N-1];
@@ -1432,6 +1452,7 @@
   // ---------- 畫面切換 ----------
   function renderAll(){
     var kind = VIEW, view = document.getElementById("view");
+    hideTip();
     document.documentElement.setAttribute("data-theme", THEME);
     document.getElementById("theme-sw").setAttribute("data-pos", THEME==="hud" ? "1":"0");
     document.getElementById("th-hud").setAttribute("aria-pressed", THEME==="hud" ? "true":"false");
@@ -1526,6 +1547,62 @@
     var s = e.target.closest("[data-sel]");
     if(s && VIEW){ sel[VIEW] = s.getAttribute("data-sel"); syncSelection(); }
   });
+
+  // ---------- Cube：長條的懸浮 bubble ----------
+  // 滑鼠移上去就顯示；觸控裝置點一下顯示，點別處收起
+  var tipEl = null, tipBar = null;
+  function tipHtml(kind, d){
+    var head = '<span class="d">'+esc(md(d.date))+' '+esc(dowOf(d.date))+'</span>';
+    if(!(d.v>0)) return '<div class="h">'+head+'</div><div class="n z">當天沒有紀錄</div>';
+    var val, nm, sub;
+    if(kind==="running" || kind==="cycling"){
+      val = f1(d.km)+" km"; nm = d.name || META[kind].zh;
+      sub = kind==="running"
+        ? ["移動 "+(d.sec? fmtHM(d.sec):"—"), "配速 "+(d.sec? fmtPace(d.sec/d.km)+" /km":"—"), "爬升 "+comma(d.elev)+" m"]
+        : ["移動 "+(d.sec? fmtHM(d.sec):"—"), "爬升 "+comma(d.elev)+" m", "均速 "+(d.sec? f1(d.km/(d.sec/3600))+" km/h":"—")];
+    } else if(kind==="english"){
+      val = fmtHM(d.sec); nm = d.live ? "Santa · 今日進行中" : "Santa 學習";
+      sub = [num(d.q)+" 題", num(d.vocab)+" 詞"].concat(d.score!=null ? ["多益預測 "+num(d.score)] : []);
+    } else {
+      val = fmtHM(d.sec); nm = "Claude Code"; sub = [sessTx(d.sessions)];
+    }
+    return '<div class="h">'+head+'<span class="v">'+esc(val)+'</span></div>'+
+      '<div class="n">'+esc(nm)+'</div><div class="s">'+esc(sub.join(" · "))+'</div>';
+  }
+  function hideTip(){
+    if(tipBar) tipBar.classList.remove("hi");
+    tipBar = null;
+    if(tipEl) tipEl.classList.remove("on");
+  }
+  function showTip(bar){
+    var days = HUDDAYS[bar.getAttribute("data-k")], d = days && days[Number(bar.getAttribute("data-i"))];
+    if(!d){ hideTip(); return; }
+    if(!tipEl){
+      tipEl = document.createElement("div"); tipEl.id = "tip"; tipEl.setAttribute("role","tooltip");
+      document.body.appendChild(tipEl);
+    }
+    if(tipBar && tipBar!==bar) tipBar.classList.remove("hi");
+    tipBar = bar; bar.classList.add("hi");
+    tipEl.innerHTML = tipHtml(bar.getAttribute("data-k"), d);
+    // 放在長條正上方並置中，超出視窗就往內靠；上方放不下就改放下面
+    var r = bar.getBoundingClientRect(), w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+    var x = Math.max(8, Math.min(document.documentElement.clientWidth-w-8, r.left+r.width/2-w/2));
+    var y = r.top-h-10; if(y<8) y = r.bottom+10;
+    tipEl.style.left = Math.round(x)+"px"; tipEl.style.top = Math.round(y)+"px";
+    tipEl.classList.add("on");
+  }
+  document.addEventListener("pointerover", function(e){
+    if(e.pointerType==="touch" || !e.target.closest) return;
+    var b = e.target.closest(".hc-bars .b");
+    if(b){ if(b!==tipBar) showTip(b); } else if(tipBar) hideTip();
+  });
+  document.addEventListener("click", function(e){
+    var b = e.target.closest && e.target.closest(".hc-bars .b");
+    if(b) showTip(b); else hideTip();
+  });
+  document.documentElement.addEventListener("mouseleave", hideTip);
+  window.addEventListener("scroll", hideTip, {passive:true});
+  window.addEventListener("resize", hideTip);
 
   function setTheme(t){
     if(t===THEME) return;
