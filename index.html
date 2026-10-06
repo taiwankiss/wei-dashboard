@@ -382,10 +382,10 @@
   .hc-bars .b{flex:1 1 0;min-width:0;border-radius:2px 2px 0 0;transform-origin:50% 100%;animation:hudRise .8s cubic-bezier(.2,.8,.2,1) backwards;}
   @keyframes hudRise{from{transform:scaleY(0)}}
   /* 長條本身很窄又有高有低，用偽元素把感應範圍撐成整欄高度（含間隙），空白日也點得到 */
-  .hc-bars .b{position:relative;cursor:pointer;}
+  .hc-bars .b{position:relative;}
+  .hc-bars .b:not(.z){cursor:pointer;}
   .hc-bars .b::after{content:"";position:absolute;left:-2px;right:-2px;bottom:0;height:96px;}
   .hc-bars .b.hi{filter:brightness(1.3);}
-  .hc-bars .b.z.hi{background:rgba(255,255,255,.22) !important;}
   /* 長條的懸浮 bubble：整頁共用一個，滑到哪根就移到哪根上方 */
   #tip{position:fixed;left:0;top:0;z-index:60;pointer-events:none;max-width:320px;padding:10px 14px 11px;
     visibility:hidden;opacity:0;transition:opacity .12s;
@@ -397,7 +397,6 @@
   #tip .d{font:500 11px/1 var(--mono);letter-spacing:.1em;color:#FFB054;}
   #tip .v{font:600 16px/1 var(--sans);color:#FFF4E6;}
   #tip .n{margin-top:8px;font:500 13px/1.4 var(--cjk);color:var(--ink);overflow-wrap:anywhere;}
-  #tip .n.z{color:var(--ink-50);font-weight:400;}
   #tip .s{margin-top:4px;font:400 11px/1.6 var(--cjk);color:var(--ink-60);}
   .hc-sweep{position:absolute;top:0;bottom:0;left:0;width:70px;pointer-events:none;
     background:linear-gradient(90deg,rgba(255,200,120,0),rgba(255,200,120,.18));border-right:1px solid rgba(255,220,160,.75);
@@ -1553,7 +1552,6 @@
   var tipEl = null, tipBar = null;
   function tipHtml(kind, d){
     var head = '<span class="d">'+esc(md(d.date))+' '+esc(dowOf(d.date))+'</span>';
-    if(!(d.v>0)) return '<div class="h">'+head+'</div><div class="n z">當天沒有紀錄</div>';
     var val, nm, sub;
     if(kind==="running" || kind==="cycling"){
       val = f1(d.km)+" km"; nm = d.name || META[kind].zh;
@@ -1576,7 +1574,7 @@
   }
   function showTip(bar){
     var days = HUDDAYS[bar.getAttribute("data-k")], d = days && days[Number(bar.getAttribute("data-i"))];
-    if(!d){ hideTip(); return; }
+    if(!d || !(d.v>0)){ hideTip(); return; }   // 沒有紀錄的日子不顯示
     if(!tipEl){
       tipEl = document.createElement("div"); tipEl.id = "tip"; tipEl.setAttribute("role","tooltip");
       document.body.appendChild(tipEl);
