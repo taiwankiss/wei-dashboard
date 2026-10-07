@@ -56,17 +56,30 @@
     "elevationM": 10,
     "km": 6.16,
     "name": "傍晚跑步"
+   },
+   {
+    "date": "2026-10-07",
+    "durationSec": 5172,
+    "elevationM": 44,
+    "km": 15.89,
+    "name": "傍晚跑步"
    }
   ],
-  "lastSynced": "2026-10-06T01:26:26+08:00",
+  "lastSynced": "2026-10-07T23:03:48+08:00",
   "manualEntries": [],
   "month": {
-   "count": 0,
-   "durationSec": 0,
-   "km": 0
+   "count": 1,
+   "durationSec": 5172,
+   "km": 15.9
   },
   "source": "strava",
   "syncedRecent": [
+   {
+    "date": "2026-10-07",
+    "durationSec": 5172,
+    "km": 15.89,
+    "name": "傍晚跑步"
+   },
    {
     "date": "2026-09-17",
     "durationSec": 2205,
@@ -84,19 +97,13 @@
     "durationSec": 2131,
     "km": 6.13,
     "name": "傍晚跑步"
-   },
-   {
-    "date": "2026-09-03",
-    "durationSec": 2260,
-    "km": 6,
-    "name": "跑步機跑步"
    }
   ],
   "totals": {
-   "count": 8,
-   "durationSec": 17085,
-   "elevationM": 24,
-   "km": 44.5
+   "count": 9,
+   "durationSec": 22257,
+   "elevationM": 68,
+   "km": 60.4
   }
  },
  "cycling": {
@@ -397,18 +404,18 @@
  },
  "english": {
   "latest": {
-   "date": "2026-10-06",
+   "date": "2026-10-07",
    "toeic_predicted": 885,
    "toeic_lc": 460,
    "toeic_rc": 425,
    "goal_score": 750,
-   "study_time_sec": 4238,
+   "study_time_sec": 2140,
    "goal_percent": 0,
-   "questions_count": 69,
-   "vocab_count": 20,
-   "note": "Santa · 推薦學習 4 組（今日進行中）",
+   "questions_count": 35,
+   "vocab_count": 10,
+   "note": "Santa · 推薦學習 2 組（今日進行中）",
    "source": "santa",
-   "addedAt": "2026-10-06T00:00:00+08:00"
+   "addedAt": "2026-10-07T00:00:00+08:00"
   },
   "history": [
    {
@@ -858,9 +865,23 @@
     "note": "Santa · 推薦學習 2 組",
     "source": "santa",
     "addedAt": "2026-10-06T00:00:00+08:00"
+   },
+   {
+    "date": "2026-10-06",
+    "toeic_predicted": 885,
+    "toeic_lc": 460,
+    "toeic_rc": 425,
+    "goal_score": 750,
+    "study_time_sec": 4238,
+    "goal_percent": 0,
+    "questions_count": 69,
+    "vocab_count": 20,
+    "note": "Santa · 推薦學習 4 組",
+    "source": "santa",
+    "addedAt": "2026-10-07T00:00:00+08:00"
    }
   ],
-  "lastUpdated": "2026-10-06T00:00:00+08:00"
+  "lastUpdated": "2026-10-07T00:00:00+08:00"
  },
  "goals": {
   "enTargetScore": 850,
