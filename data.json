@@ -65,7 +65,7 @@
     "name": "傍晚跑步"
    }
   ],
-  "lastSynced": "2026-10-09T23:58:43+08:00",
+  "lastSynced": "2026-10-11T23:57:04+08:00",
   "manualEntries": [],
   "month": {
    "count": 1,
@@ -191,17 +191,30 @@
     "elevationM": 92,
     "km": 27.92,
     "name": "上午 騎行"
+   },
+   {
+    "date": "2026-10-11",
+    "durationSec": 7396,
+    "elevationM": 594,
+    "km": 43.97,
+    "name": "劍中劍"
    }
   ],
-  "lastSynced": "2026-10-09T23:58:43+08:00",
+  "lastSynced": "2026-10-11T23:57:04+08:00",
   "manualEntries": [],
   "month": {
-   "count": 2,
-   "durationSec": 10758,
-   "km": 65.8
+   "count": 3,
+   "durationSec": 18154,
+   "km": 109.8
   },
   "source": "strava",
   "syncedRecent": [
+   {
+    "date": "2026-10-11",
+    "durationSec": 7396,
+    "km": 43.97,
+    "name": "劍中劍"
+   },
    {
     "date": "2026-10-03",
     "durationSec": 4381,
@@ -219,19 +232,13 @@
     "durationSec": 15927,
     "km": 77.36,
     "name": "巴拉卡 二子坪"
-   },
-   {
-    "date": "2026-09-19",
-    "durationSec": 10158,
-    "km": 69.24,
-    "name": "烏來瀑布"
    }
   ],
   "totals": {
-   "count": 12,
-   "durationSec": 106428,
-   "elevationM": 5590,
-   "km": 623.0
+   "count": 13,
+   "durationSec": 113824,
+   "elevationM": 6184,
+   "km": 667.0
   }
  },
  "ai": {
@@ -384,15 +391,25 @@
    },
    {
     "date": "2026-10-09",
-    "seconds": 19176,
+    "seconds": 19355,
     "sessions": 7
+   },
+   {
+    "date": "2026-10-10",
+    "seconds": 136,
+    "sessions": 1
+   },
+   {
+    "date": "2026-10-11",
+    "seconds": 11186,
+    "sessions": 6
    }
   ],
-  "lastSynced": "2026-10-09T23:58:43+08:00",
-  "note": "使用時間為 Claude Code session 起訖時間估算：同一 session 內以 30 分鐘無活動切成多段，每段獨立封頂 3 小時再加總；歷史僅回溯到本機保留的 session 記錄。9/5、9/7～9/9、9/13、9/14 沒有找到獨立的 session 紀錄（工作內容多半發生在跟這個 dashboard 對話同一個跨日長 session 裡，估算工具看不到「目前 session」，抓不到準確用量，故不補這幾天的數字）；9/6 是用 git commit 時間範圍粗估、封頂 3 小時的近似值；9/10～9/12、9/15～9/19、9/22 則是從實際的獨立 session 記錄估算，較為準確；9/20 檢查過所有專案的 session 紀錄，當天只有兩筆孤立的背景訊號、沒有真正的對話內容，確認是 0；9/21 全天在爬奇萊南華（Strava 有紀錄），故不補這兩天；9/22 起連同這個 dashboard 對話本身一併計入（當天已結束、時間戳完整）；9/19 起的估算已排除資料夾搬家後留下的舊路徑重複紀錄；9/23、9/24 已以完整當日紀錄重算（9/23 較先前的部分用量增加）；9/25 已以完整當日紀錄重算；9/26～9/28 檢查所有專案均無 session 紀錄（9/26 騎車出遊），確認是 0；9/29 已以完整當日紀錄重算；9/30 已以完整當日紀錄重算；10/1、10/2、10/4、10/5 為完整當日紀錄；10/3 檢查所有專案均無 session 紀錄（10/3 騎車），確認是 0；10/2 起新增專案 3D City，10/4 起新增 my score（原 Spectrum App 資料夾改名，新舊路徑紀錄只算一個專案）與 20221029 德奧法；10/6、10/7、10/8 為完整當日紀錄，10/6 起新增專案 20260212 紐西蘭春節、10/7 起新增 Arzopa；10/9 為截至更新當下的部分用量，之後更新會重算。",
-  "periodEnd": "2026-10-09",
+  "lastSynced": "2026-10-11T23:57:04+08:00",
+  "note": "使用時間為 Claude Code session 起訖時間估算：同一 session 內以 30 分鐘無活動切成多段，每段獨立封頂 3 小時再加總；歷史僅回溯到本機保留的 session 記錄。9/5、9/7～9/9、9/13、9/14 沒有找到獨立的 session 紀錄（工作內容多半發生在跟這個 dashboard 對話同一個跨日長 session 裡，估算工具看不到「目前 session」，抓不到準確用量，故不補這幾天的數字）；9/6 是用 git commit 時間範圍粗估、封頂 3 小時的近似值；9/10～9/12、9/15～9/19、9/22 則是從實際的獨立 session 記錄估算，較為準確；9/20 檢查過所有專案的 session 紀錄，當天只有兩筆孤立的背景訊號、沒有真正的對話內容，確認是 0；9/21 全天在爬奇萊南華（Strava 有紀錄），故不補這兩天；9/22 起連同這個 dashboard 對話本身一併計入（當天已結束、時間戳完整）；9/19 起的估算已排除資料夾搬家後留下的舊路徑重複紀錄；9/23、9/24 已以完整當日紀錄重算（9/23 較先前的部分用量增加）；9/25 已以完整當日紀錄重算；9/26～9/28 檢查所有專案均無 session 紀錄（9/26 騎車出遊），確認是 0；9/29 已以完整當日紀錄重算；9/30 已以完整當日紀錄重算；10/1、10/2、10/4、10/5 為完整當日紀錄；10/3 檢查所有專案均無 session 紀錄（10/3 騎車），確認是 0；10/2 起新增專案 3D City，10/4 起新增 my score（原 Spectrum App 資料夾改名，新舊路徑紀錄只算一個專案）與 20221029 德奧法；10/6、10/7、10/8 為完整當日紀錄，10/6 起新增專案 20260212 紐西蘭春節、10/7 起新增 Arzopa；10/9、10/10 為完整當日紀錄（10/10 出遊，只有幾分鐘紀錄），10/11 起新增專案 20181229 越南胡志明、20191017勤美學山那村、20261010 福隆舊草嶺隧道；10/11 為截至更新當下的部分用量，之後更新會重算。",
+  "periodEnd": "2026-10-11",
   "periodStart": "2026-08-27",
-  "projectCount": 17,
+  "projectCount": 20,
   "projectLinks": {
    "Resume": "https://github.com/taiwankiss/resume",
    "Sport-Journey": "https://github.com/taiwankiss/sport-journey",
@@ -415,24 +432,27 @@
    "my score",
    "20221029 德奧法",
    "20260212 紐西蘭春節",
-   "Arzopa"
+   "Arzopa",
+   "20181229 越南胡志明",
+   "20191017勤美學山那村",
+   "20261010 福隆舊草嶺隧道"
   ],
-  "totalSeconds": 487978
+  "totalSeconds": 499479
  },
  "english": {
   "latest": {
-   "date": "2026-10-09",
-   "toeic_predicted": 895,
-   "toeic_lc": 460,
-   "toeic_rc": 435,
+   "date": "2026-10-11",
+   "toeic_predicted": 910,
+   "toeic_lc": 470,
+   "toeic_rc": 440,
    "goal_score": 750,
-   "study_time_sec": 2344,
+   "study_time_sec": 2892,
    "goal_percent": 0,
-   "questions_count": 42,
-   "vocab_count": 20,
-   "note": "Santa · 推薦學習 2 組（今日進行中）",
+   "questions_count": 73,
+   "vocab_count": 10,
+   "note": "Santa · 推薦學習 4 組（今日進行中）",
    "source": "santa",
-   "addedAt": "2026-10-09T00:00:00+08:00"
+   "addedAt": "2026-10-11T00:00:00+08:00"
   },
   "history": [
    {
@@ -924,9 +944,23 @@
     "note": "Santa · 推薦學習 2 組",
     "source": "santa",
     "addedAt": "2026-10-09T00:00:00+08:00"
+   },
+   {
+    "date": "2026-10-09",
+    "toeic_predicted": 895,
+    "toeic_lc": 460,
+    "toeic_rc": 435,
+    "goal_score": 750,
+    "study_time_sec": 2344,
+    "goal_percent": 0,
+    "questions_count": 42,
+    "vocab_count": 20,
+    "note": "Santa · 推薦學習 2 組",
+    "source": "santa",
+    "addedAt": "2026-10-10T00:00:00+08:00"
    }
   ],
-  "lastUpdated": "2026-10-09T00:00:00+08:00"
+  "lastUpdated": "2026-10-11T00:00:00+08:00"
  },
  "goals": {
   "enTargetScore": 850,
@@ -955,113 +989,113 @@
   "updatedAt": "2026-09-14T00:00:00+08:00"
  },
  "weather": {
-  "date": "2026-10-09",
-  "high": 29.2,
+  "date": "2026-10-11",
+  "high": 29.4,
   "hourly": [
    {
     "code": 1,
     "h": 0,
     "pop": 0,
-    "temp": 23.3
+    "temp": 24.5
    },
    {
     "code": 1,
     "h": 1,
     "pop": 0,
-    "temp": 23.1
+    "temp": 24.4
    },
    {
-    "code": 0,
+    "code": 1,
     "h": 2,
     "pop": 0,
-    "temp": 22.9
+    "temp": 23.9
    },
    {
-    "code": 0,
+    "code": 1,
     "h": 3,
     "pop": 0,
-    "temp": 22.9
+    "temp": 23.5
    },
    {
-    "code": 0,
+    "code": 1,
     "h": 4,
     "pop": 0,
-    "temp": 22.7
+    "temp": 23.0
    },
    {
-    "code": 0,
+    "code": 1,
     "h": 5,
     "pop": 0,
-    "temp": 22.1
+    "temp": 22.6
    },
    {
     "code": 0,
     "h": 6,
     "pop": 0,
-    "temp": 21.5
+    "temp": 22.1
    },
    {
     "code": 0,
     "h": 7,
     "pop": 0,
-    "temp": 23.4
-   },
-   {
-    "code": 0,
-    "h": 8,
-    "pop": 0,
-    "temp": 26.5
-   },
-   {
-    "code": 51,
-    "h": 9,
-    "pop": 0,
-    "temp": 27.7
+    "temp": 23.7
    },
    {
     "code": 1,
-    "h": 10,
+    "h": 8,
     "pop": 0,
-    "temp": 28.3
+    "temp": 26.1
    },
    {
-    "code": 2,
+    "code": 1,
+    "h": 9,
+    "pop": 0,
+    "temp": 27.2
+   },
+   {
+    "code": 0,
+    "h": 10,
+    "pop": 0,
+    "temp": 27.9
+   },
+   {
+    "code": 0,
     "h": 11,
     "pop": 0,
-    "temp": 28.4
+    "temp": 28.7
    },
    {
     "code": 2,
     "h": 12,
     "pop": 0,
-    "temp": 28.6
+    "temp": 29.4
    },
    {
     "code": 2,
     "h": 13,
     "pop": 0,
-    "temp": 29.2
+    "temp": 29.4
    },
    {
-    "code": 3,
+    "code": 0,
     "h": 14,
     "pop": 0,
-    "temp": 28.9
+    "temp": 29.0
    },
    {
-    "code": 1,
+    "code": 0,
     "h": 15,
     "pop": 0,
-    "temp": 27.9
+    "temp": 28.1
    },
    {
-    "code": 2,
+    "code": 0,
     "h": 16,
     "pop": 0,
-    "temp": 26.9
+    "temp": 27.0
    },
    {
-    "code": 1,
+    "code": 0,
     "h": 17,
     "pop": 0,
     "temp": 25.6
@@ -1070,46 +1104,46 @@
     "code": 0,
     "h": 18,
     "pop": 0,
-    "temp": 24.6
+    "temp": 24.4
    },
    {
     "code": 0,
     "h": 19,
     "pop": 0,
-    "temp": 24.1
-   },
-   {
-    "code": 2,
-    "h": 20,
-    "pop": 0,
     "temp": 24.0
    },
    {
-    "code": 2,
+    "code": 0,
+    "h": 20,
+    "pop": 0,
+    "temp": 23.7
+   },
+   {
+    "code": 0,
     "h": 21,
     "pop": 0,
-    "temp": 24.2
+    "temp": 23.1
    },
    {
-    "code": 2,
+    "code": 0,
     "h": 22,
     "pop": 0,
-    "temp": 24.2
+    "temp": 22.9
    },
    {
-    "code": 2,
+    "code": 0,
     "h": 23,
     "pop": 0,
-    "temp": 23.8
+    "temp": 23.2
    }
   ],
   "lat": 25.0143,
   "location": "新北市板橋區",
   "locationShort": "板橋",
   "lon": 121.4672,
-  "low": 21.5,
+  "low": 22.1,
   "source": "open-meteo",
-  "updatedAt": "2026-10-09T23:58:43+08:00"
+  "updatedAt": "2026-10-11T23:57:04+08:00"
  },
- "generatedAt": "2026-10-09T23:58:43+08:00"
+ "generatedAt": "2026-10-11T23:57:04+08:00"
 }
