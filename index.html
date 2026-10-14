@@ -603,7 +603,6 @@
   var sel = { running:null, cycling:null, ai:null, english:null };   // 單項頁目前選取的日期
   var VIEW = null;        // null = 總覽；否則為 running / cycling / english / ai
   var THEME = "orbit";    // orbit = C 軌道；hud = A 遙測（只有總覽，沒有單項頁）
-  try{ var ts = localStorage.getItem("wd-theme"); if(ts==="hud" || ts==="orbit") THEME = ts; }catch(e){}
   try{ var qs = /[?&]style=(hud|orbit)\b/.exec(location.search); if(qs) THEME = qs[1]; }catch(e){}
   var DET = null;         // 單項頁目前的計算結果，點選日期時局部更新用
   var db = null, sample = null, sampleImages = false, staticMode = false;
