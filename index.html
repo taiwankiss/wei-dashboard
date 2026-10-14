@@ -598,6 +598,7 @@
 (function(){
   "use strict";
 
+  var START_DATE = "2026-09-01";   // 全部視窗的起點（0 = 從第一筆紀錄）
   var WINDOW_DAYS = 0;    // 30 = 近 30 天；0 = 全部（從第一筆紀錄到今天）
   var state = { running:null, cycling:null, ai:null, english:null, goals:null, weather:null };
   var sel = { running:null, cycling:null, ai:null, english:null };   // 單項頁目前選取的日期
@@ -715,6 +716,7 @@
   // 視窗內的日期：近 30 天，或「全部」＝從 firstDate 到今天
   function windowDates(firstDate){
     if(WINDOW_DAYS>0 || !firstDate) return lastDays(WINDOW_DAYS>0 ? WINDOW_DAYS : 30);
+    if(START_DATE && firstDate<START_DATE) firstDate = START_DATE;
     var out = rangeDates(firstDate, tpeToday());
     return out.length>1 ? out : lastDays(30);
   }
@@ -1287,6 +1289,7 @@
   function trendHtml(kind, by){
     var pal = META[kind].pal, first = minKey(by), today = tpeToday();
     if(!first) return '<div class="hd"><span class="cap">TREND</span></div><div class="empty">尚無紀錄</div>';
+    if(START_DATE && first<START_DATE) first = START_DATE;
     var dates = rangeDates(first, today), n = dates.length;
     function X(i){ return n>1 ? i/(n-1)*1000 : 0; }
     var line = "", dots = [], cap, sub, note = "", goalPath = "", yMax, yMin = 0;
@@ -1317,7 +1320,7 @@
         prev = v;
       });
       if(monthly!=null) goalPath = "M0 "+r1(Yc(0))+" L1000 "+r1(Yc(goalEnd));
-      var unit = kind==="ai" ? " h" : " km", act = Object.keys(by).filter(function(k){ return by[k].v>0; }).length;
+      var unit = kind==="ai" ? " h" : " km", act = Object.keys(by).filter(function(k){ return k>=first && by[k].v>0; }).length;
       cap = "CUMULATIVE";
       sub = md(first)+" 起累計 "+f1(cum)+unit+" · "+act+(kind==="ai"?" 個活躍日":" 次")+
         (kind==="cycling" ? " · 爬升 "+comma(Object.keys(by).reduce(function(a,k){ return a+(by[k].elev||0); },0))+" m" : "");
