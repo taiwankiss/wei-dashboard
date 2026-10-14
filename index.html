@@ -157,8 +157,9 @@
   .core .dw{font:400 11px/1 var(--mono);letter-spacing:.2em;color:var(--ink-50);}
   .core .dt{font:300 clamp(24px,4.2vw,40px)/1 var(--sans);}
   .core .ck{font:400 clamp(11px,1.3vw,15px)/1 var(--mono);color:var(--ai);}
-  .ring-hit{cursor:pointer;}
-  .ring-hit:hover{filter:brightness(1.25);}
+  .ring-hit{cursor:default;}
+  .ring-hit.seg{cursor:pointer;}
+  .ring-hit.seg:hover,.ring-hit.seg.hi{fill:rgba(255,255,255,.16);}
 
   .tl{margin-top:24px;padding:20px 28px 22px;display:flex;flex-direction:column;gap:18px;}
   .tl .hd{display:flex;align-items:baseline;gap:12px;}
@@ -844,16 +845,20 @@
     var C = 320, N = dates.length, iso = tpeToday();
     var ringsSvg = RINGS.map(function(rr, ri){
       var kind = rr[0], R = rr[1], col = META[kind].pal[1];
-      var days = daysOf(recs[kind], dates), max = 0, track = "", path = "";
+      var days = daysOf(recs[kind], dates), max = 0, track = "", path = "", hits = "";
       days.forEach(function(d){ max = Math.max(max, d.v); });
+      HUDDAYS[kind] = days;
       days.forEach(function(d, i){
         var a = segAngles(i, N);
         track += sector(C, R, R+2, a[0], a[1]);
-        if(d.v>0) path += sector(C, R, R+4+(d.v/(max||1))*34, a[0], a[1]);
+        if(d.v>0){
+          path += sector(C, R, R+4+(d.v/(max||1))*34, a[0], a[1]);
+          hits += '<path class="ring-hit seg" data-k="'+kind+'" data-i="'+i+'" d="'+sector(C, R, R+42, a[0], a[1])+'" fill="rgba(255,255,255,0)" style="pointer-events:auto"></path>';
+        }
       });
       return '<svg class="reveal ring-svg" viewBox="-24 -24 688 688" style="animation-delay:'+(ri*0.18).toFixed(2)+'s;pointer-events:none" aria-hidden="true">'+
-        '<path class="ring-hit" data-go="'+kind+'" d="'+track+'" fill="rgba(255,255,255,.07)" style="pointer-events:auto"></path>'+
-        (path ? '<path class="ring-hit" data-go="'+kind+'" d="'+path+'" fill="'+col+'" style="pointer-events:auto;filter:drop-shadow(0 0 6px '+col+')"></path>' : '')+
+        '<path d="'+track+'" fill="rgba(255,255,255,.07)"></path>'+
+        (path ? '<path d="'+path+'" fill="'+col+'" style="filter:drop-shadow(0 0 6px '+col+')"></path>' : '')+hits+
       '</svg>';
     }).join("");
     var circ = 2*Math.PI*300, dash = 1.2, gap = circ/N-dash;
@@ -1593,11 +1598,11 @@
   }
   document.addEventListener("pointerover", function(e){
     if(e.pointerType==="touch" || !e.target.closest) return;
-    var b = e.target.closest(".hc-bars .b");
+    var b = e.target.closest(".hc-bars .b, .ring-hit.seg");
     if(b){ if(b!==tipBar) showTip(b); } else if(tipBar) hideTip();
   });
   document.addEventListener("click", function(e){
-    var b = e.target.closest && e.target.closest(".hc-bars .b");
+    var b = e.target.closest && e.target.closest(".hc-bars .b, .ring-hit.seg");
     if(b) showTip(b); else hideTip();
   });
   document.documentElement.addEventListener("mouseleave", hideTip);
