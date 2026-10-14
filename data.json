@@ -63,17 +63,30 @@
     "elevationM": 44,
     "km": 15.89,
     "name": "傍晚跑步"
+   },
+   {
+    "date": "2026-10-12",
+    "durationSec": 2041,
+    "elevationM": 11,
+    "km": 6.24,
+    "name": "傍晚跑步"
    }
   ],
-  "lastSynced": "2026-10-11T23:57:04+08:00",
+  "lastSynced": "2026-10-14T12:00:00+08:00",
   "manualEntries": [],
   "month": {
-   "count": 1,
-   "durationSec": 5172,
-   "km": 15.9
+   "count": 2,
+   "durationSec": 7213,
+   "km": 22.1
   },
   "source": "strava",
   "syncedRecent": [
+   {
+    "date": "2026-10-12",
+    "durationSec": 2041,
+    "km": 6.24,
+    "name": "傍晚跑步"
+   },
    {
     "date": "2026-10-07",
     "durationSec": 5172,
@@ -91,19 +104,13 @@
     "durationSec": 2179,
     "km": 6.24,
     "name": "傍晚跑步"
-   },
-   {
-    "date": "2026-09-15",
-    "durationSec": 2131,
-    "km": 6.13,
-    "name": "傍晚跑步"
    }
   ],
   "totals": {
-   "count": 9,
-   "durationSec": 22257,
-   "elevationM": 68,
-   "km": 60.4
+   "count": 10,
+   "durationSec": 24298,
+   "elevationM": 79,
+   "km": 66.7
   }
  },
  "cycling": {
@@ -198,17 +205,30 @@
     "elevationM": 594,
     "km": 43.97,
     "name": "劍中劍"
+   },
+   {
+    "date": "2026-10-13",
+    "durationSec": 7821,
+    "elevationM": 491,
+    "km": 47.26,
+    "name": "凌雲路上觀音山"
    }
   ],
-  "lastSynced": "2026-10-11T23:57:04+08:00",
+  "lastSynced": "2026-10-14T12:00:00+08:00",
   "manualEntries": [],
   "month": {
-   "count": 3,
-   "durationSec": 18154,
-   "km": 109.8
+   "count": 4,
+   "durationSec": 25975,
+   "km": 157.0
   },
   "source": "strava",
   "syncedRecent": [
+   {
+    "date": "2026-10-13",
+    "durationSec": 7821,
+    "km": 47.26,
+    "name": "凌雲路上觀音山"
+   },
    {
     "date": "2026-10-11",
     "durationSec": 7396,
@@ -226,19 +246,13 @@
     "durationSec": 6377,
     "km": 37.87,
     "name": "凌雲路上觀音山 原路回"
-   },
-   {
-    "date": "2026-09-26",
-    "durationSec": 15927,
-    "km": 77.36,
-    "name": "巴拉卡 二子坪"
    }
   ],
   "totals": {
-   "count": 13,
-   "durationSec": 113824,
-   "elevationM": 6184,
-   "km": 667.0
+   "count": 14,
+   "durationSec": 121645,
+   "elevationM": 6675,
+   "km": 714.3
   }
  },
  "ai": {
