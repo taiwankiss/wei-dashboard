@@ -539,6 +539,8 @@
 
 <div class="shell">
   <header class="top">
+<!-- the old address (taiwankiss.github.io) moves visitors to weilee01.com/myboard/; the weilee01.com router fetches this same file but never runs scripts -->
+<script>if (location.hostname === 'taiwankiss.github.io') location.replace('https://weilee01.com/myboard' + location.pathname.replace(/^\/wei-dashboard/i, '') + location.search + location.hash);</script>
     <a class="back nv" id="back" href="#" aria-label="回總覽" title="回總覽" hidden>
       <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
     </a>
